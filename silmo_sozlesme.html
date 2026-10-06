@@ -185,6 +185,12 @@
   table.mx tfoot td, table.mx tfoot th { background: #f1f1f1; font-weight: 700; }
   .blk-note { font-size: 9pt; padding-bottom: 2mm; }
 
+  #modal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 200; padding: 16px; }
+  .modal-box { background: var(--card-bg); color: var(--text); border-radius: 14px; padding: 18px; max-width: 380px; width: 100%; }
+  .modal-box h3 { margin: 0 0 8px; font-size: 1rem; }
+  .modal-box p { margin: 0 0 14px; font-size: 0.88rem; color: var(--text-muted); }
+  .modal-box .pv-bar { margin-bottom: 0; }
+  .btn.warnbtn { background: var(--danger); }
   #printArea { display: none; }
   #toast {
     position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%);
@@ -194,7 +200,7 @@
   @media print {
     @page { size: A4; margin: 0; }
     html, body { background: #fff !important; }
-    .app, #toast, .measure { display: none !important; }
+    .app, #toast, .measure, #modal { display: none !important; }
     #printArea { display: block; }
     #printArea .page { margin: 0; box-shadow: none; }
   }
@@ -309,6 +315,16 @@
 
 <div id="printArea"></div>
 <div class="measure" id="measure"></div>
+<div id="modal">
+  <div class="modal-box" role="alertdialog" aria-labelledby="mTitle" aria-describedby="mText">
+    <h3 id="mTitle">Sözleşme kaydedilmedi</h3>
+    <p id="mText">Bu sözleşme kaydedilmedi. Yine de silinsin mi?</p>
+    <div class="pv-bar">
+      <button class="btn secondary" id="mNo">Vazgeç</button>
+      <button class="btn warnbtn" id="mYes">Kaydetmeden Sil</button>
+    </div>
+  </div>
+</div>
 <div id="toast"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -621,10 +637,21 @@ CAMPS.push({ id: 15, code: 'KMP15', name: 'Fokometre Kampanyası', evrak: true,
 const S = {};
 function resetState() {
   Object.assign(S, { campId: null, sel: {}, rows: [], num: null, plan: null, annex: null, ek: '', custom: false,
-    hediyeTutar: '', odeme: 'Sıralı Evrak', evrak: '', tarih: todayISO(), unvan: '', kod: '', adres: '', savedId: null });
+    hediyeTutar: '', odeme: 'Sıralı Evrak', evrak: '', tarih: todayISO(), unvan: '', kod: '', adres: '', savedId: null, savedSig: null });
 }
 resetState();
-let curModel = null, curLayout = null, prevPanel = 'yeni', fromSaved = false;
+let curModel = null, curLayout = null, prevPanel = 'yeni', fromSaved = false, curSig = null;
+/* Formun şu anki durumunun imzası: kayıttan sonra herhangi bir değişiklik olursa imza değişir */
+const sig = () => JSON.stringify([S.campId, S.sel, S.rows, S.num, S.plan, S.odeme, S.evrak, S.tarih, S.unvan, S.kod, S.adres, S.hediyeTutar, S.custom]);
+const hasContent = () => !!(S.campId || String(S.unvan).trim() || String(S.kod).trim() || String(S.adres).trim());
+const isSaved = () => !!S.savedId && S.savedSig === sig();
+let modalCb = null;
+function askDiscard(cb) { modalCb = cb; $('modal').style.display = 'flex'; $('mNo').focus(); }
+$('mNo').addEventListener('click', () => { $('modal').style.display = 'none'; modalCb = null; });
+$('mYes').addEventListener('click', () => { $('modal').style.display = 'none'; const cb = modalCb; modalCb = null; if (cb) cb(); });
+window.addEventListener('beforeunload', e => {
+  if (hasContent() && !isSaved()) { e.preventDefault(); e.returnValue = ''; return ''; }
+});
 const curCamp = () => CAMPS.find(c => c.id === S.campId) || null;
 const planTotals = p => ({ toplam: p.lines.reduce((a, l) => a + l.aylik * l.ay, 0), ay: p.lines.reduce((a, l) => a + l.ay, 0) });
 
@@ -636,7 +663,10 @@ function showPanel(name) {
   if (name === 'musteri') renderMusteriPanel();
   window.scrollTo(0, 0);
 }
-document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => showPanel(b.dataset.tab)));
+document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => {
+  if (b.dataset.tab === 'yeni' && hasContent() && isSaved()) resetForm();
+  showPanel(b.dataset.tab);
+}));
 
 /* ============ 1. Kampanya seçimi ============ */
 function renderCamps() {
@@ -649,6 +679,7 @@ $('campGrid').addEventListener('click', e => {
 });
 function selectCamp(id) {
   S.campId = id; S.sel = {}; S.rows = []; S.num = null; S.plan = null; S.annex = null; S.ek = ''; S.custom = false; S.hediyeTutar = '';
+  S.savedId = null; S.savedSig = null;
   renderCamps(); renderDetay(); renderOdeme();
   ['card-musteri', 'card-odeme', 'card-aksiyon'].forEach(i => { $(i).style.display = 'block'; });
   $('err').style.display = 'none';
@@ -841,11 +872,15 @@ $('btnOnizle').addEventListener('click', () => {
   eb.style.display = 'none';
   showPreview(buildModel(), 'yeni', false);
 });
-$('btnTemizle').addEventListener('click', () => {
+function resetForm() {
   resetState();
   ['c_unvan', 'c_kod', 'c_adres'].forEach(i => { $(i).value = ''; });
   ['card-detay', 'card-musteri', 'card-odeme', 'card-aksiyon'].forEach(i => { $(i).style.display = 'none'; });
+  $('err').style.display = 'none'; $('sug').style.display = 'none';
   renderCamps(); window.scrollTo(0, 0);
+}
+$('btnTemizle').addEventListener('click', () => {
+  if (hasContent() && !isSaved()) askDiscard(resetForm); else resetForm();
 });
 
 /* ============ Sözleşme blokları ve sayfalama ============ */
@@ -920,6 +955,7 @@ const pageHtml = (blks, i, N, tag) => `<div class="page"><div class="pg-body">${
 /* ============ Önizleme, kaydet, yazdır ============ */
 function showPreview(m, from, saved) {
   curModel = m; prevPanel = from; fromSaved = saved;
+  if (!saved) curSig = sig();
   curLayout = layoutModel(m);
   $('previewScale').innerHTML = curLayout.pages.map((p, i) => pageHtml(p, i, curLayout.N, '')).join('');
   $('pvSave').style.display = saved ? 'none' : '';
@@ -944,7 +980,7 @@ function saveModel() {
   const i = all.findIndex(x => x.id === curModel.id);
   if (i > -1) all[i] = curModel; else all.push(curModel);
   if (!lsSet(LS_KAYIT, all)) return false;
-  S.savedId = curModel.id; updateKayitBadge();
+  S.savedId = curModel.id; S.savedSig = curSig; updateKayitBadge();
   return true;
 }
 $('pvSave').addEventListener('click', () => {
