@@ -140,7 +140,16 @@
   .gbtns .btn { width: 100%; }
   @media (prefers-color-scheme: dark) { .yedekbar.uyari { background: #4a3406; color: #ffe2a8; border-color: #d98e04; } }
   header p.kimlik { margin: 3px 0 0; font-size: 11px; letter-spacing: 0; font-weight: 600; text-decoration: underline; cursor: pointer; opacity: 0.95; }
-  #girisModal { position: fixed; inset: 0; background: rgba(0,0,0,0.55); display: none; align-items: center; justify-content: center; z-index: 210; padding: 16px; }
+  #girisModal { position: fixed; inset: 0; background: var(--bg); display: none; align-items: center; justify-content: center; z-index: 210; padding: 20px; overflow-y: auto; }
+  #girisBox { width: 100%; max-width: 380px; text-align: center; }
+  .giris-logo { width: 220px; max-width: 70%; height: auto; background: #fff; border-radius: 14px; padding: 12px 16px; box-shadow: 0 1px 6px rgba(0,0,0,0.15); }
+  #girisBox h1 { font-size: 1.25rem; margin: 18px 0 2px; color: var(--accent); }
+  .giris-alt { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em; color: var(--text-muted); }
+  .giris-yonerge { margin: 22px 0 8px; font-weight: 700; }
+  #girisBox select { width: 100%; }
+  #girisBox .field { text-align: left; }
+  .giris-isim { margin-top: 14px; }
+  #gDevam:disabled { opacity: 0.45; }
   .spage { position: relative; width: 210mm; height: 297mm; overflow: hidden; background: #fff; page-break-after: always; break-after: page; -webkit-print-color-adjust: exact; print-color-adjust: exact; font-family: "Times New Roman", Times, "DejaVu Serif", serif; color: #1c1c1c; }
   .spage:last-child { page-break-after: auto; break-after: auto; }
   .sn { position: absolute; left: 3.5mm; width: 203mm; height: 94.6mm; }
@@ -493,22 +502,6 @@
       <div id="hvEski" class="muted"></div>
       <button type="button" class="btn full" id="hvKaydet" style="margin-top:8px">Kaydet</button>
     </div>
-    <div class="card">
-      <h2>Şube ve Personel</h2>
-      <p class="muted" style="margin-bottom:10px">Sözleşme numarası SLM26-ŞUBE-PERSONEL-SIRA biçiminde verilir (örn. SLM26-IST-AK-0007). Kodlar 2-4 harf veya rakamdır; boş bırakırsanız addan önerilir. Liste yalnızca bu cihazda saklanır ve yedeğe dahildir.</p>
-      <div id="sicilBox"></div>
-      <button type="button" class="btn full" id="sicilKaydet" style="margin-top:12px">Kaydet</button>
-      <button type="button" class="btn secondary full" id="sicilSablon" style="margin-top:8px">Excel Şablonunu İndir</button>
-      <div class="field" style="margin-top:12px"><label>Excel veya CSV'den yükle (Şube Adı, Şube Kodu, Personel Adı, Personel Kodu)</label><input type="file" id="sicilDosya" accept=".xlsx,.xls,.csv,.txt"></div>
-    </div>
-    <div class="card">
-      <h2>Bu Cihazı Kullanan</h2>
-      <div class="muted" id="kullBilgi" style="margin-bottom:8px"></div>
-      <button type="button" class="btn secondary full" id="kullDegistir">Kullanıcıyı Seç / Değiştir</button>
-      <label style="display:flex;gap:8px;align-items:center;font-size:0.85rem;margin-top:12px"><input type="checkbox" id="kSor"> Uygulama her açıldığında sor</label>
-      <div class="field" style="margin-top:8px"><label>Cihaz harfi (aynı kişi birden fazla cihaz kullanıyorsa, örn. A)</label><input type="text" id="kCihaz" maxlength="1"></div>
-      <button type="button" class="btn full" id="kKaydet">Kaydet</button>
-    </div>
   </div>
 </div>
 
@@ -524,7 +517,7 @@
     </div>
   </div>
 </div>
-<div id="girisModal"><div class="modal-box" id="girisBox"></div></div>
+<div id="girisModal"><div id="girisBox"></div></div>
 <div id="gonderModal"><div class="modal-box" id="gonderBox"></div></div>
 <div id="toast"></div>
 
@@ -631,7 +624,7 @@ const HEDIYE_ISKONTO = 65, HEDIYE_KDV = 10;
 const hedFiyat = liste => Math.floor((liste * (100 - HEDIYE_ISKONTO) * (100 + HEDIYE_KDV) + 5000) / 10000); /* tam sayı hesabı, en yakın liraya */
 const PROG_KAPLAMA = { 'Hawk Plus': ['Steel AR Pro', 'Steel AR Blue', 'Steel AR Phantom'], 'Fuji': ['Satin', 'Satin Blue', 'Satin Drive', 'Satin Natura'] }; /* ilk kaplama varsayılan */
 const PROG_TIPLER = { 'Hawk Plus': ['Beyaz', 'Hybrid'], 'Fuji': ['Beyaz', 'BlueSafe', 'Neochromes'] };
-const PROG_TASARIM = { 'Hawk Plus': ['Premium', 'Clarity Neo', 'Identify', 'Mobile Life', 'Extensive'], 'Fuji': ['One', 'Adaptive', 'Life', 'Sense', 'Icon AI'] };
+const PROG_TASARIM = { 'Hawk Plus': ['Premium', 'Clarity Neo', 'Identify', 'Mobile Life'], 'Fuji': ['Adaptive', 'Life', 'Sense', 'Icon AI'] }; /* seçilebilir tasarımlar; Extensive (Hawk Plus) ve One (Fuji) listeden çıkarıldı, fiyatları eski kayıtların okunması için PROG_RAW'da kalır */
 const VISTA = 'Hawk Vista 1.56 Beyaz'; /* KMP2'nin ilk kademesindeki katalog hediyesi; seçilebilir ürün listesinde yok */
 const PROG_RAW = [ // [marka, tasarım, tip, indeks, liste fiyatları (kaplama sırasıyla, KDV hariç)]
   ["Hawk Plus", "Identify", "Beyaz", "1.50", [4830, 5030, 5130]],
@@ -1365,7 +1358,7 @@ function showPanel(name) {
   document.title = APP_TITLE;
   if (name === 'kayit') renderKayit();
   if (name === 'musteri') renderMusteriPanel();
-  if (name === 'ayar') { alicilarCiz(); havuzCiz(); sicilCiz(); kullCiz(); }
+  if (name === 'ayar') { alicilarCiz(); havuzCiz(); }
   window.scrollTo(0, 0);
 }
 document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => {
@@ -2287,9 +2280,8 @@ function saveModel() {
   const prevK = lsGet(LS_KAYIT, []).find(x => x.id === curModel.id);
   if (prevK) ['no', 'sube', 'pers', 'subeKod', 'persKod', 'gonder'].forEach(k => { if (prevK[k] != null && curModel[k] == null) curModel[k] = prevK[k]; });
   kimlikRed = false;
-  if (!curModel.no && sicilOku().personel.length) {
-    if (!kullGecerli()) { kimlikRed = true; toast('Önce şube ve personel seçin.'); girisAc(false); return false; }
-    const kk = kullOku(); curModel.no = noUret(curModel.tarih); curModel.subeKod = kk.sube; curModel.persKod = kk.pers; curModel.sube = subeAd(kk.sube); curModel.pers = persAd(kk.sube, kk.pers);
+  if (!curModel.no && kullGecerli()) {
+    const kk = kullOku(); curModel.no = noUret(curModel.tarih); curModel.subeKod = kk.sube; curModel.persKod = persKodu(); curModel.sube = subeAd(kk.sube); curModel.pers = persKodu();
   }
   const all = lsGet(LS_KAYIT, []);
   const i = all.findIndex(x => x.id === curModel.id);
@@ -2599,7 +2591,7 @@ function yedekIndir() {
   const kayit = lsGet(LS_KAYIT, []), musteri = lsGet(LS_MUSTERI, null), ayar = lsGet(LS_AYAR, null);
   if (!kayit.length && !(musteri && musteri.list && musteri.list.length) && !ayar) { toast('Yedeklenecek veri yok.'); return; }
   const d = new Date(), ad = 'silmo_yedek_' + gunStr(d) + '_' + pad2(d.getHours()) + pad2(d.getMinutes()) + '.json';
-  const veri = { uygulama: 'SILMO-2026', surum: 1, tarih: d.toISOString(), kayit, musteri, ayar, sicil: lsGet(LS_SICIL, null), sayac: lsGet(LS_SAYAC, null) };
+  const veri = { uygulama: 'SILMO-2026', surum: 1, tarih: d.toISOString(), kayit, musteri, ayar, sayac: lsGet(LS_SAYAC, null) };
   const blob = new Blob([JSON.stringify(veri)], { type: 'application/json' });
   const file = new File([blob], ad, { type: 'application/json' });
   const canShare = !!(navigator.canShare && navigator.share && navigator.canShare({ files: [file] }));
@@ -2620,9 +2612,8 @@ function yedekUygula(d, gecerli, degistir) {
     const a0 = ayarOku();
     if (degistir || (!a0.alicilar.length && !a0.havuz.adres)) lsSet(LS_AYAR, d.ayar);
   }
-  if (d.sicil && Array.isArray(d.sicil.personel)) { const s0 = sicilOku(); if (degistir || !s0.personel.length) lsSet(LS_SICIL, d.sicil); }
   sayacYenile(sonuc, d.sayac);
-  loadMusteri(); renderMusteriPanel(); updateKayitBadge(); renderKayit(); alicilarCiz(); havuzCiz(); sicilCiz(); kimlikGuncelle(); havuzBarGuncelle();
+  loadMusteri(); renderMusteriPanel(); updateKayitBadge(); renderKayit(); alicilarCiz(); havuzCiz(); kimlikGuncelle(); havuzBarGuncelle();
   toast(gecerli.length + ' kayıt yedekten işlendi (şu an ' + sonuc.length + ' kayıt var).');
 }
 $('yedekDosya').addEventListener('change', async e => {
@@ -2842,153 +2833,68 @@ function ekhChange(t) {
   renderCustom(); refreshSummary();
 }
 
-/* ============ Şube, personel, kullanıcı ve sözleşme numarası ============ */
-const LS_SICIL = 'slm26_sicil_v1', LS_KULL = 'slm26_kullanici_v1', LS_SAYAC = 'slm26_sayac_v1';
-const sicilOku = () => { const s = lsGet(LS_SICIL, null); return { subeler: (s && Array.isArray(s.subeler)) ? s.subeler : [], personel: (s && Array.isArray(s.personel)) ? s.personel : [] }; };
-const kullOku = () => Object.assign({ sube: '', pers: '', cihaz: '', sor: false }, lsGet(LS_KULL, {}));
-const kullGecerli = () => { const k = kullOku(); return sicilOku().personel.some(p => p.kod === k.pers && p.sube === k.sube); };
-const subeAd = kod => { const s = sicilOku().subeler.find(x => x.kod === kod); return s ? s.ad : kod; };
-const persAd = (sube, kod) => { const p = sicilOku().personel.find(x => x.kod === kod && x.sube === sube); return p ? p.ad : kod; };
+/* ============ Şube seçimi, kullanıcı ve sözleşme numarası ============
+   Şube listesi uygulamanın içinde sabittir (Ayarlar'dan değiştirilemez). Açılışta şube ve adın/soyadın ilk 2 harfi sorulur;
+   her telefona kendiliğinden kısa bir cihaz kodu verilir. Numara: SLM26-KDK-AH.YI-K7-0001 */
+const LS_KULL = 'slm26_kullanici_v1', LS_SAYAC = 'slm26_sayac_v1', LS_CIHAZ = 'slm26_cihaz_v1';
+const SUBELER = [['Sirkeci', 'SRK'], ['Bakırköy', 'BKR'], ['Kadıköy', 'KDK'], ['Ankara', 'ANK'], ['İzmir', 'IZM'], ['Bursa', 'BRS'], ['Antalya', 'ANT'], ['Adana', 'ADN'], ['Kayseri', 'KYS'], ['Samsun', 'SMS'], ['Malatya', 'MLT'], ['Sakarya', 'SKR'], ['Merkez', 'MRK']];
+const subeAd = kod => { const s = SUBELER.find(x => x[1] === kod); return s ? s[0] : kod; };
 function foldUp(s) { return String(s || '').replace(/[çÇ]/g, 'C').replace(/[ğĞ]/g, 'G').replace(/[ıİ]/g, 'I').replace(/[öÖ]/g, 'O').replace(/[şŞ]/g, 'S').replace(/[üÜ]/g, 'U').toUpperCase().replace(/[^A-Z0-9]/g, ''); }
-function kodOner(ad, tip, kullanilan) {
-  const w = String(ad || '').trim().split(/\s+/).filter(Boolean);
-  let k = tip === 'sube' ? foldUp(w.join('')).slice(0, 3) : (w.length > 1 ? w.map(x => foldUp(x).charAt(0)).join('').slice(0, 3) : foldUp(w[0]).slice(0, 2));
-  if (k.length < 2) k = (k + 'XX').slice(0, 2);
-  let c = k, n = 2; while (kullanilan.indexOf(c) > -1) { c = k.slice(0, Math.min(k.length, 3)) + n; n++; }
+const harf2 = v => foldUp(v).replace(/[^A-Z]/g, '').slice(0, 2);
+const kullOku = () => Object.assign({ sube: '', ad: '', soyad: '' }, lsGet(LS_KULL, {}));
+const kullGecerli = () => { const k = kullOku(); return SUBELER.some(x => x[1] === k.sube) && /^[A-Z]{2}$/.test(k.ad) && /^[A-Z]{2}$/.test(k.soyad); };
+const persKodu = () => { const k = kullOku(); return k.ad + '.' + k.soyad; };
+function cihazKodu() {
+  let c = lsGet(LS_CIHAZ, '');
+  if (!/^[A-Z][0-9]$/.test(c)) { const L = 'ABCDEFGHJKLMNPQRSTUVWXYZ'; c = L.charAt(Math.floor(Math.random() * L.length)) + (2 + Math.floor(Math.random() * 8)); lsSet(LS_CIHAZ, c); }
   return c;
 }
-function kimlikGerekli(m) {
-  if (!sicilOku().personel.length) return false;
-  if (m && m.no) return false;
-  const prev = m && lsGet(LS_KAYIT, []).find(x => x.id === m.id); if (prev && prev.no) return false;
-  return !kullGecerli();
-}
+function kimlikGerekli() { return false; } /* açılış ekranı seçim yapılmadan kapanmaz; seçim yoksa (ör. otomasyon) numara boş kalır */
 function noUret(tarihIso) {
-  const k = kullOku(), yy = String(/^\d{4}/.test(tarihIso || '') ? tarihIso : new Date().getFullYear()).slice(2, 4);
-  const key = [yy, k.sube, k.pers, k.cihaz].join('|'), sy = lsGet(LS_SAYAC, {}); sy[key] = (sy[key] || 0) + 1; lsSet(LS_SAYAC, sy);
-  return 'SLM' + yy + '-' + k.sube + '-' + k.pers + (k.cihaz ? '-' + k.cihaz : '') + '-' + String(sy[key]).padStart(4, '0');
+  const k = kullOku(), cz = cihazKodu(), pk = persKodu(), yy = String(/^\d{4}/.test(tarihIso || '') ? tarihIso : new Date().getFullYear()).slice(2, 4);
+  const key = [yy, k.sube, pk, cz].join('|'), sy = lsGet(LS_SAYAC, {}); sy[key] = (sy[key] || 0) + 1; lsSet(LS_SAYAC, sy);
+  return 'SLM' + yy + '-' + k.sube + '-' + pk + '-' + cz + '-' + String(sy[key]).padStart(4, '0');
 }
 function sayacYenile(kayitlar, ek) { /* geri yüklemeden sonra sıra numaraları çakışmasın */
   const sy = lsGet(LS_SAYAC, {});
   const art = (key, n) => { if (n > (sy[key] || 0)) sy[key] = n; };
   if (ek && typeof ek === 'object') Object.keys(ek).forEach(k => art(k, +ek[k] || 0));
-  (kayitlar || []).forEach(x => { const m = /^SLM(\d\d)-([A-Z0-9]+)-([A-Z0-9]+)(?:-([A-Z]))?-(\d{4})$/.exec(x.no || ''); if (m) art([m[1], m[2], m[3], m[4] || ''].join('|'), +m[5]); });
+  (kayitlar || []).forEach(x => {
+    let m = /^SLM(\d\d)-([A-Z]{3})-([A-Z]{2}\.[A-Z]{2})-([A-Z]\d)-(\d{4})$/.exec(x.no || '');
+    if (m) { art([m[1], m[2], m[3], m[4]].join('|'), +m[5]); return; }
+    m = /^SLM(\d\d)-([A-Z0-9]+)-([A-Z0-9]+)(?:-([A-Z]))?-(\d{4})$/.exec(x.no || ''); /* eski (personel kodlu) numaralar */
+    if (m) art([m[1], m[2], m[3], m[4] || ''].join('|'), +m[5]);
+  });
   lsSet(LS_SAYAC, sy);
 }
 function kimlikGuncelle() {
-  const el = $('kimlik'); if (!el) return; const s = sicilOku();
-  if (!s.personel.length) { el.textContent = ''; el.style.display = 'none'; return; }
-  el.style.display = '';
-  if (kullGecerli()) { const k = kullOku(); el.textContent = k.sube + ' · ' + persAd(k.sube, k.pers) + (k.cihaz ? ' · ' + k.cihaz : '') + ' (değiştir)'; }
-  else el.textContent = 'Şube ve personel seçilmedi (seç)';
-  const kb = $('kullBilgi'); if (kb) kb.textContent = kullGecerli() ? 'Şu an: ' + kullOku().sube + ' · ' + persAd(kullOku().sube, kullOku().pers) : 'Şube ve personel seçilmedi.';
+  const el = $('kimlik'); if (!el) return; el.style.display = '';
+  el.textContent = kullGecerli() ? subeAd(kullOku().sube) + ' · ' + persKodu() + ' (değiştir)' : 'Şube seçilmedi (seç)';
 }
 let bekleyenHatirlat = false;
 const girisGorunur = () => getComputedStyle($('girisModal')).display === 'flex';
 function girisAc(zorunlu) {
-  const s = sicilOku();
-  if (!s.personel.length) { toast('Önce Ayarlar sekmesinde Şube ve Personel bölümünü doldurun.'); return; }
-  const k = kullOku(), subeler = s.subeler.filter(b => s.personel.some(p => p.sube === b.kod));
-  const sb = kullGecerli() ? k.sube : subeler[0].kod;
-  const pers = sb => s.personel.filter(p => p.sube === sb);
-  const optP = sb => pers(sb).map(p => '<option value="' + esc(p.kod) + '"' + (kullGecerli() && k.pers === p.kod && k.sube === sb ? ' selected' : '') + '>' + esc(p.ad) + ' (' + esc(p.kod) + ')</option>').join('');
-  $('girisBox').innerHTML = '<h3>Kim kullanıyor?</h3><p>Sözleşme numaraları seçtiğiniz şube ve personel koduyla verilir.</p>' +
-    '<div class="field"><label>Şube</label><select id="gSube">' + subeler.map(b => '<option value="' + esc(b.kod) + '"' + (b.kod === sb ? ' selected' : '') + '>' + esc(b.ad) + ' (' + esc(b.kod) + ')</option>').join('') + '</select></div>' +
-    '<div class="field"><label>Personel</label><select id="gPers">' + optP(sb) + '</select></div>' +
-    '<div class="pv-bar" style="margin-top:12px">' + (kullGecerli() && !zorunlu ? '<button type="button" class="btn secondary" id="gVazgec">Vazgeç</button>' : '') + '<button type="button" class="btn" id="gDevam">Devam</button></div>';
+  const k = kullOku(), tamam = kullGecerli();
+  $('girisBox').innerHTML = '<img class="giris-logo" src="' + LOGO + '" alt="Merve Gözlük Camı"><h1>SILMO İSTANBUL 2026</h1><div class="giris-alt">Fuar Uygulaması</div><p class="giris-yonerge">Lütfen Şubenizi Seçiniz</p>' +
+    '<select id="gSube"><option value="">Şube seçin…</option>' + SUBELER.map(s => '<option value="' + s[1] + '"' + (k.sube === s[1] ? ' selected' : '') + '>' + esc(s[0]) + '</option>').join('') + '</select>' +
+    '<div class="hd-grid giris-isim"><div class="field"><label>Adınızın ilk 2 harfi</label><input type="text" id="gAd" maxlength="2" autocapitalize="characters" autocomplete="off" value="' + esc(k.ad) + '"></div><div class="field"><label>Soyadınızın ilk 2 harfi</label><input type="text" id="gSoyad" maxlength="2" autocapitalize="characters" autocomplete="off" value="' + esc(k.soyad) + '"></div></div>' +
+    '<div class="pv-bar" style="margin-top:14px">' + (tamam && !zorunlu ? '<button type="button" class="btn secondary" id="gVazgec">Vazgeç</button>' : '') + '<button type="button" class="btn" id="gDevam" disabled>Devam</button></div>';
   $('girisModal').style.display = 'flex';
-  $('gSube').addEventListener('change', () => { $('gPers').innerHTML = optP($('gSube').value); });
+  const kontrol = () => { $('gDevam').disabled = !($('gSube').value && /^[A-Z]{2}$/.test($('gAd').value) && /^[A-Z]{2}$/.test($('gSoyad').value)); };
+  ['gAd', 'gSoyad'].forEach(id => $(id).addEventListener('input', e => { e.target.value = harf2(e.target.value); kontrol(); }));
+  $('gSube').addEventListener('change', kontrol); kontrol();
   $('gDevam').addEventListener('click', () => {
-    const sube = $('gSube').value, pk = $('gPers').value; if (!pk) { toast('Bu şubede personel yok.'); return; }
-    lsSet(LS_KULL, Object.assign(kullOku(), { sube, pers: pk }));
+    if ($('gDevam').disabled) return;
+    lsSet(LS_KULL, { sube: $('gSube').value, ad: $('gAd').value, soyad: $('gSoyad').value });
     $('girisModal').style.display = 'none'; kimlikGuncelle();
     if (bekleyenHatirlat) { bekleyenHatirlat = false; yedekHatirlat(); }
   });
   const v = $('gVazgec'); if (v) v.addEventListener('click', () => { $('girisModal').style.display = 'none'; });
 }
-function girisBaslangic() { if (sicilOku().personel.length && (!kullGecerli() || kullOku().sor)) girisAc(true); }
+/* Otomatik tarayıcı testlerinde (navigator.webdriver) açılış ekranı atlanır; testte zorlamak için localStorage 'slm26_test_baslangic' = '1' */
+const baslangicGoster = () => !navigator.webdriver || localStorage.getItem('slm26_test_baslangic') === '1';
+function girisBaslangic() { if (baslangicGoster()) girisAc(true); }
 $('kimlik').addEventListener('click', () => girisAc(false));
-$('kullDegistir').addEventListener('click', () => girisAc(false));
-$('kKaydet').addEventListener('click', () => {
-  const c = foldUp($('kCihaz').value).slice(0, 1);
-  lsSet(LS_KULL, Object.assign(kullOku(), { sor: $('kSor').checked, cihaz: c })); $('kCihaz').value = c; kimlikGuncelle(); toast('Kaydedildi.');
-});
-function kullCiz() { const k = kullOku(); $('kSor').checked = !!k.sor; $('kCihaz').value = k.cihaz || ''; kimlikGuncelle(); }
-
-/* Şube ve personel listesi (Ayarlar) */
-function sicilTopla() {
-  const subeler = [...document.querySelectorAll('#sicilBox .sb-row')].map(r => ({ ad: r.querySelector('[data-sf="ad"]').value.trim(), kod: foldUp(r.querySelector('[data-sf="kod"]').value).slice(0, 4) }));
-  const personel = [...document.querySelectorAll('#sicilBox .pr-row')].map(r => ({ ad: r.querySelector('[data-sf="ad"]').value.trim(), kod: foldUp(r.querySelector('[data-sf="kod"]').value).slice(0, 4), sube: r.querySelector('[data-sf="sube"]').value }));
-  return { subeler, personel };
-}
-function kodTamamla(d) { const kul = d.subeler.filter(b => b.kod).map(b => b.kod); d.subeler.forEach(b => { if (b.ad && !b.kod) { b.kod = kodOner(b.ad, 'sube', kul); kul.push(b.kod); } }); return d; }
-function sicilCiz(taslak) {
-  const el = $('sicilBox'); if (!el) return; const s = taslak || sicilOku();
-  let h = '<h3 style="margin:6px 0">Şubeler</h3>' + (s.subeler.length ? s.subeler.map(b => '<div class="alici sb-row"><div class="hd-grid"><div class="field"><label>Şube adı</label><input type="text" data-sf="ad" value="' + esc(b.ad) + '" placeholder="Örn. İstanbul"></div><div class="field"><label>Şube kodu</label><input type="text" data-sf="kod" value="' + esc(b.kod) + '" maxlength="4" placeholder="IST"></div></div><button type="button" class="btn danger" data-ssil="1" style="padding:7px 10px;font-size:0.78rem">Sil</button></div>').join('') : '<div class="empty-msg">Şube tanımlı değil.</div>');
-  h += '<button type="button" class="btn secondary full" id="subeEkle" style="margin-bottom:12px">Şube Ekle</button><h3 style="margin:6px 0">Personel</h3>';
-  const subOpt = v => '<option value="">Şube seçin</option>' + s.subeler.filter(b => b.kod).map(b => '<option value="' + esc(b.kod) + '"' + (v === b.kod ? ' selected' : '') + '>' + esc(b.ad || b.kod) + ' (' + esc(b.kod) + ')</option>').join('');
-  h += s.personel.length ? s.personel.map(p => '<div class="alici pr-row"><div class="field"><label>Ad soyad</label><input type="text" data-sf="ad" value="' + esc(p.ad) + '"></div><div class="hd-grid"><div class="field"><label>Personel kodu</label><input type="text" data-sf="kod" value="' + esc(p.kod) + '" maxlength="4" placeholder="AK"></div><div class="field"><label>Şube</label><select data-sf="sube">' + subOpt(p.sube) + '</select></div></div><button type="button" class="btn danger" data-psil="1" style="padding:7px 10px;font-size:0.78rem">Sil</button></div>').join('') : '<div class="empty-msg">Personel tanımlı değil.</div>';
-  h += '<button type="button" class="btn secondary full" id="persEkle">Personel Ekle</button>';
-  el.innerHTML = h;
-}
-$('sicilBox').addEventListener('click', e => {
-  const t = e.target;
-  if (t.id === 'subeEkle') { const d = sicilTopla(); if (d.subeler.length >= 20) { toast('En fazla 20 şube.'); return; } d.subeler.push({ ad: '', kod: '' }); sicilCiz(d); }
-  else if (t.id === 'persEkle') { const d = kodTamamla(sicilTopla()); if (d.personel.length >= 60) { toast('En fazla 60 personel.'); return; } d.personel.push({ ad: '', kod: '', sube: (d.subeler[0] || {}).kod || '' }); sicilCiz(d); }
-  else if (t.dataset.ssil) { const d = sicilTopla(), i = [...document.querySelectorAll('#sicilBox .sb-row')].indexOf(t.closest('.sb-row')); d.subeler.splice(i, 1); sicilCiz(d); }
-  else if (t.dataset.psil) { const d = sicilTopla(), i = [...document.querySelectorAll('#sicilBox .pr-row')].indexOf(t.closest('.pr-row')); d.personel.splice(i, 1); sicilCiz(d); }
-});
-$('sicilKaydet').addEventListener('click', () => {
-  const d = sicilTopla(); const subeler = d.subeler.filter(b => b.ad || b.kod), personel = d.personel.filter(p => p.ad || p.kod);
-  const skodlar = [];
-  for (const b of subeler) {
-    if (!b.ad) { toast('Şube adı boş olamaz.'); return; }
-    if (!b.kod) b.kod = kodOner(b.ad, 'sube', skodlar);
-    if (b.kod.length < 2) { toast(b.ad + ': şube kodu en az 2 harf veya rakam olmalı.'); return; }
-    if (skodlar.indexOf(b.kod) > -1) { toast('Şube kodu tekrar ediyor: ' + b.kod); return; }
-    skodlar.push(b.kod);
-  }
-  for (const p of personel) {
-    if (!p.ad) { toast('Personel adı boş olamaz.'); return; }
-    if (!p.sube && subeler.length === 1) p.sube = subeler[0].kod;
-    if (!p.sube || skodlar.indexOf(p.sube) < 0) { toast(p.ad + ': şube seçin.'); return; }
-    if (!p.kod) p.kod = kodOner(p.ad, 'pers', personel.filter(q => q.sube === p.sube && q.kod).map(q => q.kod));
-    if (p.kod.length < 2) { toast(p.ad + ': personel kodu en az 2 harf veya rakam olmalı.'); return; }
-    if (personel.some(q => q !== p && q.sube === p.sube && q.kod === p.kod)) { toast(p.ad + ': bu şubede ' + p.kod + ' kodu tekrar ediyor.'); return; }
-  }
-  if (!lsSet(LS_SICIL, { subeler, personel })) { toast('Kaydedilemedi: tarayıcı hafızası dolu olabilir.'); return; }
-  if (!kullGecerli()) lsSet(LS_KULL, Object.assign(kullOku(), { sube: '', pers: '' }));
-  sicilCiz(); kimlikGuncelle(); toast('Şube ve personel kaydedildi.');
-});
-$('sicilSablon').addEventListener('click', () => {
-  if (!libXlsx()) { toast('Excel kütüphanesi yüklenemedi.'); return; }
-  const ws = XLSX.utils.aoa_to_sheet([['Şube Adı', 'Şube Kodu', 'Personel Adı', 'Personel Kodu'], ['İstanbul', 'IST', 'Ahmet Kaya', 'AK'], ['İstanbul', 'IST', 'Ayşe Demir', 'AD'], ['Ankara', 'ANK', 'Mehmet Yılmaz', 'MY']]);
-  ws['!cols'] = [20, 12, 24, 14].map(w => ({ wch: w }));
-  const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Personel'); XLSX.writeFile(wb, 'silmo_personel_sablonu.xlsx');
-});
-$('sicilDosya').addEventListener('change', async e => {
-  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
-  try {
-    const buf = await f.arrayBuffer(); let aoa;
-    if (/\.(csv|txt)$/i.test(f.name)) { let txt = new TextDecoder('utf-8').decode(buf); if (txt.indexOf('\ufffd') > -1) txt = new TextDecoder('windows-1254').decode(buf); aoa = parseCSV(txt.replace(/^\ufeff/, '')); }
-    else { if (!libXlsx()) { toast('Excel okuyucu yüklenemedi. CSV olarak kaydedip deneyin.'); return; } const wb = XLSX.read(buf, { type: 'array' }); aoa = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, raw: false, defval: '' }); }
-    const h = aoa.findIndex(r => r.some(x => /sube/.test(norm(x))));
-    if (h < 0) { toast('Başlık satırı bulunamadı. Şablondaki sütun adlarını kullanın.'); return; }
-    const hd = aoa[h].map(x => norm(x));
-    const ix = fn => hd.findIndex(fn);
-    const iSA = ix(x => /sube/.test(x) && /ad/.test(x)), iSK = ix(x => /sube/.test(x) && /kod/.test(x)), iPA = ix(x => /personel/.test(x) && /ad/.test(x)), iPK = ix(x => /personel/.test(x) && /kod/.test(x));
-    if (iSA < 0 || iPA < 0) { toast('Şube Adı ve Personel Adı sütunları gerekli.'); return; }
-    const subeler = [], personel = [], cell = (r, i) => (i < 0 || r[i] == null) ? '' : String(r[i]).trim();
-    aoa.slice(h + 1).forEach(r => {
-      const sa = cell(r, iSA), pa = cell(r, iPA); if (!sa || !pa) return;
-      let sb = subeler.find(b => norm(b.ad) === norm(sa));
-      if (!sb) { sb = { ad: sa, kod: foldUp(cell(r, iSK)).slice(0, 4) || kodOner(sa, 'sube', subeler.map(b => b.kod)) }; subeler.push(sb); }
-      personel.push({ ad: pa, kod: foldUp(cell(r, iPK)).slice(0, 4) || kodOner(pa, 'pers', personel.filter(q => q.sube === sb.kod).map(q => q.kod)), sube: sb.kod });
-    });
-    if (!personel.length) { toast('Dosyada personel satırı bulunamadı.'); return; }
-    sicilCiz({ subeler, personel }); toast(personel.length + ' personel okundu. Kontrol edip Kaydet\'e basın.');
-  } catch (err) { toast('Dosya okunamadı: ' + err.message); }
-});
 
 /* ============ Havuz adresi ============ */
 function havuzCiz() {
@@ -3136,8 +3042,8 @@ function senetYazdir(tur) {
 $('pvSenet').addEventListener('click', () => senetYazdir('odt'));
 $('pvSenetCb').addEventListener('click', () => senetYazdir('cb'));
 /* ============ Başlangıç ============ */
-renderCamps(); loadMusteri(); updateKayitBadge(); renderMusteriPanel(); yedekBarGuncelle(); alicilarCiz(); havuzCiz(); sicilCiz(); kullCiz(); havuzBarGuncelle(); kimlikGuncelle();
-setTimeout(girisBaslangic, 300);
+renderCamps(); loadMusteri(); updateKayitBadge(); renderMusteriPanel(); yedekBarGuncelle(); alicilarCiz(); havuzCiz(); havuzBarGuncelle(); kimlikGuncelle();
+girisBaslangic();
 setTimeout(() => { if (girisGorunur()) bekleyenHatirlat = true; else yedekHatirlat(); }, 700);
 })();
 </script>
