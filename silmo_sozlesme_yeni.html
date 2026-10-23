@@ -377,7 +377,7 @@
 
   .app { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
   #toast { bottom: calc(88px + env(safe-area-inset-bottom, 0px)); }
-  .tabs { position: fixed; left: 0; right: 0; bottom: 0; margin: 0; gap: 0; flex-wrap: nowrap; z-index: 40; background: var(--nav-bg); border-top: 1px solid var(--border); box-shadow: 0 -4px 14px rgba(20,33,43,0.08); padding: 0 0 env(safe-area-inset-bottom, 0px); }
+  .tabs { position: fixed; left: 0; right: 0; bottom: 0; margin: 0 auto; max-width: 760px; gap: 0; flex-wrap: nowrap; z-index: 40; background: var(--nav-bg); border-top: 1px solid var(--border); box-shadow: 0 -4px 14px rgba(20,33,43,0.08); padding: 0 0 env(safe-area-inset-bottom, 0px); }
   .tab-btn { flex: 1 1 0; min-width: 0; background: transparent; border-radius: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 8px 2px 7px; font-size: 10.5px; font-weight: 700; color: var(--nav-fg); position: relative; }
   .tab-btn.active { background: transparent; color: var(--accent); }
   .tab-btn.active::before { content: ""; position: absolute; top: 0; left: 50%; width: 34px; margin-left: -17px; height: 3px; border-radius: 0 0 4px 4px; background: var(--accent); }
@@ -393,10 +393,9 @@
   .camp-grid { grid-template-columns: 1fr; gap: 7px; }
   @media (min-width: 560px) { .camp-grid { grid-template-columns: repeat(2, 1fr); } }
   .camp { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 14px; position: relative; }
-  .camp .code { min-width: 46px; height: 34px; border-radius: 9px; background: var(--kc, var(--accent)); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; flex: none; }
+  .camp .code { min-width: 46px; height: 34px; border-radius: 9px; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; flex: none; }
   .camp .kt { flex: 1; min-width: 0; }
   .camp .nm { font-size: 0.85rem; font-weight: 700; margin: 0; }
-  .camp .kcip { font-style: normal; font-size: 10px; font-weight: 800; border-radius: 10px; padding: 3px 8px; border: 1px solid var(--kc, var(--accent)); color: var(--kc, var(--accent)); flex: none; }
   .camp.sel { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(31,78,120,0.16); }
   .camp .kok { position: absolute; right: -5px; top: -7px; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); border: 2px solid var(--card-bg); display: flex; align-items: center; justify-content: center; }
   .camp .kok svg { width: 13px; height: 13px; stroke: #fff; stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
@@ -422,14 +421,15 @@
   #btnPaket { background: linear-gradient(135deg, #1B8A4B, #16703D); min-height: 50px; border-radius: 14px; box-shadow: 0 6px 16px rgba(27,138,75,0.4); }
   #kDiger .btn, #kYon .field { margin-top: 8px; }
 
-  #girisModal { background: var(--bg); }
-  .giris-logo { background: transparent; box-shadow: none; border-radius: 0; padding: 0; width: 206px; max-width: 70%; margin: 0 auto 30px; display: block; }
-  #girisBox h1 { margin: 0 0 2px; font-size: 1.3rem; letter-spacing: 0.5px; }
-  .giris-alt::after { content: ""; display: block; width: 46px; height: 3px; background: #1A86A8; border-radius: 3px; margin: 12px auto 0; }
-  .giris-yonerge { margin: 16px 0 9px; text-align: left; font-size: 0.9rem; }
+  #girisModal { background: var(--bg); align-items: flex-start; padding: 14px 20px; }
+  #girisBox { margin-top: auto; margin-bottom: auto; }
+  .giris-logo { background: transparent; box-shadow: none; border-radius: 0; padding: 0; width: 176px; max-width: 70%; margin: 0 auto 18px; display: block; }
+  #girisBox h1 { margin: 0 0 2px; font-size: 1.2rem; letter-spacing: 0.5px; }
+  .giris-alt::after { content: ""; display: block; width: 46px; height: 3px; background: #1A86A8; border-radius: 3px; margin: 9px auto 0; }
+  .giris-yonerge { margin: 12px 0 7px; text-align: left; font-size: 0.9rem; }
   #gSube { display: none; }
-  .sube-izgara { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .sube-k { border: 1.5px solid var(--border); background: var(--card-bg); color: var(--text); border-radius: 13px; padding: 8px 4px 7px; text-align: center; cursor: pointer; font-family: inherit; }
+  .sube-izgara { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .sube-k { border: 1.5px solid var(--border); background: var(--card-bg); color: var(--text); border-radius: 13px; padding: 6px 4px 5px; text-align: center; cursor: pointer; font-family: inherit; }
   .sube-k b { display: block; font-size: 0.8rem; }
   .sube-k span { font-size: 0.62rem; letter-spacing: 0.12em; font-weight: 700; color: var(--text-muted); }
   .sube-k.sec { background: var(--accent); border-color: var(--accent); color: #fff; }
@@ -440,11 +440,32 @@
   .sube-k.yon.sec b { color: #fff; }
   .sube-k svg { width: 17px; height: 17px; stroke: var(--accent); fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
   .sube-k.yon.sec svg { stroke: #fff; }
-  .giris-isim { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
+  .giris-isim { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
   .giris-isim .field { text-align: center; }
   .giris-isim .field label { text-align: center; font-size: 0.62rem; letter-spacing: 0.04em; }
-  #gAd, #gSoyad { width: 88px; margin: 0 auto; display: block; text-align: center; height: 42px; padding: 0; font-size: 1.15rem; font-weight: 800; letter-spacing: 0.28em; text-indent: 0.28em; color: var(--accent); }
-  #gDevam { min-height: 52px; font-size: 1rem; border-radius: 14px; }
+  #gAd, #gSoyad { width: 88px; margin: 0 auto; display: block; text-align: center; height: 38px; padding: 0; font-size: 1.15rem; font-weight: 800; letter-spacing: 0.28em; text-indent: 0.28em; color: var(--accent); }
+  #gDevam { min-height: 50px; font-size: 1rem; border-radius: 14px; }
+  @media (max-height: 700px) {
+    .giris-logo { width: 140px; margin-bottom: 10px; }
+    #girisBox h1 { font-size: 1.1rem; }
+    .giris-alt::after { margin-top: 6px; }
+    .giris-yonerge { margin: 8px 0 5px; }
+    .sube-k { padding: 4px 4px 3px; }
+    .giris-isim { margin-top: 8px; }
+    #girisBox .pv-bar { margin-top: 8px; }
+  }
+
+  .uyarilar { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 8px; }
+  .uyarilar:empty { display: none; }
+  .uyarilar .yedekbar { flex: 1 1 auto; margin: 0; padding: 4px 6px 4px 12px; border-radius: 20px; font-size: 0.72rem; line-height: 1.25; }
+  .uyarilar .yedekbar .btn { padding: 4px 10px; font-size: 0.72rem; border-radius: 14px; }
+  .duz-banner { padding: 6px 6px 6px 12px; border-radius: 20px; font-size: 0.78rem; margin-bottom: 8px; }
+  .duz-banner .btn { padding: 4px 12px; font-size: 0.75rem; border-radius: 14px; }
+  .ksum-not { margin-top: 6px; font-size: 0.72rem; color: var(--text-muted); }
+  .ksum-not summary { cursor: pointer; font-weight: 700; color: var(--accent); }
+  @media (min-width: 761px) {
+    .tabs { border-left: 1px solid var(--border); border-right: 1px solid var(--border); border-radius: 16px 16px 0 0; }
+  }
 }
 
 </style>
@@ -466,8 +487,10 @@
     <button class="tab-btn" data-tab="musteri">Müşteri Listesi</button>
     <button class="tab-btn" data-tab="ayar">Ayarlar</button>
   </div>
+  <div class="uyarilar">
   <div class="yedekbar" id="yedekBar"><span id="yedekMetin"></span><button type="button" class="btn secondary" id="yedekGit">Yedek Al</button></div>
   <div class="yedekbar uyari" id="havuzBar" style="display:none"><span id="havuzMetin"></span><button type="button" class="btn secondary" id="havuzGit">Göster</button></div>
+  </div>
 
   <!-- ===== YENİ SÖZLEŞME ===== -->
   <div class="panel active" id="panel-yeni">
@@ -1489,8 +1512,8 @@ document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', (
 
 /* ============ 1. Kampanya seçimi ============ */
 function renderCamps() {
-  $('campGrid').innerHTML = CAMPS.map(c => { const t = CAMP_TUR[c.id] || ['', '#1F4E78'], sec = S.campId === c.id;
-    return `<button type="button" class="camp${sec ? ' sel' : ''}" data-id="${c.id}" style="--kc:${t[1]}"><div class="code">${c.code}</div><div class="kt"><div class="nm">${esc(c.name)}</div></div>${t[0] ? `<em class="kcip">${t[0]}</em>` : ''}${sec ? `<span class="kok">${OK_SVG}</span>` : ''}</button>`; }).join('');
+  $('campGrid').innerHTML = CAMPS.map(c => { const sec = S.campId === c.id;
+    return `<button type="button" class="camp${sec ? ' sel' : ''}" data-id="${c.id}"><div class="code">${c.code}</div><div class="kt"><div class="nm">${esc(c.name)}</div></div>${sec ? `<span class="kok">${OK_SVG}</span>` : ''}</button>`; }).join('');
 }
 $('campGrid').addEventListener('click', e => {
   const b = e.target.closest('.camp'); if (!b) return;
@@ -2566,7 +2589,7 @@ function renderKayit() {
   const cbLine = cbs.length ? '<div class="rowk"><span>Cihaz bedeli tahsilatı · ' + cbs.length + ' adet</span><span>' + money(cbs.reduce((a, v) => a + v, 0)) + '</span></div>' : '';
   $('kSummary').innerHTML = all.length
     ? '<div class="ksum"><div class="rowk tot"><span><b>' + all.length + '</b> sözleşme</span><b>' + money(total) + '</b></div>' + per.join('') + cbLine +
-      '<div class="muted" style="margin-top:6px">Tutarlar: aylık anlaşmalarda aylık × ay, makinelerde ödeme planı toplamı, stok camda KDV dahil ödeme. Farklı türler birlikte toplanmıştır. Cihaz bedeli ayrı gösterilir, toplama katılmaz.</div></div>' : '';
+      '<details class="ksum-not"><summary>Tutarlar nasıl hesaplanır?</summary>Aylık anlaşmalarda aylık × ay, makinelerde ödeme planı toplamı, stok camda KDV dahil ödeme. Farklı türler birlikte toplanmıştır. Cihaz bedeli ayrı gösterilir, toplama katılmaz.</details></div>' : '';
   $('kayitList').innerHTML = all.length ? all.map(x => {
     const k = kayitInfo(x);
     let bd = '';
@@ -2723,11 +2746,11 @@ function sonYedekMetni(son) {
 }
 function yedekBarGuncelle() {
   const b = $('yedekBar'); if (!b) return; const s = yedekDurum(); let t, uyari = false;
-  if (!s.n) t = 'Kayıtlar yalnızca bu cihazda saklanır. Her akşam mutlaka yedek alın.';
-  else if (!s.son) { t = 'Hiç yedek alınmadı (' + s.n + ' kayıt var). Kayıtlar yalnızca bu cihazda saklanır, her akşam mutlaka yedek alın.'; uyari = true; }
-  else if (s.yeni) { t = s.yeni + ' kayıt yedeklenmedi (son yedek: ' + sonYedekMetni(s.son) + '). Her akşam mutlaka yedek alın.'; uyari = true; }
-  else t = 'Tüm kayıtlar yedekte (son yedek: ' + sonYedekMetni(s.son) + '). Her akşam mutlaka yedek alın.';
-  $('yedekMetin').textContent = t; b.classList.toggle('uyari', uyari);
+  if (!s.n) t = 'Kayıtlar yalnızca bu cihazda saklanır.';
+  else if (!s.son) { t = 'Hiç yedek alınmadı (' + s.n + ' kayıt var).'; uyari = true; }
+  else if (s.yeni) { t = s.yeni + ' kayıt yedeklenmedi (son yedek: ' + sonYedekMetni(s.son) + ').'; uyari = true; }
+  else t = 'Tüm kayıtlar yedekte (son yedek: ' + sonYedekMetni(s.son) + ').';
+  $('yedekMetin').textContent = t; b.classList.toggle('uyari', uyari); b.style.display = s.n ? '' : 'none';
 }
 function yedekIsaretle() { const y = lsGet(LS_YEDEK, {}); lsSet(LS_YEDEK, { son: Date.now(), hat: y.hat || '' }); yedekBarGuncelle(); }
 function dosyaIndir(blob, ad) {
@@ -3182,7 +3205,7 @@ function havuzBarGuncelle() {
   const b = $('havuzBar'); if (!b) return;
   const n = lsGet(LS_KAYIT, []).filter(x => !havuzaGitti(x)).length;
   b.style.display = n ? '' : 'none';
-  if (n) $('havuzMetin').textContent = n + ' sözleşme merkeze gönderilmedi. Gün sonunda "Merkeze Gönder"e basın.';
+  if (n) $('havuzMetin').textContent = n + ' sözleşme merkeze gönderilmedi.';
 }
 $('havuzGit').addEventListener('click', () => paketGonder());
 $('k_havuz').addEventListener('change', renderKayit); $('k_duz').addEventListener('change', renderKayit);
@@ -3453,7 +3476,6 @@ document.querySelectorAll('.tab-btn').forEach(b => {
   const t = b.dataset.tab; b.setAttribute('aria-label', b.textContent.trim());
   b.innerHTML = (NAV_IKON[t] || '') + '<span>' + (NAV_AD[t] || b.textContent) + '</span>' + (t === 'kayit' ? '<i id="kayitRozet"></i>' : '');
 });
-const CAMP_TUR = { 1: ['İskonto', '#1F4E78'], 2: ['Hediye', '#1B8A4B'], 3: ['Hediye', '#1B8A4B'], 4: ['Cihaz', '#6C4AB6'], 5: ['Puan', '#D98E04'], 6: ['Çek', '#C2185B'], 7: ['Ön ödeme', '#00838F'], 8: ['Fiyat farkı', '#546E7A'], 9: ['Stok cam', '#8D6E63'], 10: ['Makine', '#283593'], 11: ['Makine', '#283593'], 12: ['Makine', '#283593'], 13: ['Makine', '#283593'], 14: ['Makine', '#283593'], 15: ['Fokometre', '#00695C'] };
 const OK_SVG = '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
 
 /* ============ Başlangıç ============ */
