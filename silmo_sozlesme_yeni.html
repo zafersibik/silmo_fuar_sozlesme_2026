@@ -189,6 +189,10 @@
   .gercek-kutu span { font-weight: 700; }
   .gercek-kutu small { font-size: 0.7rem; opacity: 0.8; }
   @media (prefers-color-scheme: dark) { .gercek-kutu { background: #4a3406; color: #ffe2a8; border-color: #d98e04; } }
+  .diger summary { cursor: pointer; padding: 10px 2px; font-weight: 700; color: var(--accent); }
+  .diger .pv-bar { margin-top: 8px; }
+  #senetBar { flex-wrap: wrap; }
+  #senetBar .btn { flex: 1 1 45%; }
   .sadece-yonetici { display: none; }
   body.yonetici .sadece-yonetici { display: block; }
   .hdblock { border: 1.5px solid var(--accent); border-radius: 10px; padding: 10px 12px; margin: 10px 0; }
@@ -430,31 +434,26 @@
     <div class="card">
       <div class="pv-bar">
         <button class="btn secondary" id="pvBack">Geri Dön</button>
-        <button class="btn secondary" id="pvSave">Sadece Kaydet</button>
       </div>
       <div class="pv-bar">
         <button class="btn" id="pvSavePrint">Kaydet ve Yazdır (Asıl + Suret)</button>
       </div>
       <div class="pv-bar">
-        <button class="btn secondary" id="pvPrint2">Yazdır (Asıl + Suret)</button>
-        <button class="btn secondary" id="pvPrint1">Tek Nüsha Yazdır</button>
-      </div>
-      <div class="pv-bar">
-        <button class="btn" id="pvSavePdf">Kaydet ve PDF İndir (Asıl + Suret)</button>
-      </div>
-      <div class="pv-bar">
-        <button class="btn secondary" id="pvPdf2">PDF İndir (Asıl + Suret)</button>
-        <button class="btn secondary" id="pvPdf1">PDF İndir (Tek Nüsha)</button>
-      </div>
-      <div class="pv-bar">
-        <button class="btn" id="pvGonder2">PDF Gönder (Asıl + Suret)</button>
-        <button class="btn" id="pvGonder">PDF Gönder (Tek Nüsha)</button>
+        <button class="btn" id="pvGonder2">Kaydet ve Gönder</button>
       </div>
       <div class="pv-bar" id="senetBar" style="display:none">
         <button class="btn secondary" id="pvSenet">Senetleri Yazdır</button>
-        <button class="btn secondary" id="pvSenetCb">Cihaz Bedeli Senetleri</button>
+        <button class="btn secondary" id="pvSenetG">Senetleri Gönder</button>
+        <button class="btn secondary" id="pvSenetCb">Cihaz Bedeli Senetlerini Yazdır</button>
+        <button class="btn secondary" id="pvSenetCbG">Cihaz Bedeli Senetlerini Gönder</button>
       </div>
-      <div class="muted">"PDF İndir" düğmeleri telefonda ve bilgisayarda aynı A4 çıktıyı verir (internet gerekmez, PDF'teki yazılar seçilemez). "Yazdır" düğmeleri tarayıcının yazdırma ekranını açar.</div>
+      <details class="diger" id="pvDiger">
+        <summary>Diğer seçenekler</summary>
+        <div class="pv-bar"><button class="btn secondary" id="pvSave">Yalnızca Kaydet</button></div>
+        <div class="pv-bar"><button class="btn secondary" id="pvPrint1">Tek Nüsha Yazdır</button></div>
+        <div class="pv-bar"><button class="btn secondary" id="pvPdf1">PDF İndir</button></div>
+      </details>
+      <div class="muted">"Gönder" PDF'i hazırlar ve telefonun paylaşma menüsünü açar (WhatsApp, e-posta…). "Yazdır" tarayıcının yazdırma ekranını açar. "PDF İndir" PDF'i cihaza kaydeder.</div>
     </div>
     <div class="pv-wrap" id="pvWrap"><div id="previewScale"></div></div>
   </div>
@@ -466,15 +465,17 @@
       <div class="field">
         <input type="text" id="k_q" placeholder="Ünvan, cari kodu, sözleşme no veya kampanya ara">
       </div>
-      <label style="display:flex;gap:8px;align-items:center;font-size:0.82rem;margin-bottom:8px"><input type="checkbox" id="k_havuz"> Yalnızca havuza gönderilmeyenler</label>
+      <label style="display:flex;gap:8px;align-items:center;font-size:0.82rem;margin-bottom:8px"><input type="checkbox" id="k_havuz"> Yalnızca merkeze gönderilmeyenler</label>
       <div id="kSummary"></div>
       <div id="kayitList"></div>
       <button class="btn secondary full" id="btnExcel" style="margin-top:10px">Excel'e Aktar</button>
       <button class="btn secondary full" id="btnExcelHavuz" style="margin-top:8px">Excel'i Havuza Gönder</button>
+      <button class="btn full" id="btnPaket" style="margin-top:8px">Günü Bitir: Gönderilmeyenleri Merkeze Gönder (Veri Paketi)</button>
       <p class="muted">Kayıtlar yalnızca bu cihazın tarayıcı hafızasında tutulur. Excel bir rapordur, geri yüklenemez; gerçek yedek için aşağıdaki "Yedek İndir"i kullanın.</p>
       <h2 style="margin-top:18px">Yedek</h2>
       <button class="btn full" id="btnYedek">Yedek İndir</button>
       <div class="sadece-yonetici">
+      <div class="field" style="margin-top:12px"><label>Kayıt paketi yükle (şubelerden gelen gün sonu paketleri)</label><input type="file" id="paketDosya" accept=".json,application/json" multiple></div>
       <div class="field" style="margin-top:12px"><label>Yedekten geri yükle</label><input type="file" id="yedekDosya" accept=".json,application/json"></div>
       <label style="display:flex;gap:8px;align-items:center;font-size:0.82rem;margin-top:8px"><input type="checkbox" id="yedekDegistir"> Mevcut kayıtları silip yalnızca yedekteki kayıtları koy</label>
       <div class="field" style="margin-top:12px"><label>PDF'lerden kayıt yükle (PDF Gönder ile üretilenler; birden fazla seçilebilir)</label><input type="file" id="pdfKayitDosya" accept=".pdf,application/pdf" multiple></div>
@@ -2271,15 +2272,15 @@ function layoutModel(m, ph) {
 const pageHtml = (blks, i, N, tag) => `<div class="page"><div class="pg-body">${blks.join('')}</div><div class="pg-foot"><span>Sayfa ${i + 1} / ${N}</span><span>${tag}</span></div></div>`;
 
 /* ============ Önizleme, kaydet, yazdır ============ */
+let pvY = 0; /* önizlemeye gitmeden önceki kaydırma konumu */
 function showPreview(m, from, saved) {
+  if (!$('panel-onizleme').classList.contains('active')) pvY = window.scrollY;
   curModel = m; prevPanel = from; fromSaved = saved;
   document.title = pdfName(m);
   if (!saved) curSig = sig();
   curLayout = layoutModel(m);
   $('previewScale').innerHTML = curLayout.pages.map((p, i) => pageHtml(p, i, curLayout.N, '')).join('');
-  $('pvSave').style.display = saved ? 'none' : '';
-  $('pvSavePrint').style.display = saved ? 'none' : '';
-  $('pvSavePdf').style.display = saved ? 'none' : '';
+  pvEtiket(!!saved);
   senetGoster(m);
   document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-onizleme'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -2294,7 +2295,12 @@ function fitPreview() {
   wrap.style.height = (sc.offsetHeight * s + 20) + 'px';
 }
 window.addEventListener('resize', fitPreview);
-$('pvBack').addEventListener('click', () => showPanel(prevPanel));
+$('pvBack').addEventListener('click', () => { showPanel(prevPanel); const y = pvY; requestAnimationFrame(() => window.scrollTo(0, y)); });
+function pvEtiket(k) {
+  $('pvSave').style.display = k ? 'none' : '';
+  $('pvSavePrint').textContent = k ? 'Yazdır (Asıl + Suret)' : 'Kaydet ve Yazdır (Asıl + Suret)';
+  $('pvGonder2').textContent = k ? 'Gönder' : 'Kaydet ve Gönder';
+}
 function saveModel() {
   if (!curModel) return false;
   const prevK = lsGet(LS_KAYIT, []).find(x => x.id === curModel.id);
@@ -2307,13 +2313,14 @@ function saveModel() {
   const i = all.findIndex(x => x.id === curModel.id);
   if (i > -1) all[i] = curModel; else all.push(curModel);
   if (!lsSet(LS_KAYIT, all)) return false;
-  S.savedId = curModel.id; S.savedSig = curSig; updateKayitBadge();
+  S.savedId = curModel.id; S.savedSig = curSig; updateKayitBadge(); pvEtiket(true);
   return true;
 }
 $('pvSave').addEventListener('click', () => {
   if (saveModel()) toast('Sözleşme kaydedildi.'); else if (!kimlikRed) toast('Kaydedilemedi: tarayıcı hafızası dolu olabilir.');
 });
 $('pvSavePrint').addEventListener('click', () => {
+  if (fromSaved) { yazdir(2); return; }
   if (saveModel()) { toast('Sözleşme kaydedildi.'); yazdir(2); }
   else if (!kimlikRed && confirm('Sözleşme kaydedilemedi (tarayıcı hafızası dolu olabilir). Yine de yazdırılsın mı?')) yazdir(2);
 });
@@ -2340,25 +2347,31 @@ async function pdfLibs() {
 }
 async function uretPdf(m, copies, onProgress, opts) {
   await pdfLibs();
-  const lay = layoutModel(m, PDF_PAGE_H);
+  const lay = layoutModel(m, PDF_PAGE_H), hafif = !!(opts && opts.hafif), olcek = hafif ? 1.5 : 2, kalite = hafif ? 0.8 : 0.92;
   const tags = copies === 2 ? ['ASIL', 'SURET'] : [''];
-  const jobs = []; tags.forEach(t => lay.pages.forEach((p, i) => jobs.push(pageHtml(p, i, lay.N, t))));
+  const jobs = lay.pages.map((p, i) => pageHtml(p, i, lay.N, '')); /* her sayfa bir kez çizilir; Asıl ve Suret'te aynı görüntü kullanılır, etiket PDF'e yazı olarak eklenir (dosya boyutu tek nüsha kadar kalır) */
   const pdf = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait', compress: true });
   pdf.setProperties({ title: pdfName(m), subject: 'SILMO İstanbul 2026 Sözleşmesi' + (m.no ? ' – ' + m.no : ''), creator: 'SILMO İSTANBUL 2026 Fuar Uygulaması', keywords: (opts && opts.embed) ? 'SLM26DATA:' + kayitKodla(m) : (m.no || '') });
   let stage = $('pdfStage');
   if (!stage) { stage = document.createElement('div'); stage.id = 'pdfStage'; document.body.appendChild(stage); }
+  const imgs = [];
   try {
     for (let i = 0; i < jobs.length; i++) {
       onProgress(i + 1, jobs.length);
       stage.innerHTML = jobs[i];
       await new Promise(r => setTimeout(r, 30)); /* ekranın güncellenmesine izin ver */
-      const canvas = await window.html2canvas(stage.firstElementChild, { scale: 2, backgroundColor: '#ffffff', useCORS: true, logging: false, windowWidth: 1000 });
-      if (i > 0) pdf.addPage('a4', 'portrait');
-      pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
+      const canvas = await window.html2canvas(stage.firstElementChild, { scale: olcek, backgroundColor: '#ffffff', useCORS: true, logging: false, windowWidth: 1000 });
+      imgs.push(canvas.toDataURL('image/jpeg', kalite));
       canvas.width = canvas.height = 0;
     }
   } finally { stage.innerHTML = ''; }
-  return { blob: pdf.output('blob'), pages: jobs.length };
+  let sayfa = 0;
+  tags.forEach(t => imgs.forEach((d, i) => {
+    if (sayfa > 0) pdf.addPage('a4', 'portrait'); sayfa++;
+    pdf.addImage(d, 'JPEG', 0, 0, 210, 297, 'sf' + i, 'FAST');
+    if (t) { pdf.setFont('helvetica', 'normal'); pdf.setFontSize(7.5); pdf.setTextColor(85, 85, 85); pdf.text(t, 192, 288.3, { align: 'right' }); }
+  }));
+  return { blob: pdf.output('blob'), pages: sayfa };
 }
 async function pdfIndir(copies, kaydet) {
   if (pdfBusy || !curModel) return;
@@ -2367,7 +2380,7 @@ async function pdfIndir(copies, kaydet) {
     else if (kimlikRed || !confirm('Sözleşme kaydedilemedi (tarayıcı hafızası dolu olabilir). Yine de PDF oluşturulsun mu?')) return;
   }
   pdfBusy = true;
-  const btns = ['pvSavePdf', 'pvPdf2', 'pvPdf1', 'pvGonder', 'pvGonder2'].map($); const old = btns.map(b => b.textContent);
+  const btns = ['pvSavePrint', 'pvPdf1', 'pvGonder2'].map($); const old = btns.map(b => b.textContent);
   btns.forEach(b => { b.disabled = true; });
   const lbl = (i, n) => btns.forEach(b => { b.textContent = 'PDF hazırlanıyor… ' + i + ' / ' + n; });
   const name = pdfName(curModel) + '.pdf';
@@ -2385,10 +2398,7 @@ async function pdfIndir(copies, kaydet) {
     toast(e && (e.message === 'lib' || e.message === 'script') ? 'PDF oluşturulamadı: internet bağlantısını kontrol edin.' : 'PDF oluşturulamadı: ' + (e && e.message ? e.message : 'bilinmeyen hata'));
   } finally { btns.forEach((b, i) => { b.disabled = false; b.textContent = old[i]; }); pdfBusy = false; }
 }
-$('pvSavePdf').addEventListener('click', () => pdfIndir(2, true));
-$('pvPdf2').addEventListener('click', () => pdfIndir(2, false));
-$('pvPdf1').addEventListener('click', () => pdfIndir(1, false));
-$('pvPrint2').addEventListener('click', () => yazdir(2));
+$('pvPdf1').addEventListener('click', () => pdfIndir(1, !fromSaved));
 $('pvPrint1').addEventListener('click', () => yazdir(1));
 
 /* ============ Kayıtlar ============ */
@@ -2450,7 +2460,7 @@ function renderKayit() {
     if (k.ekIskonto != null && k.ekIskonto !== 0) bd += '<span class="badge">ek iskonto ' + (k.ekIskonto > 0 ? '+' : '−') + numTr(Math.abs(k.ekIskonto)) + '</span>';
     if (k.farklar.length) bd += '<span class="badge">tablo dışı</span>'; else if (x.custom) bd += '<span class="badge">özelleştirilmiş</span>';
     if (x.odtDuzenlendi || x.cbDuzenlendi) bd += '<span class="badge">ödeme planı düzenlendi</span>';
-    bd += havuzRozet(x);
+    bd += kaynakRozet(x) + havuzRozet(x);
     return `<div class="list-row"><div class="info"><b>${x.no ? esc(x.no) + ' · ' : ''}${esc(x.unvan)}</b><small>${fmtDateDot(x.tarih)} · ${esc(x.campName)}${x.ozet ? ' · ' + esc(x.ozet) : ''}${bd}</small>` +
       (k.aciklama ? `<small style="display:block">Not: ${esc(k.aciklama)}</small>` : '') + `</div>` +
       `<div class="acts"><button class="btn secondary" data-open="${x.id}">Aç</button><button class="btn secondary" data-gonder="${x.id}">Gönder</button><button class="btn danger" data-del="${x.id}">Sil</button></div></div>`;
@@ -2459,7 +2469,7 @@ function renderKayit() {
 $('k_q').addEventListener('input', renderKayit);
 $('kayitList').addEventListener('click', e => {
   const o = e.target.closest('[data-open]'), d = e.target.closest('[data-del]'), gd = e.target.closest('[data-gonder]');
-  if (gd) { const m = lsGet(LS_KAYIT, []).find(x => x.id === gd.dataset.gonder); if (m) { showPreview(m, 'kayit', true); pdfGonder(1, true); } }
+  if (gd) { const m = lsGet(LS_KAYIT, []).find(x => x.id === gd.dataset.gonder); if (m) { showPreview(m, 'kayit', true); pdfGonder(2, true); } }
   if (o) { const m = lsGet(LS_KAYIT, []).find(x => x.id === o.dataset.open); if (m) showPreview(m, 'kayit', true); }
   if (d && confirm('Bu sözleşme kaydı silinsin mi?')) {
     lsSet(LS_KAYIT, lsGet(LS_KAYIT, []).filter(x => x.id !== d.dataset.del));
@@ -2586,8 +2596,8 @@ const pad2 = n => String(n).padStart(2, '0');
 const gunStr = d => d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
 function yedekDurum() {
   const k = lsGet(LS_KAYIT, []), y = lsGet(LS_YEDEK, {}), son = typeof y.son === 'number' ? y.son : 0;
-  const yeniler = k.filter(x => (x.ts || 0) > son);
-  return { n: k.length, yeni: yeniler.length, eskiYeni: yeniler.filter(x => x.ts < Date.now() - 30 * 60 * 1000).length, son, hat: y.hat || '' };
+  const yeniler = k.filter(x => (x.yuklemeTs || x.ts || 0) > son);
+  return { n: k.length, yeni: yeniler.length, eskiYeni: yeniler.filter(x => (x.yuklemeTs || x.ts) < Date.now() - 30 * 60 * 1000).length, son, hat: y.hat || '' };
 }
 function sonYedekMetni(son) {
   if (!son) return 'hiç yedek alınmadı';
@@ -2702,11 +2712,13 @@ $('aliciKaydet').addEventListener('click', () => {
   alicilarCiz(); toast('Alıcılar kaydedildi.');
 });
 
-/* ============ PDF Gönder (havuz, paylaş, e-posta, WhatsApp) ============ */
-function gonderMetni(m) {
+/* ============ Gönder (paylaş, e-posta, WhatsApp) ve gün sonu veri paketi ============ */
+function gonderMetni(m, ek) {
   const k = kayitInfo(m), tarih = fmtDateDot(m.tarih), no = m.no || '';
-  const konu = (no ? '[' + no + '] ' : '') + 'Sözleşme – ' + m.unvan + ' – ' + (KISA[m.campId] || m.campName) + ' – ' + tarih;
-  const s = ['Merhaba,', '', 'Ekte SILMO İstanbul 2026 sözleşmesi bulunmaktadır.', ''];
+  const baslik = ek === 'senet' ? 'Senetler' : 'Sözleşme';
+  const konu = (no ? '[' + no + '] ' : '') + baslik + ' – ' + m.unvan + ' – ' + (KISA[m.campId] || m.campName) + ' – ' + tarih;
+  const ilk = ek === 'senet' ? 'Ekte SILMO İstanbul 2026 sözleşmesine ait senetler bulunmaktadır.' : (ek === 'ikisi' ? 'Ekte SILMO İstanbul 2026 sözleşmesi ve senetleri bulunmaktadır.' : 'Ekte SILMO İstanbul 2026 sözleşmesi bulunmaktadır.');
+  const s = ['Merhaba,', '', ilk, ''];
   if (no) s.push('Sözleşme No: ' + no);
   s.push('Ünvan: ' + m.unvan);
   if (String(m.kod || '').trim()) s.push('Cari Kod: ' + m.kod);
@@ -2715,70 +2727,135 @@ function gonderMetni(m) {
   if (m.sube || m.pers) s.push('Şube / Personel: ' + [m.sube, m.pers].filter(Boolean).join(' / '));
   return { konu, govde: s.join('\n') };
 }
-/* Havuza gönderim durumu: kayıtta { ts, kime, yol } saklanır; havuz adresi değişirse eski kayıtlar "yeni havuza gönderilmedi" olur */
+/* Merkeze (havuza) gönderim durumu: kayıtta { ts, kime, yol } saklanır; gün sonu veri paketi gönderilince işaretlenir.
+   Merkezde PDF'ten ya da paketten yüklenen kayıtlar (kaynak) gönderilmesi gereken kayıt sayılmaz. */
 const havuzAdres = () => String(ayarOku().havuz.adres || '').trim().toLowerCase();
-function havuzaGitti(x) { const g = x.gonder; return !!(g && g.ts && String(g.kime || '').toLowerCase() === havuzAdres()); }
-function gonderIsaretle(id, yol) {
-  const all = lsGet(LS_KAYIT, []), i = all.findIndex(x => x.id === id); if (i < 0) return;
-  all[i].gonder = { ts: Date.now(), kime: ayarOku().havuz.adres || '', yol };
-  lsSet(LS_KAYIT, all); if (curModel && curModel.id === id) curModel.gonder = all[i].gonder;
-  havuzBarGuncelle(); renderKayit(); toast('Havuza gönderildi olarak işaretlendi.');
+function havuzaGitti(x) { if (x.kaynak) return true; const g = x.gonder; return !!(g && g.ts && String(g.kime || '').toLowerCase() === havuzAdres()); }
+function gonderIsaretle(ids, yol) {
+  const all = lsGet(LS_KAYIT, []), kime = ayarOku().havuz.adres || ''; let n = 0;
+  all.forEach(x => { if (ids.indexOf(x.id) > -1) { x.gonder = { ts: Date.now(), kime, yol }; n++; if (curModel && curModel.id === x.id) curModel.gonder = x.gonder; } });
+  if (!n) return; lsSet(LS_KAYIT, all);
+  havuzBarGuncelle(); renderKayit(); toast(n + ' kayıt merkeze gönderildi olarak işaretlendi.');
 }
 function gonderModal(c) {
-  const A = ayarOku().alicilar, hv = ayarOku().havuz, mb = (c.blob.size / 1048576).toFixed(1).replace('.', ',');
-  const canShare = !!(navigator.canShare && navigator.share && navigator.canShare({ files: [c.file] }));
-  const tur = c.excel ? 'Excel' : 'PDF';
-  let h = '<h3>' + tur + ' hazır</h3><p>' + esc(c.name) + ' (' + (c.sayfa ? c.sayfa + ' sayfa, ' : '') + mb + ' MB)</p><div class="gbtns">';
-  if (canShare) h += '<button type="button" class="btn" data-g="paylas">Paylaş (telefon menüsü)</button>';
-  if (hv.adres) h += '<button type="button" class="btn" data-g="havuz">Havuza E-posta: ' + esc(hv.adres) + '</button>';
-  h += '<button type="button" class="btn secondary" data-g="indir">' + tur + '\'i İndir</button>';
+  const A = ayarOku().alicilar, hv = ayarOku().havuz, files = c.dosyalar.map(d => d.file);
+  const canShare = !!(navigator.canShare && navigator.share && navigator.canShare({ files }));
+  const mb = b => (b.size / 1048576).toFixed(1).replace('.', ',');
+  const coklu = c.dosyalar.length > 1;
+  let h = '<h3>' + esc(c.baslik || 'Dosya hazır') + '</h3>' + c.dosyalar.map(d => '<p style="margin:2px 0">' + esc(d.name) + ' (' + (d.sayfa ? d.sayfa + ' sayfa, ' : '') + mb(d.blob) + ' MB)</p>').join('') + '<div class="gbtns" style="margin-top:10px">';
+  if (canShare) h += '<button type="button" class="btn" data-g="paylas">Gönder (WhatsApp, e-posta… telefon menüsü)</button>';
+  if (c.havuz && hv.adres) h += '<button type="button" class="btn' + (canShare ? ' secondary' : '') + '" data-g="havuz">Havuza E-posta: ' + esc(hv.adres) + '</button>';
+  h += '<button type="button" class="btn secondary" data-g="indir">' + (coklu ? 'Dosyaları İndir' : 'İndir') + '</button>';
+  if (!canShare) h += '<button type="button" class="btn secondary" data-g="wamesaj">WhatsApp mesajı (dosya elle eklenir)</button>';
   A.forEach((a, i) => {
     if (a.eposta) h += '<button type="button" class="btn secondary" data-g="mail" data-i="' + i + '">E-posta: ' + esc(a.ad) + '</button>';
     if (waNo(a.tel)) h += '<button type="button" class="btn secondary" data-g="wa" data-i="' + i + '">WhatsApp: ' + esc(a.ad) + '</button>';
   });
-  if (c.id && hv.adres) h += '<button type="button" class="btn secondary" data-g="isaret">Havuza gönderildi olarak işaretle</button>';
+  if (c.ids && c.ids.length) h += '<button type="button" class="btn secondary" data-g="isaret">Merkeze gönderildi olarak işaretle</button>';
   h += '</div>';
-  h += (A.length || hv.adres) ? '<p class="muted" style="margin:10px 0 0">E-posta ve WhatsApp açılınca dosya kendiliğinden eklenmez: önce "' + tur + '\'i İndir"e basın, sonra mesaja ekleyin. "Paylaş" menüsünde dosya otomatik eklenir, alıcıyı siz seçersiniz. E-posta ile gönderdiyseniz "Havuza gönderildi olarak işaretle"ye basın.</p>'
-    : '<p class="muted" style="margin:10px 0 0">Havuz adresi ve alıcı tanımlı değil. Ayarlar sekmesinden ekleyebilirsiniz.</p>';
+  h += '<p class="muted" style="margin:10px 0 0">' + (canShare ? '"Gönder"e basınca telefonun paylaşma menüsü açılır; dosya kendiliğinden eklenir, alıcıyı (örneğin WhatsApp\'ta yetkili kişiyi) siz seçersiniz.' : 'Bu cihazda paylaşma menüsü yok: önce "İndir"e basın, sonra WhatsApp ya da e-postaya dosyayı ekleyin.') + (c.ids && c.ids.length ? ' E-posta ile gönderdiyseniz "Merkeze gönderildi olarak işaretle"ye basın.' : '') + '</p>';
   h += '<button type="button" class="btn secondary full" data-g="kapat" style="margin-top:10px">Kapat</button>';
   const box = $('gonderBox'); box.innerHTML = h; $('gonderModal').style.display = 'flex';
-  box._ctx = Object.assign({ A, hv }, c);
+  box._ctx = Object.assign({ A, hv, files }, c);
 }
 $('gonderBox').addEventListener('click', e => {
   const b = e.target.closest('[data-g]'); if (!b) return; const c = $('gonderBox')._ctx, g = b.dataset.g;
   if (g === 'kapat') { $('gonderModal').style.display = 'none'; return; }
   if (!c) return;
-  const posta = (adres, cc) => { const k = document.createElement('a'); k.href = 'mailto:' + adres + '?' + (cc ? 'cc=' + encodeURIComponent(cc) + '&' : '') + 'subject=' + encodeURIComponent(c.konu) + '&body=' + encodeURIComponent(c.govde); document.body.appendChild(k); k.click(); k.remove(); };
-  if (g === 'paylas') navigator.share({ files: [c.file], title: c.konu, text: c.govde }).then(() => { if (c.id) gonderIsaretle(c.id, 'paylas'); }).catch(() => {});
-  else if (g === 'indir') { dosyaIndir(c.blob, c.name); toast((c.excel ? 'Excel' : 'PDF') + ' indirildi.'); }
+  const ac = (href, hedef) => { const k = document.createElement('a'); k.href = href; if (hedef) { k.target = '_blank'; k.rel = 'noopener'; } document.body.appendChild(k); k.click(); k.remove(); };
+  const posta = (adres, cc) => ac('mailto:' + adres + '?' + (cc ? 'cc=' + encodeURIComponent(cc) + '&' : '') + 'subject=' + encodeURIComponent(c.konu) + '&body=' + encodeURIComponent(c.govde));
+  if (g === 'paylas') navigator.share({ files: c.files, title: c.konu, text: c.govde }).then(() => {
+    if (c.ids && c.ids.length) { $('gonderModal').style.display = 'none'; askModal({ title: 'Merkeze gönderildi mi?', text: 'Paylaşımı merkeze (havuza) gönderdiyseniz "Evet"i seçin; kayıtlar "merkeze gönderildi" olarak işaretlenir.', left: { label: 'Hayır' }, right: { label: 'Evet', fn: () => gonderIsaretle(c.ids, 'paylas') } }); }
+  }).catch(() => {});
+  else if (g === 'indir') { c.dosyalar.forEach((d, i) => setTimeout(() => dosyaIndir(d.blob, d.name), i * 500)); toast(c.dosyalar.length > 1 ? 'Dosyalar indiriliyor.' : 'Dosya indirildi.'); }
   else if (g === 'havuz') posta(c.hv.adres, c.hv.cc);
-  else if (g === 'isaret') { if (c.id) gonderIsaretle(c.id, 'eposta'); }
+  else if (g === 'isaret') { if (c.ids && c.ids.length) gonderIsaretle(c.ids, 'eposta'); }
   else if (g === 'mail') posta(c.A[+b.dataset.i].eposta, '');
-  else if (g === 'wa') { const a = c.A[+b.dataset.i], k = document.createElement('a'); k.href = 'https://wa.me/' + waNo(a.tel) + '?text=' + encodeURIComponent(c.govde); k.target = '_blank'; k.rel = 'noopener'; document.body.appendChild(k); k.click(); k.remove(); }
+  else if (g === 'wamesaj') ac('https://wa.me/?text=' + encodeURIComponent(c.govde), true);
+  else if (g === 'wa') { const a = c.A[+b.dataset.i]; ac('https://wa.me/' + waNo(a.tel) + '?text=' + encodeURIComponent(c.govde), true); }
 });
 $('gonderModal').addEventListener('click', e => { if (e.target === $('gonderModal')) $('gonderModal').style.display = 'none'; });
-async function pdfGonder(copies, onceKayitli) {
+
+/* Senetler PDF olarak (A4'te üç senet): yalnızca gönderme için; baskı kalitesi için ölçek 2 */
+async function uretSenetPdf(m, tur, onProgress) {
+  await pdfLibs();
+  const L = senetSatirlari(tur); if (!L) throw new Error('Senet için sıralı evrak ödeme tablosu gerekli.');
+  const wrap = document.createElement('div'); wrap.innerHTML = senetSayfalari(L, m);
+  const sayfalar = [...wrap.children];
+  const ad = pdfName(m) + (tur === 'cb' ? ' - Cihaz Bedeli Senetleri' : ' - Senetler');
+  const pdf = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait', compress: true });
+  pdf.setProperties({ title: ad, subject: 'SILMO İstanbul 2026 Senetleri' + (m.no ? ' – ' + m.no : ''), creator: 'SILMO İSTANBUL 2026 Fuar Uygulaması', keywords: m.no || '' });
+  let stage = $('pdfStage');
+  if (!stage) { stage = document.createElement('div'); stage.id = 'pdfStage'; document.body.appendChild(stage); }
+  try {
+    for (let i = 0; i < sayfalar.length; i++) {
+      onProgress(i + 1, sayfalar.length);
+      stage.innerHTML = sayfalar[i].outerHTML;
+      await new Promise(r => setTimeout(r, 30));
+      const canvas = await window.html2canvas(stage.firstElementChild, { scale: 2, backgroundColor: '#ffffff', useCORS: true, logging: false, windowWidth: 1000 });
+      if (i > 0) pdf.addPage('a4', 'portrait');
+      pdf.addImage(canvas.toDataURL('image/jpeg', 0.85), 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
+      canvas.width = canvas.height = 0;
+    }
+  } finally { stage.innerHTML = ''; }
+  return { blob: pdf.output('blob'), pages: sayfalar.length, ad };
+}
+function senetSor(n1, n2) {
+  const p = []; if (n1) p.push('sözleşme senetleri (' + n1 + ' adet)'); if (n2) p.push('cihaz bedeli senetleri (' + n2 + ' adet)');
+  const t = p.join(' ve ');
+  return new Promise(res => askModal({ title: 'Senetler de gönderilsin mi?', text: t.charAt(0).toUpperCase() + t.slice(1) + ' aynı mesajda ayrı PDF olarak gönderilsin mi? Hayır derseniz senetleri sonra Kayıtlar\'dan gönderebilir ya da yazdırabilirsiniz.', left: { label: 'Hayır', fn: () => res(false) }, right: { label: 'Evet', fn: () => res(true) } }));
+}
+/* Kaydet ve Gönder: kaydeder, PDF'i (ve istenirse senetleri) hazırlar, paylaşma menüsünü açar. sadeceSenet: 'odt' | 'cb' */
+async function pdfGonder(copies, onceKayitli, sadeceSenet) {
   if (pdfBusy || !curModel) return;
   if (kimlikGerekli(curModel)) { toast('Önce şube ve personel seçin.'); girisAc(false); return; }
+  if (sadeceSenet && !senetSatirlari(sadeceSenet)) { toast('Senet için sıralı evrak ödeme tablosu gerekli.'); return; }
   if (!fromSaved && !onceKayitli) {
     if (saveModel()) toast('Sözleşme kaydedildi.');
     else if (kimlikRed || !confirm('Sözleşme kaydedilemedi (tarayıcı hafızası dolu olabilir). Yine de PDF oluşturulsun mu?')) return;
   }
+  let ekle = sadeceSenet ? [sadeceSenet] : [];
+  if (!sadeceSenet) {
+    const sL = senetSatirlari('odt'), cL = senetSatirlari('cb');
+    if (sL || cL) { const evet = await senetSor(sL ? sL.length : 0, cL ? cL.length : 0); if (evet) ekle = [sL ? 'odt' : null, cL ? 'cb' : null].filter(Boolean); }
+  }
   pdfBusy = true;
-  const ids = ['pvSavePdf', 'pvPdf2', 'pvPdf1', 'pvGonder', 'pvGonder2'], btns = ids.map($); const old = btns.map(b => b.textContent);
+  const ids = ['pvSavePrint', 'pvPdf1', 'pvGonder2', 'pvSenetG', 'pvSenetCbG'], btns = ids.map($); const old = btns.map(b => b.textContent);
   btns.forEach(b => { b.disabled = true; });
   const lbl = (i, n) => btns.forEach(b => { b.textContent = 'PDF hazırlanıyor… ' + i + ' / ' + n; });
-  const name = pdfName(curModel) + '.pdf';
   try {
-    const r = await uretPdf(curModel, copies, lbl, { embed: true });
-    const t = gonderMetni(curModel);
-    gonderModal({ file: new File([r.blob], name, { type: 'application/pdf' }), blob: r.blob, name, konu: t.konu, govde: t.govde, sayfa: r.pages, id: curModel.id });
+    const dosyalar = [];
+    if (!sadeceSenet) {
+      const r = await uretPdf(curModel, copies, lbl, { embed: true, hafif: true }), name = pdfName(curModel) + '.pdf';
+      dosyalar.push({ file: new File([r.blob], name, { type: 'application/pdf' }), blob: r.blob, name, sayfa: r.pages });
+    }
+    for (const t of ekle) {
+      const r = await uretSenetPdf(curModel, t, lbl), name = r.ad + '.pdf';
+      dosyalar.push({ file: new File([r.blob], name, { type: 'application/pdf' }), blob: r.blob, name, sayfa: r.pages });
+    }
+    const tm = gonderMetni(curModel, sadeceSenet ? 'senet' : (ekle.length ? 'ikisi' : ''));
+    gonderModal({ dosyalar, baslik: sadeceSenet ? 'Senetler hazır' : (ekle.length ? 'Sözleşme ve senetler hazır' : 'Sözleşme hazır'), konu: tm.konu, govde: tm.govde });
   } catch (e) {
     toast('PDF oluşturulamadı: ' + (e && e.message ? e.message : 'bilinmeyen hata'));
   } finally { btns.forEach((b, i) => { b.disabled = false; b.textContent = old[i]; }); pdfBusy = false; }
 }
-$('pvGonder').addEventListener('click', () => pdfGonder(1));
-$('pvGonder2').addEventListener('click', () => pdfGonder(2));
+$('pvGonder2').addEventListener('click', () => pdfGonder(1));
+$('pvSenetG').addEventListener('click', () => pdfGonder(2, false, 'odt'));
+$('pvSenetCbG').addEventListener('click', () => pdfGonder(2, false, 'cb'));
+
+/* Gün sonu veri paketi: merkeze gönderilmemiş kayıtlar tek küçük dosyada (sözleşme başına yaklaşık 8 KB) */
+function paketGonder() {
+  const liste = lsGet(LS_KAYIT, []).filter(x => !havuzaGitti(x));
+  if (!liste.length) { toast('Merkeze gönderilmemiş kayıt yok.'); return; }
+  const k = kullOku(), d = new Date(), bugun = gunStr(d), sa = pad2(d.getHours()) + pad2(d.getMinutes());
+  const ad = 'silmo_paket_' + (k.sube || 'XXX') + '_' + (k.ad && k.soyad ? persKodu() : 'XX') + '_' + bugun + '_' + sa + '.json';
+  const veri = { uygulama: 'SILMO-2026-PAKET', surum: 1, olusturma: d.toISOString(), sube: k.sube || '', kisi: k.ad && k.soyad ? persKodu() : '', cihaz: cihazKodu(), kayit: liste };
+  const blob = new Blob([JSON.stringify(veri)], { type: 'application/json' }), file = new File([blob], ad, { type: 'application/json' });
+  const nolar = liste.map(x => x.no).filter(Boolean).sort();
+  const govde = ['Merhaba,', '', 'Ekte SILMO İstanbul 2026 sözleşme kayıt paketi bulunmaktadır.', '', 'Kayıt sayısı: ' + liste.length, 'Şube / Personel: ' + (subeAd(k.sube || '') + ' / ' + (k.ad && k.soyad ? persKodu() : '')), 'Tarih: ' + fmtDateDot(bugun) + ' ' + pad2(d.getHours()) + ':' + pad2(d.getMinutes())].concat(nolar.length ? ['İlk sözleşme no: ' + nolar[0], 'Son sözleşme no: ' + nolar[nolar.length - 1]] : []).join('\n');
+  gonderModal({ dosyalar: [{ file, blob, name: ad }], baslik: 'Veri paketi hazır (' + liste.length + ' kayıt)', konu: 'SILMO kayıt paketi – ' + subeAd(k.sube || '') + ' – ' + fmtDateDot(bugun) + ' – ' + liste.length + ' kayıt', govde, havuz: true, ids: liste.map(x => x.id) });
+}
+$('btnPaket').addEventListener('click', paketGonder);
 let kimlikRed = false; /* son kaydetme girişimi şube/personel seçilmediği için engellendi */
 /* ============ Özelleştir: toplam tutar ve evrak adedi ============ */
 function ekhOzet() {
@@ -2981,20 +3058,21 @@ $('hvKaydet').addEventListener('click', () => {
   havuzCiz(); havuzBarGuncelle(); renderKayit(); toast('Havuz adresi kaydedildi.');
 });
 function havuzBarGuncelle() {
-  const b = $('havuzBar'); if (!b) return; const hv = ayarOku().havuz;
-  const n = hv.adres ? lsGet(LS_KAYIT, []).filter(x => !havuzaGitti(x)).length : 0;
+  const b = $('havuzBar'); if (!b) return;
+  const n = lsGet(LS_KAYIT, []).filter(x => !havuzaGitti(x)).length;
   b.style.display = n ? '' : 'none';
-  if (n) $('havuzMetin').textContent = n + ' sözleşme havuza (' + hv.adres + ') gönderilmedi.';
+  if (n) $('havuzMetin').textContent = n + ' sözleşme merkeze gönderilmedi. Gün sonunda "Merkeze Gönder"e basın.';
 }
-$('havuzGit').addEventListener('click', () => { showPanel('kayit'); $('k_havuz').checked = true; renderKayit(); });
+$('havuzGit').addEventListener('click', () => paketGonder());
 $('k_havuz').addEventListener('change', renderKayit);
-const havuzMetni = x => x.gonder ? 'Gönderildi ' + new Date(x.gonder.ts).toLocaleString('tr-TR') + (x.gonder.kime ? ' → ' + x.gonder.kime : '') : 'Gönderilmedi';
-function havuzRozet(x) { if (!ayarOku().havuz.adres) return ''; return havuzaGitti(x) ? '<span class="badge">havuza gönderildi</span>' : '<span class="badge" style="border-color:#d98e04">havuza gönderilmedi</span>'; }
+const havuzMetni = x => x.kaynak ? (x.kaynak === 'pdf' ? 'PDF\'ten yüklendi' : 'Paketten yüklendi') : x.gonder ? 'Gönderildi ' + new Date(x.gonder.ts).toLocaleString('tr-TR') + (x.gonder.kime ? ' → ' + x.gonder.kime : '') : 'Gönderilmedi';
+function havuzRozet(x) { if (x.kaynak) return ''; return havuzaGitti(x) ? '<span class="badge">merkeze gönderildi</span>' : '<span class="badge" style="border-color:#d98e04">merkeze gönderilmedi</span>'; }
+function kaynakRozet(x) { return x.kaynak ? '<span class="badge">' + (x.kaynak === 'pdf' ? 'PDF\'ten yüklendi' : 'paketten yüklendi') + '</span>' : ''; }
 $('btnExcelHavuz').addEventListener('click', () => {
   const arr = excelUret('blob'); if (!arr) return;
   const n = lsGet(LS_KAYIT, []).length, bugun = gunStr(new Date());
   const blob = new Blob([arr], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), ad = 'silmo_sozlesme_kayitlari_' + bugun + '.xlsx';
-  gonderModal({ file: new File([blob], ad, { type: blob.type }), blob, name: ad, excel: true, konu: 'SILMO sözleşme kayıtları (Excel) – ' + fmtDateDot(bugun) + ' – ' + n + ' kayıt', govde: 'Merhaba,\n\nEkte SILMO İstanbul 2026 sözleşme kayıtları Excel dosyası bulunmaktadır (' + n + ' kayıt).' });
+  gonderModal({ dosyalar: [{ file: new File([blob], ad, { type: blob.type }), blob, name: ad }], baslik: 'Excel hazır', havuz: true, konu: 'SILMO sözleşme kayıtları (Excel) – ' + fmtDateDot(bugun) + ' – ' + n + ' kayıt', govde: 'Merhaba,\n\nEkte SILMO İstanbul 2026 sözleşme kayıtları Excel dosyası bulunmaktadır (' + n + ' kayıt).' });
 });
 
 /* ============ PDF'lerden kayıt yükleme (PDF Gönder ile üretilen PDF'in içinde kayıt verisi vardır) ============ */
@@ -3018,12 +3096,31 @@ $('pdfKayitDosya').addEventListener('change', async e => {
     const m = await pdfKayitOku(f);
     if (!m || !m.id || typeof m.ts !== 'number' || !Array.isArray(m.rows) || !m.unvan) { yok++; continue; }
     if (cur.some(x => x.id === m.id)) { var_++; continue; }
-    const fy = farkYeniden(m); m.farklar = fy.farklar; m.ekIskonto = fy.ekIsk; m.custom = !!m.custom || fy.farklar.length > 0;
+    const fy = farkYeniden(m); m.farklar = fy.farklar; m.ekIskonto = fy.ekIsk; m.custom = !!m.custom || fy.farklar.length > 0; m.kaynak = 'pdf'; m.yuklemeTs = Date.now();
     cur.push(m); yeni++;
   }
   if (yeni && !lsSet(LS_KAYIT, cur)) { toast('Kaydedilemedi: tarayıcı hafızası dolu olabilir.'); return; }
   sayacYenile(cur); updateKayitBadge(); renderKayit();
   toast(yeni + ' kayıt eklendi' + (var_ ? ', ' + var_ + ' zaten vardı' : '') + (yok ? ', ' + yok + ' dosyada kayıt verisi yok' : '') + '.');
+});
+
+/* Kayıt paketi yükle (yalnızca yönetici): şubelerden gelen gün sonu veri paketlerini birleştirir */
+$('paketDosya').addEventListener('change', async e => {
+  const fs = [...e.target.files]; e.target.value = ''; if (!fs.length) return;
+  if (!yoneticiMi()) { toast('Kayıt paketi yükleme yalnızca yönetici girişinde yapılabilir.'); return; }
+  const cur = lsGet(LS_KAYIT, []); let yeni = 0, var_ = 0, hata = 0;
+  for (const f of fs) {
+    let d; try { d = JSON.parse(await f.text()); } catch (er) { hata++; continue; }
+    if (!d || d.uygulama !== 'SILMO-2026-PAKET' || !Array.isArray(d.kayit)) { hata++; continue; }
+    d.kayit.forEach(m => {
+      if (!m || !m.id || typeof m.ts !== 'number' || !Array.isArray(m.rows) || !m.unvan) { hata++; return; }
+      if (cur.some(x => x.id === m.id)) { var_++; return; }
+      m.kaynak = 'paket'; m.yuklemeTs = Date.now(); cur.push(m); yeni++;
+    });
+  }
+  if (yeni && !lsSet(LS_KAYIT, cur)) { toast('Kaydedilemedi: tarayıcı hafızası dolu olabilir.'); return; }
+  sayacYenile(cur); updateKayitBadge(); renderKayit();
+  toast(yeni + ' kayıt eklendi' + (var_ ? ', ' + var_ + ' zaten vardı' : '') + (hata ? ', ' + hata + ' dosya/kayıt okunamadı' : '') + '.');
 });
 
 /* ============ Senet yazdırma (A4'e üç senet) ============ */
@@ -3099,7 +3196,7 @@ function senetSatirlari(tur) {
 }
 function senetGoster(m) {
   const ok = tur => { const o = tur === 'cb' ? m.cb : m.odt; return !!(o && o.tip === 'evrak' && o.lines && o.lines.length); };
-  $('pvSenet').style.display = ok('odt') ? '' : 'none'; $('pvSenetCb').style.display = ok('cb') ? '' : 'none';
+  $('pvSenet').style.display = $('pvSenetG').style.display = ok('odt') ? '' : 'none'; $('pvSenetCb').style.display = $('pvSenetCbG').style.display = ok('cb') ? '' : 'none';
   $('senetBar').style.display = (ok('odt') || ok('cb')) ? '' : 'none';
 }
 function senetYazdir(tur) {
