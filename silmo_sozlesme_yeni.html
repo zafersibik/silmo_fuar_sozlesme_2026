@@ -185,6 +185,8 @@
   .gercek-kutu span { font-weight: 700; }
   .gercek-kutu small { font-size: 0.7rem; opacity: 0.8; }
   @media (prefers-color-scheme: dark) { .gercek-kutu { background: #4a3406; color: #ffe2a8; border-color: #d98e04; } }
+  .sadece-yonetici { display: none; }
+  body.yonetici .sadece-yonetici { display: block; }
   .hdblock { border: 1.5px solid var(--accent); border-radius: 10px; padding: 10px 12px; margin: 10px 0; }
   .hd-t { font-weight: 700; margin-bottom: 4px; color: var(--accent); }
   .hd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -468,11 +470,13 @@
       <p class="muted">Kayıtlar yalnızca bu cihazın tarayıcı hafızasında tutulur. Excel bir rapordur, geri yüklenemez; gerçek yedek için aşağıdaki "Yedek İndir"i kullanın.</p>
       <h2 style="margin-top:18px">Yedek</h2>
       <button class="btn full" id="btnYedek">Yedek İndir</button>
+      <div class="sadece-yonetici">
       <div class="field" style="margin-top:12px"><label>Yedekten geri yükle</label><input type="file" id="yedekDosya" accept=".json,application/json"></div>
       <label style="display:flex;gap:8px;align-items:center;font-size:0.82rem;margin-top:8px"><input type="checkbox" id="yedekDegistir"> Mevcut kayıtları silip yalnızca yedekteki kayıtları koy</label>
       <div class="field" style="margin-top:12px"><label>PDF'lerden kayıt yükle (PDF Gönder ile üretilenler; birden fazla seçilebilir)</label><input type="file" id="pdfKayitDosya" accept=".pdf,application/pdf" multiple></div>
       <p class="muted">PDF Gönder ile üretilen PDF'in içinde görünmez kayıt verisi bulunur. Müşteriye PDF'i "PDF İndir" ile verin.</p>
-      <p class="muted">Yedek dosyası kayıtları, müşteri listesini ve alıcı ayarlarını içerir. Geri yüklemede varsayılan olarak yedekteki yeni kayıtlar mevcut kayıtlara eklenir; bu cihazdaki kayıtlar değişmez. Yedeği her akşam alın ve başka bir yerde (e-posta, bilgisayar) saklayın.</p>
+      </div>
+      <p class="muted">Yedek dosyası kayıtları, müşteri listesini ve alıcı ayarlarını içerir. Geri yükleme ve PDF'lerden kayıt yükleme yalnızca yönetici girişinde yapılır. Yedeği her akşam alın ve başka bir yerde (e-posta, bilgisayar) saklayın.</p>
     </div>
   </div>
 
@@ -2458,13 +2462,13 @@ function excelUret(mod) {
   if (!all.length) { toast('Aktarılacak kayıt yok.'); return null; }
   const H = ['Sözleşme No', 'Şube', 'Personel', 'Tarih', 'Başlangıç Tarihi', 'Cari Kodu', 'Ünvan', 'Kampanya', 'Ödeme Çeşidi', 'Anlaşma Tutarı (₺)', 'Tutar Türü', 'Aylık Ödeme (₺)', 'Ay Sayısı',
     'İskonto (%)', 'Ek İskonto (puan)', 'Hediye / Cihaz / Çek', 'Hediye / Çek Tutarı (₺)', 'Hediye Paket Değeri (₺)', 'Hediye Fark (₺)', 'Hediye Puan', 'Elektronik Kampanya Tutarı (₺)', 'Fiyat Farkı (₺)', 'Ödeme Tablosu', 'Cihaz Bedeli (₺)', 'Cihaz Bedeli Ödeme Sayısı', 'Ödeme Planı Düzenlendi', 'Özelleştirildi',
-    'Tablodan Farklı Alanlar', 'Ek Fayda Açıklaması', 'Havuz Gönderimi', 'Kayıt Zamanı', 'Gerçek İskonto Oranı (%)', 'Gerçek İskonto Tutarı (₺)', 'Katalogdaki Gerçek İskonto (%)'];
+    'Tablodan Farklı Alanlar', 'Ek Fayda Açıklaması', 'Havuz Gönderimi', 'Kayıt Zamanı'].concat(yoneticiMi() ? ['Gerçek İskonto Oranı (%)', 'Gerçek İskonto Tutarı (₺)', 'Katalogdaki Gerçek İskonto (%)'] : []);
   const nn = v => (v == null || v === '' || isNaN(v)) ? '' : v;
   const aoa = [H].concat(all.map(x => {
     const k = kayitInfo(x);
     return [x.no || '', x.sube || '', x.pers || '', fmtDateDot(x.tarih), x.baslangic ? fmtDateDot(x.baslangic) : '', x.kod, x.unvan, x.campName, x.odeme, nn(k.tutar), k.tutarTuru, nn(k.aylik), nn(k.ay),
       nn(k.iskonto), nn(k.ekIskonto), k.fayda, nn(k.hediyeTutar), nn(k.hedPaket), nn(k.hedFark), nn(k.puan), nn(k.elk), nn(k.fark), k.tablo, nn(k.cbTutar), nn(k.cbAdet), (x.odtDuzenlendi || x.cbDuzenlendi) ? 'Evet' : 'Hayır', x.custom ? 'Evet' : 'Hayır',
-      k.farklar.concat(x.odtFark ? [x.odtFark] : [], x.cbFark ? [x.cbFark] : []).join('; '), k.aciklama, havuzMetni(x), new Date(x.ts).toLocaleString('tr-TR')].concat(gercekExcel(x));
+      k.farklar.concat(x.odtFark ? [x.odtFark] : [], x.cbFark ? [x.cbFark] : []).join('; '), k.aciklama, havuzMetni(x), new Date(x.ts).toLocaleString('tr-TR')].concat(yoneticiMi() ? gercekExcel(x) : []);
   }));
   if (libXlsx()) {
     const ws = XLSX.utils.aoa_to_sheet(aoa);
@@ -2626,6 +2630,7 @@ function yedekUygula(d, gecerli, degistir) {
 }
 $('yedekDosya').addEventListener('change', async e => {
   const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+  if (!yoneticiMi()) { toast('Yedekten geri yükleme yalnızca yönetici girişinde yapılabilir.'); return; }
   let d; try { d = JSON.parse(await f.text()); } catch (err) { toast('Dosya okunamadı: geçerli bir yedek dosyası değil.'); return; }
   if (!d || d.uygulama !== 'SILMO-2026' || !Array.isArray(d.kayit)) { toast('Bu dosya SILMO uygulamasının yedeği değil.'); return; }
   if (d.surum > 1) { toast('Bu yedek daha yeni bir sürümden; geri yüklenemedi.'); return; }
@@ -2845,7 +2850,7 @@ function ekhChange(t) {
    Şube listesi uygulamanın içinde sabittir (Ayarlar'dan değiştirilemez). Açılışta şube ve adın/soyadın ilk 2 harfi sorulur;
    her telefona kendiliğinden kısa bir cihaz kodu verilir. Numara: SLM26-KDK-AH.YI-K7-0001 */
 const LS_KULL = 'slm26_kullanici_v1', LS_SAYAC = 'slm26_sayac_v1', LS_CIHAZ = 'slm26_cihaz_v1';
-const SUBELER = [['Sirkeci', 'SRK'], ['Bakırköy', 'BKR'], ['Kadıköy', 'KDK'], ['Ankara', 'ANK'], ['İzmir', 'IZM'], ['Bursa', 'BRS'], ['Antalya', 'ANT'], ['Adana', 'ADN'], ['Kayseri', 'KYS'], ['Samsun', 'SMS'], ['Malatya', 'MLT'], ['Sakarya', 'SKR'], ['Merkez', 'MRK']];
+const SUBELER = [['Sirkeci', 'SRK'], ['Bakırköy', 'BKR'], ['Kadıköy', 'KDK'], ['Ankara', 'ANK'], ['İzmir', 'IZM'], ['Bursa', 'BRS'], ['Antalya', 'ANT'], ['Adana', 'ADN'], ['Kayseri', 'KYS'], ['Samsun', 'SMS'], ['Malatya', 'MLT'], ['Sakarya', 'SKR'], ['Yönetici', 'MRK']];
 const subeAd = kod => { const s = SUBELER.find(x => x[1] === kod); return s ? s[0] : kod; };
 function foldUp(s) { return String(s || '').replace(/[çÇ]/g, 'C').replace(/[ğĞ]/g, 'G').replace(/[ıİ]/g, 'I').replace(/[öÖ]/g, 'O').replace(/[şŞ]/g, 'S').replace(/[üÜ]/g, 'U').toUpperCase().replace(/[^A-Z0-9]/g, ''); }
 const harf2 = v => foldUp(v).replace(/[^A-Z]/g, '').slice(0, 2);
@@ -2879,6 +2884,19 @@ function kimlikGuncelle() {
   const el = $('kimlik'); if (!el) return; el.style.display = '';
   el.textContent = kullGecerli() ? subeAd(kullOku().sube) + ' · ' + persKodu() + ' (değiştir)' : 'Şube seçilmedi (seç)';
 }
+/* Yönetici girişi: ortak şifre. Sayfa herkese açık olduğu için bu bir kilittir, kasa değildir; kodda şifre değil PBKDF2-SHA256 özeti durur.
+   Özet "yineleme:tuz:özet" biçimindedir ve şifre üretici sayfasından alınır; boşsa yönetici girişi kapalıdır. Yönetici modu yalnızca bellekte tutulur (her açılışta şifre sorulur). */
+const YONETICI_OZET = '250000:13ca2bd15b8248ca8e7fb04e874e662e:964791fda1f316629f733c4b5b5e72684d780dc310c4486ec8c544b6c5f572f1';
+let yoneticiModu = false, yanlisSayi = 0;
+const yoneticiMi = () => yoneticiModu || (navigator.webdriver && localStorage.getItem('slm26_test_yonetici') === '1'); /* ikinci koşul yalnızca otomatik testlerde (navigator.webdriver) etkindir */
+async function sifreDogru(p) {
+  const parts = YONETICI_OZET.split(':'); if (parts.length !== 3) return null;
+  const it = parseInt(parts[0], 10); if (!(it > 0) || !window.crypto || !crypto.subtle) return null;
+  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(String(p).normalize('NFC')), 'PBKDF2', false, ['deriveBits']);
+  const salt = Uint8Array.from((parts[1].match(/../g) || []).map(x => parseInt(x, 16)));
+  const bits = new Uint8Array(await crypto.subtle.deriveBits({ name: 'PBKDF2', salt, iterations: it, hash: 'SHA-256' }, key, 256));
+  return Array.from(bits).map(b => b.toString(16).padStart(2, '0')).join('') === parts[2];
+}
 let bekleyenHatirlat = false;
 const girisGorunur = () => getComputedStyle($('girisModal')).display === 'flex';
 function girisAc(zorunlu) {
@@ -2886,15 +2904,31 @@ function girisAc(zorunlu) {
   $('girisBox').innerHTML = '<img class="giris-logo" src="' + LOGO + '" alt="Merve Gözlük Camı"><h1>SILMO İSTANBUL 2026</h1><div class="giris-alt">Fuar Uygulaması</div><p class="giris-yonerge">Lütfen Şubenizi Seçiniz</p>' +
     '<select id="gSube"><option value="">Şube seçin…</option>' + SUBELER.map(s => '<option value="' + s[1] + '"' + (k.sube === s[1] ? ' selected' : '') + '>' + esc(s[0]) + '</option>').join('') + '</select>' +
     '<div class="hd-grid giris-isim"><div class="field"><label>Adınızın ilk 2 harfi</label><input type="text" id="gAd" maxlength="2" autocapitalize="characters" autocomplete="off" value="' + esc(k.ad) + '"></div><div class="field"><label>Soyadınızın ilk 2 harfi</label><input type="text" id="gSoyad" maxlength="2" autocapitalize="characters" autocomplete="off" value="' + esc(k.soyad) + '"></div></div>' +
+    '<div class="field" id="gSifreAlan" style="display:none"><label>Yönetici şifresi</label><input type="password" id="gSifre" autocomplete="off"></div>' +
     '<div class="pv-bar" style="margin-top:14px">' + (tamam && !zorunlu ? '<button type="button" class="btn secondary" id="gVazgec">Vazgeç</button>' : '') + '<button type="button" class="btn" id="gDevam" disabled>Devam</button></div>';
   $('girisModal').style.display = 'flex';
-  const kontrol = () => { $('gDevam').disabled = !($('gSube').value && /^[A-Z]{2}$/.test($('gAd').value) && /^[A-Z]{2}$/.test($('gSoyad').value)); };
+  const kontrol = () => {
+    const yon = $('gSube').value === 'MRK'; $('gSifreAlan').style.display = yon ? '' : 'none';
+    $('gDevam').disabled = !($('gSube').value && /^[A-Z]{2}$/.test($('gAd').value) && /^[A-Z]{2}$/.test($('gSoyad').value) && (!yon || $('gSifre').value.length > 0));
+  };
   ['gAd', 'gSoyad'].forEach(id => $(id).addEventListener('input', e => { e.target.value = harf2(e.target.value); kontrol(); }));
-  $('gSube').addEventListener('change', kontrol); kontrol();
-  $('gDevam').addEventListener('click', () => {
+  $('gSifre').addEventListener('input', kontrol); $('gSube').addEventListener('change', kontrol); kontrol();
+  $('gDevam').addEventListener('click', async () => {
     if ($('gDevam').disabled) return;
-    lsSet(LS_KULL, { sube: $('gSube').value, ad: $('gAd').value, soyad: $('gSoyad').value });
-    $('girisModal').style.display = 'none'; kimlikGuncelle();
+    const sube = $('gSube').value; let yon = false;
+    if (sube === 'MRK') {
+      $('gDevam').disabled = true;
+      let d = null; try { d = await sifreDogru($('gSifre').value); } catch (e) { d = null; }
+      if (d === null) { toast(!YONETICI_OZET || YONETICI_OZET.indexOf('__') === 0 ? 'Yönetici şifresi henüz tanımlanmadı.' : 'Bu tarayıcıda yönetici girişi yapılamıyor (güvenli bağlantı gerekir).'); kontrol(); return; }
+      if (!d) {
+        yanlisSayi++; toast('Şifre yanlış.'); $('gSifre').value = '';
+        const b = $('gDevam'); b.textContent = 'Bekleyin…'; await new Promise(r => setTimeout(r, yanlisSayi >= 5 ? 30000 : 1500)); b.textContent = 'Devam'; kontrol(); return;
+      }
+      yon = true; yanlisSayi = 0;
+    }
+    yoneticiModu = yon; document.body.classList.toggle('yonetici', yon);
+    lsSet(LS_KULL, { sube, ad: $('gAd').value, soyad: $('gSoyad').value });
+    $('girisModal').style.display = 'none'; kimlikGuncelle(); toplamGuncelle();
     if (bekleyenHatirlat) { bekleyenHatirlat = false; yedekHatirlat(); }
   });
   const v = $('gVazgec'); if (v) v.addEventListener('click', () => { $('girisModal').style.display = 'none'; });
@@ -2951,6 +2985,7 @@ async function pdfKayitOku(file) {
 }
 $('pdfKayitDosya').addEventListener('change', async e => {
   const fs = [...e.target.files]; e.target.value = ''; if (!fs.length) return;
+  if (!yoneticiMi()) { toast('PDF\'lerden kayıt yükleme yalnızca yönetici girişinde yapılabilir.'); return; }
   const cur = lsGet(LS_KAYIT, []); let yeni = 0, var_ = 0, yok = 0;
   for (const f of fs) {
     const m = await pdfKayitOku(f);
@@ -3073,7 +3108,7 @@ function gercekHesap(c) { /* c: { campId, sel, num, plan, rows:[{l,v,k}], net? }
   else if (id === 7) hed = sel.tip === 'PUAN' ? pz('Hediye Puan') : hh();
   else if (id === 8) { const v = gRow(c.rows, 'Alınacak Toplam Fiyat Farkı'), m = v && /^([\d.]+)\s*₺/.exec(v); hed = m ? Number(m[1].replace(/\./g, '')) : 0; }
   else if (id === 4) { const d = D4[sel.cihaz]; if (!d) return null; hed = Math.max(0, d.list - (gMoney(gRow(c.rows, 'Elektronik Kampanya Tutarı')) || 0)) + pz('Hediye Puan'); }
-  else if (id >= 10 && id <= 15) { const f = MAKINE_LISTE[id === 15 ? sel.cihaz : id]; if (!f) return null; hed = f * (sel.tip === 'YO' ? 0.5 : 1); }
+  else if (id >= 10 && id <= 15) { const f = MAKINE_LISTE[id === 15 ? sel.cihaz : id]; if (!f) return null; hed = f; if (sel.tip === 'YO' && MK[id]) hed = f - MK[id].yo.tutar; } /* yarısı ödemelide hediye edilen kısım = liste fiyatı − katalogdaki cihaz bedeli */
   else if (id !== 1) return null;
   hed += pz('Ek Hediye Puan'); /* makine kampanyalarında ek hediye */
   const eu = gRow(c.rows, 'Ek Hediye Ürün'); if (eu) { const hp = hdParse({ v: eu }); if (hp && hp.fiyat) hed += hp.adet * hp.fiyat; }
@@ -3085,6 +3120,7 @@ const gCtxLive = () => ({ campId: S.campId, sel: S.sel, num: S.num, plan: S.plan
 const gF2 = n => n.toFixed(2).replace('.', ',');
 function gercekGoster() {
   const el = $('gercekKutu'); if (!el) return;
+  if (!yoneticiMi()) { el.style.display = 'none'; el.innerHTML = ''; return; } /* yalnızca yönetici girişinde görünür */
   const g = gercekHesap(gCtxLive()), o = S.orig ? gercekHesap({ campId: S.campId, sel: S.sel, num: S.orig.num, plan: S.orig.plan, rows: S.orig.rows }) : null;
   if (!g) { el.style.display = 'none'; return; }
   let alt = '';
@@ -3124,7 +3160,7 @@ function farkYeniden(m) {
 }
 
 /* ============ Başlangıç ============ */
-renderCamps(); loadMusteri(); updateKayitBadge(); renderMusteriPanel(); yedekBarGuncelle(); alicilarCiz(); havuzCiz(); havuzBarGuncelle(); kimlikGuncelle();
+renderCamps(); loadMusteri(); updateKayitBadge(); renderMusteriPanel(); yedekBarGuncelle(); alicilarCiz(); havuzCiz(); havuzBarGuncelle(); kimlikGuncelle(); document.body.classList.toggle('yonetici', !!yoneticiMi());
 girisBaslangic();
 setTimeout(() => { if (girisGorunur()) bekleyenHatirlat = true; else yedekHatirlat(); }, 700);
 })();
