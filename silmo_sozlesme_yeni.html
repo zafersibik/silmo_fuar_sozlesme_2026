@@ -195,6 +195,9 @@
   #senetBar .btn { flex: 1 1 45%; }
   .sadece-yonetici { display: none; }
   body.yonetici .sadece-yonetici { display: block; }
+  .duz-banner { display: flex; align-items: center; justify-content: space-between; gap: 8px; background: #fff1d6; color: #5b3a00; border: 1.5px solid #d98e04; border-radius: 12px; padding: 10px 12px; margin-bottom: 12px; font-size: 0.85rem; }
+  .duz-banner .btn { flex: none; padding: 7px 12px; }
+  @media (prefers-color-scheme: dark) { .duz-banner { background: #4a3406; color: #ffe2a8; } }
   .hdblock { border: 1.5px solid var(--accent); border-radius: 10px; padding: 10px 12px; margin: 10px 0; }
   .hd-t { font-weight: 700; margin-bottom: 4px; color: var(--accent); }
   .hd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -352,6 +355,98 @@
     #printArea { display: block; }
     #printArea .page { margin: 0; box-shadow: none; }
   }
+/* ============ Tema B2: krem zemin, beyaz kartlar, alt sekme çubuğu (yalnızca ekran; baskı ve PDF değişmez) ============ */
+@media screen {
+  :root {
+    --bg: #FFF8D8; --card-bg: #ffffff; --header-bg: #FFFDF2; --header-fg: #1F4E78; --border: #EBDDA0;
+    --accent: #1F4E78; --btn-bg: #1F4E78; --accent-light: #EAF1F8; --input-bg: #ffffff; --input-border: #D6C26A;
+    --tab-inactive: #F5F0D6; --text-muted: #6B6A5A; --nav-bg: #FFFDF2; --nav-fg: #8A8566; --chip-bg: #FFF1B8; --chip-bd: #E6D07A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --nav-bg: #1b2026; --nav-fg: #8a97a5; --chip-bg: #223349; --chip-bd: #35506b; }
+    :root:not([data-theme="light"]) header .logo { background: #fff; padding: 3px 6px; border-radius: 8px; }
+  }
+  :root[data-theme="dark"] { --nav-bg: #1b2026; --nav-fg: #8a97a5; --chip-bg: #223349; --chip-bd: #35506b; }
+  :root[data-theme="dark"] header .logo { background: #fff; padding: 3px 6px; border-radius: 8px; }
+
+  header { background: var(--header-bg); color: var(--header-fg); border-bottom: 1px solid var(--border); padding: 10px 16px; padding-top: calc(10px + env(safe-area-inset-top, 0px)); align-items: center; flex-direction: row-reverse; }
+  header .logo { height: 34px; background: transparent; padding: 0; border-radius: 0; }
+  header .header-text { flex: none; text-align: right; }
+  header h1, header p:not(.kimlik) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  header p.kimlik { display: inline-block; margin: 0; opacity: 1; letter-spacing: 0; background: var(--chip-bg); border: 1px solid var(--chip-bd); color: var(--accent); border-radius: 20px; padding: 6px 12px; font-size: 11.5px; font-weight: 800; cursor: pointer; }
+
+  .app { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+  #toast { bottom: calc(88px + env(safe-area-inset-bottom, 0px)); }
+  .tabs { position: fixed; left: 0; right: 0; bottom: 0; margin: 0; gap: 0; flex-wrap: nowrap; z-index: 40; background: var(--nav-bg); border-top: 1px solid var(--border); box-shadow: 0 -4px 14px rgba(20,33,43,0.08); padding: 0 0 env(safe-area-inset-bottom, 0px); }
+  .tab-btn { flex: 1 1 0; min-width: 0; background: transparent; border-radius: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 8px 2px 7px; font-size: 10.5px; font-weight: 700; color: var(--nav-fg); position: relative; }
+  .tab-btn.active { background: transparent; color: var(--accent); }
+  .tab-btn.active::before { content: ""; position: absolute; top: 0; left: 50%; width: 34px; margin-left: -17px; height: 3px; border-radius: 0 0 4px 4px; background: var(--accent); }
+  .tab-btn svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+  .tab-btn i { position: absolute; top: 4px; left: calc(50% + 7px); background: #D98E04; color: #fff; font-style: normal; font-size: 10px; font-weight: 800; min-width: 17px; height: 17px; border-radius: 9px; display: none; align-items: center; justify-content: center; padding: 0 4px; }
+  .tab-btn i.var { display: flex; }
+
+  .card { border-radius: 16px; box-shadow: 0 2px 10px rgba(120,90,0,0.06); }
+  .btn { border-radius: 12px; padding: 12px 14px; }
+  .btn.secondary { background: var(--card-bg); color: var(--accent); border: 1.5px solid var(--border); }
+  .btn.danger { background: transparent; border: 1.5px solid rgba(192,57,43,0.3); color: var(--danger); padding: 7px 10px; }
+
+  .camp-grid { grid-template-columns: 1fr; gap: 7px; }
+  @media (min-width: 560px) { .camp-grid { grid-template-columns: repeat(2, 1fr); } }
+  .camp { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 14px; position: relative; }
+  .camp .code { min-width: 46px; height: 34px; border-radius: 9px; background: var(--kc, var(--accent)); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; flex: none; }
+  .camp .kt { flex: 1; min-width: 0; }
+  .camp .nm { font-size: 0.85rem; font-weight: 700; margin: 0; }
+  .camp .kcip { font-style: normal; font-size: 10px; font-weight: 800; border-radius: 10px; padding: 3px 8px; border: 1px solid var(--kc, var(--accent)); color: var(--kc, var(--accent)); flex: none; }
+  .camp.sel { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(31,78,120,0.16); }
+  .camp .kok { position: absolute; right: -5px; top: -7px; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); border: 2px solid var(--card-bg); display: flex; align-items: center; justify-content: center; }
+  .camp .kok svg { width: 13px; height: 13px; stroke: #fff; stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+  #card-aksiyon { display: contents !important; }
+  #card-aksiyon[style*="display:none"], #card-aksiyon[style*="display: none"] { display: none !important; }
+  #btnOnizle { position: sticky; bottom: calc(80px + env(safe-area-inset-bottom, 0px)); z-index: 30; min-height: 50px; border-radius: 14px; font-size: 1rem; box-shadow: 0 6px 16px rgba(31,78,120,0.4); }
+  #btnTemizle { font-size: 0.8rem; padding: 8px; }
+
+  .k-fil { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 10px; }
+  .k-chip { position: relative; }
+  .k-chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .k-chip span { display: inline-block; border: 1.5px solid var(--border); border-radius: 20px; padding: 6px 12px; font-size: 0.78rem; font-weight: 700; background: var(--card-bg); cursor: pointer; }
+  .k-chip input:checked + span { background: var(--accent); color: #fff; border-color: var(--accent); }
+  #kayitList .list-row { flex-direction: column; align-items: stretch; gap: 8px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 10px 12px; margin-bottom: 8px; box-shadow: 0 2px 9px rgba(120,90,0,0.06); }
+  #kayitList .list-row .acts { display: flex; gap: 6px; }
+  #kayitList .list-row .acts .btn { flex: 1; padding: 7px 4px; }
+  #kayitList .list-row .acts .btn.danger { flex: 0.6; }
+  .badge { border-radius: 10px; padding: 2px 8px; font-size: 0.68rem; font-weight: 800; background: rgba(31,78,120,0.1); border: 1px solid rgba(31,78,120,0.25); color: var(--accent); margin: 2px 4px 0 0; }
+  .badge.ok { background: rgba(27,138,75,0.13); border-color: rgba(27,138,75,0.35); color: #1B8A4B; }
+  .badge.warn { background: rgba(217,142,4,0.15); border-color: rgba(217,142,4,0.5); color: #9A6400; }
+  .k-gun { position: sticky; bottom: calc(80px + env(safe-area-inset-bottom, 0px)); z-index: 30; margin-top: 12px; }
+  #btnPaket { background: linear-gradient(135deg, #1B8A4B, #16703D); min-height: 50px; border-radius: 14px; box-shadow: 0 6px 16px rgba(27,138,75,0.4); }
+  #kDiger .btn, #kYon .field { margin-top: 8px; }
+
+  #girisModal { background: var(--bg); }
+  .giris-logo { background: transparent; box-shadow: none; border-radius: 0; padding: 0; width: 206px; max-width: 70%; margin: 0 auto 30px; display: block; }
+  #girisBox h1 { margin: 0 0 2px; font-size: 1.3rem; letter-spacing: 0.5px; }
+  .giris-alt::after { content: ""; display: block; width: 46px; height: 3px; background: #1A86A8; border-radius: 3px; margin: 12px auto 0; }
+  .giris-yonerge { margin: 16px 0 9px; text-align: left; font-size: 0.9rem; }
+  #gSube { display: none; }
+  .sube-izgara { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .sube-k { border: 1.5px solid var(--border); background: var(--card-bg); color: var(--text); border-radius: 13px; padding: 8px 4px 7px; text-align: center; cursor: pointer; font-family: inherit; }
+  .sube-k b { display: block; font-size: 0.8rem; }
+  .sube-k span { font-size: 0.62rem; letter-spacing: 0.12em; font-weight: 700; color: var(--text-muted); }
+  .sube-k.sec { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .sube-k.sec span { color: #BFD7EC; }
+  .sube-k.yon { grid-column: 1 / -1; display: flex; align-items: center; justify-content: center; gap: 8px; border-style: dashed; background: var(--accent-light); padding: 10px; }
+  .sube-k.yon b { display: inline; color: var(--accent); }
+  .sube-k.yon.sec { background: var(--accent); }
+  .sube-k.yon.sec b { color: #fff; }
+  .sube-k svg { width: 17px; height: 17px; stroke: var(--accent); fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+  .sube-k.yon.sec svg { stroke: #fff; }
+  .giris-isim { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
+  .giris-isim .field { text-align: center; }
+  .giris-isim .field label { text-align: center; font-size: 0.62rem; letter-spacing: 0.04em; }
+  #gAd, #gSoyad { width: 88px; margin: 0 auto; display: block; text-align: center; height: 42px; padding: 0; font-size: 1.15rem; font-weight: 800; letter-spacing: 0.28em; text-indent: 0.28em; color: var(--accent); }
+  #gDevam { min-height: 52px; font-size: 1rem; border-radius: 14px; }
+}
+
 </style>
 </head>
 <body>
@@ -376,6 +471,7 @@
 
   <!-- ===== YENİ SÖZLEŞME ===== -->
   <div class="panel active" id="panel-yeni">
+    <div class="duz-banner" id="duzBanner" style="display:none"><b id="duzMetin"></b><button type="button" class="btn secondary" id="duzVazgec">Vazgeç</button></div>
     <div class="card">
       <h2>Kampanya Seç</h2>
       <div class="camp-grid" id="campGrid"></div>
@@ -451,7 +547,8 @@
         <summary>Diğer seçenekler</summary>
         <div class="pv-bar"><button class="btn secondary" id="pvSave">Yalnızca Kaydet</button></div>
         <div class="pv-bar"><button class="btn secondary" id="pvPrint1">Tek Nüsha Yazdır</button></div>
-        <div class="pv-bar"><button class="btn secondary" id="pvPdf1">PDF İndir</button></div>
+        <div class="pv-bar"><button class="btn secondary" id="pvGonderAS">Kaydet ve Gönder (Asıl + Suret)</button></div>
+        <div class="pv-bar"><button class="btn secondary" id="pvPdf1">PDF İndir</button><button class="btn secondary" id="pvPdfAS">PDF İndir (Asıl + Suret)</button></div>
       </details>
       <div class="muted">"Gönder" PDF'i hazırlar ve telefonun paylaşma menüsünü açar (WhatsApp, e-posta…). "Yazdır" tarayıcının yazdırma ekranını açar. "PDF İndir" PDF'i cihaza kaydeder.</div>
     </div>
@@ -462,26 +559,29 @@
   <div class="panel" id="panel-kayit">
     <div class="card">
       <h2>Kayıtlı Sözleşmeler</h2>
-      <div class="field">
-        <input type="text" id="k_q" placeholder="Ünvan, cari kodu, sözleşme no veya kampanya ara">
+      <div class="field"><input type="text" id="k_q" placeholder="Ünvan, cari kodu, sözleşme no veya kampanya ara"></div>
+      <div class="k-fil">
+        <label class="k-chip"><input type="checkbox" id="k_havuz"><span>Yalnızca merkeze gönderilmeyenler</span></label>
+        <label class="k-chip"><input type="checkbox" id="k_duz"><span>Düzenlenenler</span></label>
       </div>
-      <label style="display:flex;gap:8px;align-items:center;font-size:0.82rem;margin-bottom:8px"><input type="checkbox" id="k_havuz"> Yalnızca merkeze gönderilmeyenler</label>
       <div id="kSummary"></div>
       <div id="kayitList"></div>
-      <button class="btn secondary full" id="btnExcel" style="margin-top:10px">Excel'e Aktar</button>
-      <button class="btn secondary full" id="btnExcelHavuz" style="margin-top:8px">Excel'i Havuza Gönder</button>
-      <button class="btn full" id="btnPaket" style="margin-top:8px">Günü Bitir: Gönderilmeyenleri Merkeze Gönder (Veri Paketi)</button>
-      <p class="muted">Kayıtlar yalnızca bu cihazın tarayıcı hafızasında tutulur. Excel bir rapordur, geri yüklenemez; gerçek yedek için aşağıdaki "Yedek İndir"i kullanın.</p>
-      <h2 style="margin-top:18px">Yedek</h2>
-      <button class="btn full" id="btnYedek">Yedek İndir</button>
+      <div class="k-gun"><button class="btn full" id="btnPaket">Günü Bitir: Gönderilmeyenleri Merkeze Gönder (Veri Paketi)</button></div>
+      <details class="diger" id="kDiger"><summary>Diğer işlemler</summary>
+        <button class="btn secondary full" id="btnExcel">Excel'e Aktar</button>
+        <button class="btn secondary full" id="btnExcelHavuz" style="margin-top:8px">Excel'i Havuza Gönder</button>
+        <button class="btn secondary full" id="btnYedek" style="margin-top:8px">Yedek İndir</button>
+        <p class="muted">Kayıtlar yalnızca bu cihazın tarayıcı hafızasında tutulur. Excel bir rapordur, geri yüklenemez; gerçek yedek için "Yedek İndir"i kullanın. Yedeği her akşam alın ve başka bir yerde (e-posta, bilgisayar) saklayın.</p>
+      </details>
       <div class="sadece-yonetici">
-      <div class="field" style="margin-top:12px"><label>Kayıt paketi yükle (şubelerden gelen gün sonu paketleri)</label><input type="file" id="paketDosya" accept=".json,application/json" multiple></div>
-      <div class="field" style="margin-top:12px"><label>Yedekten geri yükle</label><input type="file" id="yedekDosya" accept=".json,application/json"></div>
-      <label style="display:flex;gap:8px;align-items:center;font-size:0.82rem;margin-top:8px"><input type="checkbox" id="yedekDegistir"> Mevcut kayıtları silip yalnızca yedekteki kayıtları koy</label>
-      <div class="field" style="margin-top:12px"><label>PDF'lerden kayıt yükle (PDF Gönder ile üretilenler; birden fazla seçilebilir)</label><input type="file" id="pdfKayitDosya" accept=".pdf,application/pdf" multiple></div>
-      <p class="muted">PDF Gönder ile üretilen PDF'in içinde görünmez kayıt verisi bulunur. Müşteriye PDF'i "PDF İndir" ile verin.</p>
+        <details class="diger" id="kYon"><summary>Yönetici işlemleri</summary>
+          <div class="field"><label>Kayıt paketi yükle (şubelerden gelen gün sonu paketleri)</label><input type="file" id="paketDosya" accept=".json,application/json" multiple></div>
+          <div class="field"><label>Yedekten geri yükle</label><input type="file" id="yedekDosya" accept=".json,application/json"></div>
+          <label style="display:flex;gap:8px;align-items:center;font-size:0.82rem;margin-top:8px"><input type="checkbox" id="yedekDegistir"> Mevcut kayıtları silip yalnızca yedekteki kayıtları koy</label>
+          <div class="field" style="margin-top:12px"><label>PDF'lerden kayıt yükle (PDF Gönder ile üretilenler; birden fazla seçilebilir)</label><input type="file" id="pdfKayitDosya" accept=".pdf,application/pdf" multiple></div>
+          <p class="muted">PDF Gönder ile üretilen PDF'in içinde görünmez kayıt verisi bulunur. Müşteriye PDF'i "PDF İndir" ile verin. Geri yükleme ve kayıt yükleme yalnızca yönetici girişinde yapılır; aynı numaralı kayıtta daha yeni düzenleme eskisinin yerine geçer.</p>
+        </details>
       </div>
-      <p class="muted">Yedek dosyası kayıtları, müşteri listesini ve alıcı ayarlarını içerir. Geri yükleme ve PDF'lerden kayıt yükleme yalnızca yönetici girişinde yapılır. Yedeği her akşam alın ve başka bir yerde (e-posta, bilgisayar) saklayın.</p>
     </div>
   </div>
 
@@ -1015,7 +1115,7 @@ CAMPS.push({ id: 15, code: 'KMP15', name: 'Fokometre Kampanyası', evrak: true, 
 const S = {};
 function resetState() {
   Object.assign(S, { campId: null, sel: {}, rows: [], num: null, plan: null, annex: null, ek: '', custom: false,
-    hediyeTutar: '', hedPaket: null, ekH: null, odeme: 'Sıralı Evrak', evrak: '', tarih: todayISO(), unvan: '', kod: '', adres: '', savedId: null, savedSig: null,
+    hediyeTutar: '', hedPaket: null, ekH: null, odeme: 'Sıralı Evrak', evrak: '', tarih: todayISO(), unvan: '', kod: '', adres: '', savedId: null, savedSig: null, editId: null,
     baslangic: todayISO(), ilkVade: addDaysIso(todayISO(), 30), baslangicEdited: false, ilkEdited: false,
     odt: null, odtSkip: false, odtEdit: false, odtSel: [], ekAciklama: '', orig: null, hediyeManual: false, odtLocked: [],
     cb: null, cbSkip: false, cbEdit: false, cbSel: [], cbLocked: [], cbIlk: addDaysIso(todayISO(), 30), cbIlkEdited: false });
@@ -1389,11 +1489,12 @@ document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', (
 
 /* ============ 1. Kampanya seçimi ============ */
 function renderCamps() {
-  $('campGrid').innerHTML = CAMPS.map(c =>
-    `<button type="button" class="camp${S.campId === c.id ? ' sel' : ''}" data-id="${c.id}"><div class="code">${c.code}</div><div class="nm">${esc(c.name)}</div></button>`).join('');
+  $('campGrid').innerHTML = CAMPS.map(c => { const t = CAMP_TUR[c.id] || ['', '#1F4E78'], sec = S.campId === c.id;
+    return `<button type="button" class="camp${sec ? ' sel' : ''}" data-id="${c.id}" style="--kc:${t[1]}"><div class="code">${c.code}</div><div class="kt"><div class="nm">${esc(c.name)}</div></div>${t[0] ? `<em class="kcip">${t[0]}</em>` : ''}${sec ? `<span class="kok">${OK_SVG}</span>` : ''}</button>`; }).join('');
 }
 $('campGrid').addEventListener('click', e => {
   const b = e.target.closest('.camp'); if (!b) return;
+  if (S.editId) { toast('Düzenleme sırasında kampanya değiştirilemez. Vazgeç deyip yeni sözleşme hazırlayın.'); return; }
   selectCamp(+b.dataset.id);
 });
 /* Yapışık başlık çubuğunun altına hizalar, böylece kartın başı ve seçim kutuları örtülmez */
@@ -1404,7 +1505,7 @@ function scrollToCard(el) {
 }
 function selectCamp(id) {
   S.campId = id; S.sel = {}; S.rows = []; S.num = null; S.plan = null; S.annex = null; S.ek = ''; S.custom = false; S.hediyeTutar = ''; S.hedPaket = null; S.ekH = null; S.hediyeManual = false; S.orig = null; S.ekAciklama = '';
-  S.savedId = null; S.savedSig = null; S.odt = null; S.odtSkip = false; S.odtEdit = false; S.odtSel = []; S.odtLocked = [];
+  S.savedId = null; S.savedSig = null; S.editId = null; S.odt = null; S.odtSkip = false; S.odtEdit = false; S.odtSel = []; S.odtLocked = [];
   S.cb = null; S.cbSkip = false; S.cbEdit = false; S.cbSel = []; S.cbLocked = [];
   renderCamps(); renderDetay(); renderOdeme();
   ['card-musteri', 'card-odeme', 'card-aksiyon'].forEach(i => { $(i).style.display = 'block'; });
@@ -2078,13 +2179,14 @@ function buildModel() {
     cbDuzenlendi: !!(cbActive() && S.cb && S.cb.manual),
     cbFark: (cbActive() && S.cb && S.cb.lines.length !== cbParams().vade) ? 'Cihaz bedeli ödeme sayısı: ' + cbParams().vade + ' → ' + S.cb.lines.length : '',
     ekIskonto: df.ekIsk, farklar: df.farklar, aciklama: S.custom ? String(S.ekAciklama || '').trim() : '',
+    form: formKopya(),
     snap: (() => { const sp = clone(SNAP); if (c.tablo !== false) sp.maddeler = sp.maddeler.concat(EK_MADDELER); return sp; })()
   };
 }
 $('btnOnizle').addEventListener('click', () => {
   commitAllNf();
   const err = validate(); const eb = $('err');
-  if (err) { eb.textContent = err; eb.style.display = 'block'; return; }
+  if (err) { eb.textContent = err; eb.style.display = 'block'; toast(err); eb.scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
   eb.style.display = 'none';
   guardTable(() => showPreview(buildModel(), 'yeni', false));
 });
@@ -2144,7 +2246,7 @@ function resetForm() {
   ['c_unvan', 'c_kod', 'c_adres'].forEach(i => { $(i).value = ''; });
   ['card-detay', 'card-musteri', 'card-odeme', 'card-aksiyon'].forEach(i => { $(i).style.display = 'none'; });
   $('err').style.display = 'none'; $('sug').style.display = 'none';
-  renderCamps(); window.scrollTo(0, 0);
+  renderCamps(); duzBannerCiz(); window.scrollTo(0, 0);
 }
 $('btnTemizle').addEventListener('click', () => {
   if (hasContent() && !isSaved()) askDiscard(resetForm); else resetForm();
@@ -2300,11 +2402,21 @@ function pvEtiket(k) {
   $('pvSave').style.display = k ? 'none' : '';
   $('pvSavePrint').textContent = k ? 'Yazdır (Asıl + Suret)' : 'Kaydet ve Yazdır (Asıl + Suret)';
   $('pvGonder2').textContent = k ? 'Gönder' : 'Kaydet ve Gönder';
+  $('pvGonderAS').textContent = k ? 'Gönder (Asıl + Suret)' : 'Kaydet ve Gönder (Asıl + Suret)';
 }
 function saveModel() {
   if (!curModel) return false;
   const prevK = lsGet(LS_KAYIT, []).find(x => x.id === curModel.id);
   if (prevK) ['no', 'sube', 'pers', 'subeKod', 'persKod', 'gonder'].forEach(k => { if (prevK[k] != null && curModel[k] == null) curModel[k] = prevK[k]; });
+  if (prevK && S.editId && curModel.id === S.editId) {
+    if (!(S.savedId === curModel.id && S.savedSig === curSig)) {
+      const kim = kullGecerli() ? subeAd(kullOku().sube) + ' ' + persKodu() : 'Yönetici';
+      curModel.ts = prevK.ts; curModel.duzTs = Date.now(); curModel.duzKim = kim;
+      curModel.duzGecmis = (prevK.duzGecmis || []).concat([{ ts: curModel.duzTs, kim, onceki: { unvan: prevK.unvan, kod: prevK.kod, adres: prevK.adres, tarih: prevK.tarih, kampanya: prevK.campName, ozet: prevK.ozet, tutar: prevK.tutar, hediye: prevK.hedPaket, farklar: prevK.farklar || [] } }]);
+      delete curModel.gonder;
+    } else ['ts', 'duzTs', 'duzKim', 'duzGecmis'].forEach(k => { if (prevK[k] != null) curModel[k] = prevK[k]; });
+    ['kaynak', 'yuklemeTs'].forEach(k => { if (prevK[k] != null) curModel[k] = prevK[k]; });
+  }
   kimlikRed = false;
   if (!curModel.no && kullGecerli()) {
     const kk = kullOku(); curModel.no = noUret(curModel.tarih); curModel.subeKod = kk.sube; curModel.persKod = persKodu(); curModel.sube = subeAd(kk.sube); curModel.pers = persKodu();
@@ -2380,7 +2492,7 @@ async function pdfIndir(copies, kaydet) {
     else if (kimlikRed || !confirm('Sözleşme kaydedilemedi (tarayıcı hafızası dolu olabilir). Yine de PDF oluşturulsun mu?')) return;
   }
   pdfBusy = true;
-  const btns = ['pvSavePrint', 'pvPdf1', 'pvGonder2'].map($); const old = btns.map(b => b.textContent);
+  const btns = ['pvSavePrint', 'pvPdf1', 'pvPdfAS', 'pvGonder2', 'pvGonderAS'].map($); const old = btns.map(b => b.textContent);
   btns.forEach(b => { b.disabled = true; });
   const lbl = (i, n) => btns.forEach(b => { b.textContent = 'PDF hazırlanıyor… ' + i + ' / ' + n; });
   const name = pdfName(curModel) + '.pdf';
@@ -2399,10 +2511,11 @@ async function pdfIndir(copies, kaydet) {
   } finally { btns.forEach((b, i) => { b.disabled = false; b.textContent = old[i]; }); pdfBusy = false; }
 }
 $('pvPdf1').addEventListener('click', () => pdfIndir(1, !fromSaved));
+$('pvPdfAS').addEventListener('click', () => pdfIndir(2, !fromSaved));
 $('pvPrint1').addEventListener('click', () => yazdir(1));
 
 /* ============ Kayıtlar ============ */
-function updateKayitBadge() { const n = lsGet(LS_KAYIT, []).length; $('tabKayit').textContent = 'Kayıtlar' + (n ? ' (' + n + ')' : ''); yedekBarGuncelle(); havuzBarGuncelle(); }
+function updateKayitBadge() { const n = lsGet(LS_KAYIT, []).length; const kr = $('kayitRozet'); if (kr) { kr.textContent = n || ''; kr.classList.toggle('var', n > 0); } yedekBarGuncelle(); havuzBarGuncelle(); }
 const rowVal = (x, l) => { const r = (x.rows || []).find(q => q[0] === l); return r ? r[1] : null; };
 function cbOf(x) {
   const r = (x.rows || []).find(q => q[0] === 'Anlaşma Şekli');
@@ -2441,7 +2554,7 @@ const numTr = n => String(n).replace('.', ',');
 function renderKayit() {
   const q = norm($('k_q').value);
   const all = lsGet(LS_KAYIT, []).sort((a, b) => b.ts - a.ts)
-    .filter(x => (!q || norm(x.unvan + ' ' + x.kod + ' ' + x.campName + ' ' + (x.no || '')).indexOf(q) > -1) && !($('k_havuz') && $('k_havuz').checked && havuzaGitti(x)));
+    .filter(x => (!q || norm(x.unvan + ' ' + x.kod + ' ' + x.campName + ' ' + (x.no || '')).indexOf(q) > -1) && !($('k_havuz') && $('k_havuz').checked && havuzaGitti(x)) && !($('k_duz') && $('k_duz').checked && !x.duzTs));
   // Özet: kayıt sayısı ve anlaşma tutarları
   let total = 0; const per = [];
   CAMPS.forEach(c => {
@@ -2460,16 +2573,18 @@ function renderKayit() {
     if (k.ekIskonto != null && k.ekIskonto !== 0) bd += '<span class="badge">ek iskonto ' + (k.ekIskonto > 0 ? '+' : '−') + numTr(Math.abs(k.ekIskonto)) + '</span>';
     if (k.farklar.length) bd += '<span class="badge">tablo dışı</span>'; else if (x.custom) bd += '<span class="badge">özelleştirilmiş</span>';
     if (x.odtDuzenlendi || x.cbDuzenlendi) bd += '<span class="badge">ödeme planı düzenlendi</span>';
+    if (x.duzTs) bd += '<span class="badge">düzenlendi ' + new Date(x.duzTs).toLocaleDateString('tr-TR') + '</span>';
     bd += kaynakRozet(x) + havuzRozet(x);
     return `<div class="list-row"><div class="info"><b>${x.no ? esc(x.no) + ' · ' : ''}${esc(x.unvan)}</b><small>${fmtDateDot(x.tarih)} · ${esc(x.campName)}${x.ozet ? ' · ' + esc(x.ozet) : ''}${bd}</small>` +
       (k.aciklama ? `<small style="display:block">Not: ${esc(k.aciklama)}</small>` : '') + `</div>` +
-      `<div class="acts"><button class="btn secondary" data-open="${x.id}">Aç</button><button class="btn secondary" data-gonder="${x.id}">Gönder</button><button class="btn danger" data-del="${x.id}">Sil</button></div></div>`;
+      `<div class="acts"><button class="btn secondary" data-open="${x.id}">Aç</button><button class="btn secondary" data-gonder="${x.id}">Gönder</button>${yoneticiMi() ? `<button class="btn secondary" data-duz="${x.id}">Düzenle</button>` : ''}<button class="btn danger" data-del="${x.id}">Sil</button></div></div>`;
   }).join('') : '<div class="empty-msg">Kayıtlı sözleşme yok.</div>';
 }
 $('k_q').addEventListener('input', renderKayit);
 $('kayitList').addEventListener('click', e => {
-  const o = e.target.closest('[data-open]'), d = e.target.closest('[data-del]'), gd = e.target.closest('[data-gonder]');
-  if (gd) { const m = lsGet(LS_KAYIT, []).find(x => x.id === gd.dataset.gonder); if (m) { showPreview(m, 'kayit', true); pdfGonder(2, true); } }
+  const o = e.target.closest('[data-open]'), d = e.target.closest('[data-del]'), gd = e.target.closest('[data-gonder]'), du = e.target.closest('[data-duz]');
+  if (du) { kayitDuzenle(du.dataset.duz); return; }
+  if (gd) { const m = lsGet(LS_KAYIT, []).find(x => x.id === gd.dataset.gonder); if (m) { showPreview(m, 'kayit', true); pdfGonder(1, true); } }
   if (o) { const m = lsGet(LS_KAYIT, []).find(x => x.id === o.dataset.open); if (m) showPreview(m, 'kayit', true); }
   if (d && confirm('Bu sözleşme kaydı silinsin mi?')) {
     lsSet(LS_KAYIT, lsGet(LS_KAYIT, []).filter(x => x.id !== d.dataset.del));
@@ -2481,19 +2596,19 @@ function excelUret(mod) {
   if (!all.length) { toast('Aktarılacak kayıt yok.'); return null; }
   const H = ['Sözleşme No', 'Şube', 'Personel', 'Tarih', 'Başlangıç Tarihi', 'Cari Kodu', 'Ünvan', 'Kampanya', 'Ödeme Çeşidi', 'Anlaşma Tutarı (₺)', 'Tutar Türü', 'Aylık Ödeme (₺)', 'Ay Sayısı',
     'İskonto (%)', 'Ek İskonto (puan)', 'Hediye / Cihaz / Çek', 'Hediye / Çek Tutarı (₺)', 'Hediye Paket Değeri (₺)', 'Hediye Fark (₺)', 'Hediye Puan', 'Elektronik Kampanya Tutarı (₺)', 'Fiyat Farkı (₺)', 'Ödeme Tablosu', 'Cihaz Bedeli (₺)', 'Cihaz Bedeli Ödeme Sayısı', 'Ödeme Planı Düzenlendi', 'Özelleştirildi',
-    'Tablodan Farklı Alanlar', 'Ek Fayda Açıklaması', 'Havuz Gönderimi', 'Kayıt Zamanı'].concat(yoneticiMi() ? ['Gerçek İskonto Oranı (%)', 'Gerçek İskonto Tutarı (₺)', 'Katalogdaki Gerçek İskonto (%)'] : []);
+    'Tablodan Farklı Alanlar', 'Ek Fayda Açıklaması', 'Havuz Gönderimi', 'Kayıt Zamanı', 'Düzenlendi', 'Düzenleme Zamanı'].concat(yoneticiMi() ? ['Gerçek İskonto Oranı (%)', 'Gerçek İskonto Tutarı (₺)', 'Katalogdaki Gerçek İskonto (%)'] : []);
   const nn = v => (v == null || v === '' || isNaN(v)) ? '' : v;
   const aoa = [H].concat(all.map(x => {
     const k = kayitInfo(x);
     return [x.no || '', x.sube || '', x.pers || '', fmtDateDot(x.tarih), x.baslangic ? fmtDateDot(x.baslangic) : '', x.kod, x.unvan, x.campName, x.odeme, nn(k.tutar), k.tutarTuru, nn(k.aylik), nn(k.ay),
       nn(k.iskonto), nn(k.ekIskonto), k.fayda, nn(k.hediyeTutar), nn(k.hedPaket), nn(k.hedFark), nn(k.puan), nn(k.elk), nn(k.fark), k.tablo, nn(k.cbTutar), nn(k.cbAdet), (x.odtDuzenlendi || x.cbDuzenlendi) ? 'Evet' : 'Hayır', x.custom ? 'Evet' : 'Hayır',
-      k.farklar.concat(x.odtFark ? [x.odtFark] : [], x.cbFark ? [x.cbFark] : []).join('; '), k.aciklama, havuzMetni(x), new Date(x.ts).toLocaleString('tr-TR')].concat(yoneticiMi() ? gercekExcel(x) : []);
+      k.farklar.concat(x.odtFark ? [x.odtFark] : [], x.cbFark ? [x.cbFark] : []).join('; '), k.aciklama, havuzMetni(x), new Date(x.ts).toLocaleString('tr-TR'), x.duzTs ? 'Evet' : '', x.duzTs ? new Date(x.duzTs).toLocaleString('tr-TR') + (x.duzKim ? ' – ' + x.duzKim : '') : ''].concat(yoneticiMi() ? gercekExcel(x) : []);
   }));
   if (libXlsx()) {
     const ws = XLSX.utils.aoa_to_sheet(aoa);
-    ws['!cols'] = [20, 10, 18, 12, 16, 14, 40, 52, 24, 18, 26, 16, 10, 12, 16, 60, 20, 20, 16, 14, 22, 16, 18, 18, 16, 14, 11, 70, 40, 28, 20, 18, 22, 24].map(w => ({ wch: w }));
+    ws['!cols'] = [20, 10, 18, 12, 16, 14, 40, 52, 24, 18, 26, 16, 10, 12, 16, 60, 20, 20, 16, 14, 22, 16, 18, 18, 16, 14, 11, 70, 40, 28, 20, 11, 34, 18, 22, 24].map(w => ({ wch: w }));
     [9, 11, 16, 17, 18, 19, 20, 21, 23].forEach(c => { for (let r = 1; r < aoa.length; r++) { const cell = ws[XLSX.utils.encode_cell({ r, c })]; if (cell && typeof cell.v === 'number') cell.z = '#,##0'; } });
-    [[31, '0.00'], [32, '#,##0'], [33, '0.00']].forEach(f => { for (let r = 1; r < aoa.length; r++) { const cell = ws[XLSX.utils.encode_cell({ r, c: f[0] })]; if (cell && typeof cell.v === 'number') cell.z = f[1]; } });
+    [[33, '0.00'], [34, '#,##0'], [35, '0.00']].forEach(f => { for (let r = 1; r < aoa.length; r++) { const cell = ws[XLSX.utils.encode_cell({ r, c: f[0] })]; if (cell && typeof cell.v === 'number') cell.z = f[1]; } });
     const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Sözleşmeler');
     if (mod === 'blob') return XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
     XLSX.writeFile(wb, 'silmo_sozlesme_kayitlari.xlsx');
@@ -2596,8 +2711,9 @@ const pad2 = n => String(n).padStart(2, '0');
 const gunStr = d => d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
 function yedekDurum() {
   const k = lsGet(LS_KAYIT, []), y = lsGet(LS_YEDEK, {}), son = typeof y.son === 'number' ? y.son : 0;
-  const yeniler = k.filter(x => (x.yuklemeTs || x.ts || 0) > son);
-  return { n: k.length, yeni: yeniler.length, eskiYeni: yeniler.filter(x => (x.yuklemeTs || x.ts) < Date.now() - 30 * 60 * 1000).length, son, hat: y.hat || '' };
+  const zm = x => Math.max(x.yuklemeTs || x.ts || 0, x.duzTs || 0);
+  const yeniler = k.filter(x => zm(x) > son);
+  return { n: k.length, yeni: yeniler.length, eskiYeni: yeniler.filter(x => zm(x) < Date.now() - 30 * 60 * 1000).length, son, hat: y.hat || '' };
 }
 function sonYedekMetni(son) {
   if (!son) return 'hiç yedek alınmadı';
@@ -2633,7 +2749,8 @@ function yedekIndir() {
 }
 function yedekUygula(d, gecerli, degistir) {
   const cur = lsGet(LS_KAYIT, []);
-  const sonuc = degistir ? gecerli.slice() : cur.concat(gecerli.filter(x => !cur.some(c => c.id === x.id)));
+  const sonuc = degistir ? gecerli.slice() : cur.slice(); let guncelSay = 0;
+  if (!degistir) gecerli.forEach(x => { const sn = kayitBirlestir(sonuc, x); if (sn === 'guncel') guncelSay++; });
   if (!lsSet(LS_KAYIT, sonuc)) { toast('Geri yüklenemedi: tarayıcı hafızası dolu olabilir.'); return; }
   if (d.musteri && Array.isArray(d.musteri.list) && d.musteri.list.length) {
     const m0 = lsGet(LS_MUSTERI, null);
@@ -2645,7 +2762,7 @@ function yedekUygula(d, gecerli, degistir) {
   }
   sayacYenile(sonuc, d.sayac);
   loadMusteri(); renderMusteriPanel(); updateKayitBadge(); renderKayit(); alicilarCiz(); havuzCiz(); kimlikGuncelle(); havuzBarGuncelle();
-  toast(gecerli.length + ' kayıt yedekten işlendi (şu an ' + sonuc.length + ' kayıt var).');
+  toast(gecerli.length + ' kayıt yedekten işlendi' + (guncelSay ? ' (' + guncelSay + ' kayıt daha yeni düzenlemeyle güncellendi)' : '') + ' (şu an ' + sonuc.length + ' kayıt var).');
 }
 $('yedekDosya').addEventListener('change', async e => {
   const f = e.target.files[0]; e.target.value = ''; if (!f) return;
@@ -2820,7 +2937,7 @@ async function pdfGonder(copies, onceKayitli, sadeceSenet) {
     if (sL || cL) { const evet = await senetSor(sL ? sL.length : 0, cL ? cL.length : 0); if (evet) ekle = [sL ? 'odt' : null, cL ? 'cb' : null].filter(Boolean); }
   }
   pdfBusy = true;
-  const ids = ['pvSavePrint', 'pvPdf1', 'pvGonder2', 'pvSenetG', 'pvSenetCbG'], btns = ids.map($); const old = btns.map(b => b.textContent);
+  const ids = ['pvSavePrint', 'pvPdf1', 'pvPdfAS', 'pvGonder2', 'pvGonderAS', 'pvSenetG', 'pvSenetCbG'], btns = ids.map($); const old = btns.map(b => b.textContent);
   btns.forEach(b => { b.disabled = true; });
   const lbl = (i, n) => btns.forEach(b => { b.textContent = 'PDF hazırlanıyor… ' + i + ' / ' + n; });
   try {
@@ -2840,6 +2957,7 @@ async function pdfGonder(copies, onceKayitli, sadeceSenet) {
   } finally { btns.forEach((b, i) => { b.disabled = false; b.textContent = old[i]; }); pdfBusy = false; }
 }
 $('pvGonder2').addEventListener('click', () => pdfGonder(1));
+$('pvGonderAS').addEventListener('click', () => pdfGonder(2));
 $('pvSenetG').addEventListener('click', () => pdfGonder(2, false, 'odt'));
 $('pvSenetCbG').addEventListener('click', () => pdfGonder(2, false, 'cb'));
 
@@ -2999,6 +3117,7 @@ function girisAc(zorunlu) {
   const k = kullOku(), tamam = kullGecerli();
   $('girisBox').innerHTML = '<img class="giris-logo" src="' + LOGO + '" alt="Merve Gözlük Camı"><h1>SILMO İSTANBUL 2026</h1><div class="giris-alt">Fuar Uygulaması</div><p class="giris-yonerge">Lütfen Şubenizi Seçiniz</p>' +
     '<select id="gSube"><option value="">Şube seçin…</option>' + SUBELER.map(s => '<option value="' + s[1] + '"' + (k.sube === s[1] ? ' selected' : '') + '>' + esc(s[0]) + '</option>').join('') + '</select>' +
+    '<div class="sube-izgara" id="gIzgara">' + SUBELER.filter(s => s[1] !== 'MRK').map(s => '<button type="button" class="sube-k" data-k="' + s[1] + '"><b>' + esc(s[0]) + '</b><span>' + s[1] + '</span></button>').join('') + '<button type="button" class="sube-k yon" data-k="MRK"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><b>Yönetici girişi</b></button></div>' +
     '<div class="hd-grid giris-isim"><div class="field"><label>Adınızın ilk 2 harfi</label><input type="text" id="gAd" maxlength="2" autocapitalize="characters" autocomplete="off" value="' + esc(k.ad) + '"></div><div class="field"><label>Soyadınızın ilk 2 harfi</label><input type="text" id="gSoyad" maxlength="2" autocapitalize="characters" autocomplete="off" value="' + esc(k.soyad) + '"></div></div>' +
     '<div class="field" id="gSifreAlan" style="display:none"><label>Yönetici şifresi</label><input type="password" id="gSifre" autocomplete="off"><div class="giris-hata" id="gHata"></div><div class="muted" id="gHatirli" style="display:none">Bu cihazda yönetici girişi hatırlanıyor; şifre gerekmez. <button type="button" class="giris-link" id="gYeniden">Şifreyi yeniden gir</button></div></div>' +
     '<div class="pv-bar" style="margin-top:14px">' + (tamam && !zorunlu ? '<button type="button" class="btn secondary" id="gVazgec">Vazgeç</button>' : '') + '<button type="button" class="btn" id="gDevam" disabled>Devam</button></div>';
@@ -3012,7 +3131,9 @@ function girisAc(zorunlu) {
     $('gDevam').disabled = !($('gSube').value && /^[A-Z]{2}$/.test($('gAd').value) && /^[A-Z]{2}$/.test($('gSoyad').value) && (!yon || hat || sf.value.length > 0));
   };
   ['gAd', 'gSoyad'].forEach(id => $(id).addEventListener('input', e => { e.target.value = harf2(e.target.value); kontrol(); }));
-  $('gSifre').addEventListener('input', () => { hata(''); kontrol(); }); $('gSube').addEventListener('change', () => { yeniden = false; hata(''); kontrol(); }); $('gYeniden').addEventListener('click', () => { yeniden = true; hata(''); kontrol(); $('gSifre').focus(); }); kontrol();
+  $('gSifre').addEventListener('input', () => { hata(''); kontrol(); }); $('gSube').addEventListener('change', () => { yeniden = false; hata(''); kontrol(); izSync(); });
+  const izSync = () => document.querySelectorAll('#gIzgara .sube-k').forEach(b => b.classList.toggle('sec', b.dataset.k === $('gSube').value));
+  $('gIzgara').addEventListener('click', e => { const b = e.target.closest('.sube-k'); if (!b) return; $('gSube').value = b.dataset.k; $('gSube').dispatchEvent(new Event('change')); }); izSync(); $('gYeniden').addEventListener('click', () => { yeniden = true; hata(''); kontrol(); $('gSifre').focus(); }); kontrol();
   $('gDevam').addEventListener('click', async () => {
     if ($('gDevam').disabled) return;
     const sube = $('gSube').value; let yon = false;
@@ -3064,10 +3185,10 @@ function havuzBarGuncelle() {
   if (n) $('havuzMetin').textContent = n + ' sözleşme merkeze gönderilmedi. Gün sonunda "Merkeze Gönder"e basın.';
 }
 $('havuzGit').addEventListener('click', () => paketGonder());
-$('k_havuz').addEventListener('change', renderKayit);
+$('k_havuz').addEventListener('change', renderKayit); $('k_duz').addEventListener('change', renderKayit);
 const havuzMetni = x => x.kaynak ? (x.kaynak === 'pdf' ? 'PDF\'ten yüklendi' : 'Paketten yüklendi') : x.gonder ? 'Gönderildi ' + new Date(x.gonder.ts).toLocaleString('tr-TR') + (x.gonder.kime ? ' → ' + x.gonder.kime : '') : 'Gönderilmedi';
-function havuzRozet(x) { if (x.kaynak) return ''; return havuzaGitti(x) ? '<span class="badge">merkeze gönderildi</span>' : '<span class="badge" style="border-color:#d98e04">merkeze gönderilmedi</span>'; }
-function kaynakRozet(x) { return x.kaynak ? '<span class="badge">' + (x.kaynak === 'pdf' ? 'PDF\'ten yüklendi' : 'paketten yüklendi') + '</span>' : ''; }
+function havuzRozet(x) { if (x.kaynak) return ''; return havuzaGitti(x) ? '<span class="badge ok">merkeze gönderildi</span>' : '<span class="badge warn">merkeze gönderilmedi</span>'; }
+function kaynakRozet(x) { return x.kaynak ? '<span class="badge info">' + (x.kaynak === 'pdf' ? 'PDF\'ten yüklendi' : 'paketten yüklendi') + '</span>' : ''; }
 $('btnExcelHavuz').addEventListener('click', () => {
   const arr = excelUret('blob'); if (!arr) return;
   const n = lsGet(LS_KAYIT, []).length, bugun = gunStr(new Date());
@@ -3077,7 +3198,7 @@ $('btnExcelHavuz').addEventListener('click', () => {
 
 /* ============ PDF'lerden kayıt yükleme (PDF Gönder ile üretilen PDF'in içinde kayıt verisi vardır) ============ */
 function kayitKodla(m) {
-  const u8 = new TextEncoder().encode(JSON.stringify(Object.assign({}, m, { farklar: [], aciklama: '', ekIskonto: null, odtFark: '', cbFark: '' }))); let b = '';
+  const u8 = new TextEncoder().encode(JSON.stringify(Object.assign({}, m, { farklar: [], aciklama: '', ekIskonto: null, odtFark: '', cbFark: '', duzGecmis: [], form: m.form ? Object.assign({}, m.form, { ekAciklama: '' }) : undefined }))); let b = '';
   for (let i = 0; i < u8.length; i += 0x8000) b += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000));
   return btoa(b);
 }
@@ -3091,36 +3212,36 @@ async function pdfKayitOku(file) {
 $('pdfKayitDosya').addEventListener('change', async e => {
   const fs = [...e.target.files]; e.target.value = ''; if (!fs.length) return;
   if (!yoneticiMi()) { toast('PDF\'lerden kayıt yükleme yalnızca yönetici girişinde yapılabilir.'); return; }
-  const cur = lsGet(LS_KAYIT, []); let yeni = 0, var_ = 0, yok = 0;
+  const cur = lsGet(LS_KAYIT, []); let yeni = 0, var_ = 0, yok = 0, guncel = 0;
   for (const f of fs) {
     const m = await pdfKayitOku(f);
     if (!m || !m.id || typeof m.ts !== 'number' || !Array.isArray(m.rows) || !m.unvan) { yok++; continue; }
-    if (cur.some(x => x.id === m.id)) { var_++; continue; }
+    if (cur.some(x => x.id === m.id) && (m.duzTs || 0) <= (cur.find(x => x.id === m.id).duzTs || 0)) { var_++; continue; }
     const fy = farkYeniden(m); m.farklar = fy.farklar; m.ekIskonto = fy.ekIsk; m.custom = !!m.custom || fy.farklar.length > 0; m.kaynak = 'pdf'; m.yuklemeTs = Date.now();
-    cur.push(m); yeni++;
+    if (kayitBirlestir(cur, m) === 'guncel') guncel++; else yeni++;
   }
-  if (yeni && !lsSet(LS_KAYIT, cur)) { toast('Kaydedilemedi: tarayıcı hafızası dolu olabilir.'); return; }
+  if ((yeni || guncel) && !lsSet(LS_KAYIT, cur)) { toast('Kaydedilemedi: tarayıcı hafızası dolu olabilir.'); return; }
   sayacYenile(cur); updateKayitBadge(); renderKayit();
-  toast(yeni + ' kayıt eklendi' + (var_ ? ', ' + var_ + ' zaten vardı' : '') + (yok ? ', ' + yok + ' dosyada kayıt verisi yok' : '') + '.');
+  toast(yeni + ' kayıt eklendi' + (guncel ? ', ' + guncel + ' güncellendi (daha yeni düzenleme)' : '') + (var_ ? ', ' + var_ + ' zaten vardı' : '') + (yok ? ', ' + yok + ' dosyada kayıt verisi yok' : '') + '.');
 });
 
 /* Kayıt paketi yükle (yalnızca yönetici): şubelerden gelen gün sonu veri paketlerini birleştirir */
 $('paketDosya').addEventListener('change', async e => {
   const fs = [...e.target.files]; e.target.value = ''; if (!fs.length) return;
   if (!yoneticiMi()) { toast('Kayıt paketi yükleme yalnızca yönetici girişinde yapılabilir.'); return; }
-  const cur = lsGet(LS_KAYIT, []); let yeni = 0, var_ = 0, hata = 0;
+  const cur = lsGet(LS_KAYIT, []); let yeni = 0, var_ = 0, hata = 0, guncel = 0;
   for (const f of fs) {
     let d; try { d = JSON.parse(await f.text()); } catch (er) { hata++; continue; }
     if (!d || d.uygulama !== 'SILMO-2026-PAKET' || !Array.isArray(d.kayit)) { hata++; continue; }
     d.kayit.forEach(m => {
       if (!m || !m.id || typeof m.ts !== 'number' || !Array.isArray(m.rows) || !m.unvan) { hata++; return; }
-      if (cur.some(x => x.id === m.id)) { var_++; return; }
-      m.kaynak = 'paket'; m.yuklemeTs = Date.now(); cur.push(m); yeni++;
+      m.kaynak = 'paket'; m.yuklemeTs = Date.now();
+      const sn = kayitBirlestir(cur, m); if (sn === 'yeni') yeni++; else if (sn === 'guncel') guncel++; else var_++;
     });
   }
-  if (yeni && !lsSet(LS_KAYIT, cur)) { toast('Kaydedilemedi: tarayıcı hafızası dolu olabilir.'); return; }
+  if ((yeni || guncel) && !lsSet(LS_KAYIT, cur)) { toast('Kaydedilemedi: tarayıcı hafızası dolu olabilir.'); return; }
   sayacYenile(cur); updateKayitBadge(); renderKayit();
-  toast(yeni + ' kayıt eklendi' + (var_ ? ', ' + var_ + ' zaten vardı' : '') + (hata ? ', ' + hata + ' dosya/kayıt okunamadı' : '') + '.');
+  toast(yeni + ' kayıt eklendi' + (guncel ? ', ' + guncel + ' güncellendi (daha yeni düzenleme)' : '') + (var_ ? ', ' + var_ + ' zaten vardı' : '') + (hata ? ', ' + hata + ' dosya/kayıt okunamadı' : '') + '.');
 });
 
 /* ============ Senet yazdırma (A4'e üç senet) ============ */
@@ -3282,6 +3403,58 @@ function farkYeniden(m) {
     return { farklar: out, ekIsk: (p1 != null && p0 != null) ? Math.round((p1 - p0) * 100) / 100 : null };
   } catch (e) { return { farklar: [], ekIsk: null }; }
 }
+
+/* ============ Yönetici: kayıt düzenleme ============
+   Kayıtta formun tam kopyası (form) saklanır; yönetici "Düzenle" ile kaydı forma yükler, aynı numara ve aynı kayıt güncellenir.
+   Düzenlenen kayıt "düzenlendi" izi ve önceki sürümün özetini taşır, yeniden "merkeze gönderilmedi" olur. */
+const FORM_KEYS = ['campId', 'sel', 'rows', 'num', 'plan', 'annex', 'ek', 'custom', 'hediyeTutar', 'hedPaket', 'ekH', 'odeme', 'evrak', 'tarih', 'unvan', 'kod', 'adres', 'baslangic', 'ilkVade', 'baslangicEdited', 'ilkEdited', 'odt', 'odtSkip', 'odtLocked', 'ekAciklama', 'orig', 'hediyeManual', 'cb', 'cbSkip', 'cbLocked', 'cbIlk', 'cbIlkEdited'];
+function formKopya() { const f = {}; FORM_KEYS.forEach(k => { f[k] = clone(S[k]); }); return f; }
+function duzBannerCiz() {
+  const b = $('duzBanner'); if (!b) return;
+  if (S.editId) { const m = lsGet(LS_KAYIT, []).find(x => x.id === S.editId); $('duzMetin').textContent = 'Düzenleniyor: ' + (m && m.no ? m.no : 'kayıtlı sözleşme'); b.style.display = ''; }
+  else b.style.display = 'none';
+}
+function kayitDuzenle(id) {
+  if (!yoneticiMi()) { toast('Kayıt düzenleme yalnızca yönetici girişinde yapılabilir.'); return; }
+  const m = lsGet(LS_KAYIT, []).find(x => x.id === id); if (!m) return;
+  if (!m.form || !m.form.campId) { toast('Bu kayıt eski sürümde kaydedildiği için düzenlenemez; silip yeniden hazırlayın.'); return; }
+  const git = () => {
+    resetState(); Object.assign(S, clone(m.form));
+    S.savedId = m.id; S.savedSig = null; S.editId = m.id;
+    $('c_unvan').value = S.unvan; $('c_kod').value = S.kod; $('c_adres').value = S.adres;
+    $('err').style.display = 'none'; $('sug').style.display = 'none';
+    renderCamps(); renderDetay(); renderOdeme(); refreshSummary();
+    ['card-detay', 'card-musteri', 'card-odeme', 'card-aksiyon'].forEach(i => { $(i).style.display = 'block'; });
+    duzBannerCiz(); showPanel('yeni');
+  };
+  if (hasContent() && !isSaved()) askModal({ title: 'Form dolu', text: 'Yeni Sözleşme ekranında kaydedilmemiş bir sözleşme var; düzenlemeye geçilirse silinecek. Devam edilsin mi?', left: { label: 'Vazgeç' }, right: { label: 'Düzenlemeye Geç', danger: true, fn: git } });
+  else git();
+}
+$('duzVazgec').addEventListener('click', () => {
+  askModal({ title: 'Düzenleme iptal edilsin mi?', text: 'Yapılan değişiklikler kaydedilmeyecek; kayıt olduğu gibi kalacak.', left: { label: 'Devam Et' }, right: { label: 'İptal Et', danger: true, fn: resetForm } });
+});
+/* Birleştirme: aynı kayıt (id) varsa daha yeni düzenlenmiş sürüm eskisinin yerine geçer */
+function kayitBirlestir(cur, m) {
+  const i = cur.findIndex(x => x.id === m.id);
+  if (i < 0) { cur.push(m); return 'yeni'; }
+  if ((m.duzTs || 0) > (cur[i].duzTs || 0)) { delete m.gonder; cur[i] = m; return 'guncel'; }
+  return 'var';
+}
+
+/* ============ Tema B2: alt sekme çubuğu simgeleri ============ */
+const NAV_IKON = {
+  yeni: '<svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M12 11v6M9 14h6"/></svg>',
+  kayit: '<svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>',
+  musteri: '<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>',
+  ayar: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>'
+};
+const NAV_AD = { yeni: 'Yeni', kayit: 'Kayıtlar', musteri: 'Müşteriler', ayar: 'Ayarlar' };
+document.querySelectorAll('.tab-btn').forEach(b => {
+  const t = b.dataset.tab; b.setAttribute('aria-label', b.textContent.trim());
+  b.innerHTML = (NAV_IKON[t] || '') + '<span>' + (NAV_AD[t] || b.textContent) + '</span>' + (t === 'kayit' ? '<i id="kayitRozet"></i>' : '');
+});
+const CAMP_TUR = { 1: ['İskonto', '#1F4E78'], 2: ['Hediye', '#1B8A4B'], 3: ['Hediye', '#1B8A4B'], 4: ['Cihaz', '#6C4AB6'], 5: ['Puan', '#D98E04'], 6: ['Çek', '#C2185B'], 7: ['Ön ödeme', '#00838F'], 8: ['Fiyat farkı', '#546E7A'], 9: ['Stok cam', '#8D6E63'], 10: ['Makine', '#283593'], 11: ['Makine', '#283593'], 12: ['Makine', '#283593'], 13: ['Makine', '#283593'], 14: ['Makine', '#283593'], 15: ['Fokometre', '#00695C'] };
+const OK_SVG = '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
 
 /* ============ Başlangıç ============ */
 renderCamps(); loadMusteri(); updateKayitBadge(); renderMusteriPanel(); yedekBarGuncelle(); alicilarCiz(); havuzCiz(); havuzBarGuncelle(); kimlikGuncelle(); document.body.classList.toggle('yonetici', !!yoneticiMi());
