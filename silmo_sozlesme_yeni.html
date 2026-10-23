@@ -179,6 +179,10 @@
   .sn-im { top: 72mm; font-size: 7pt; } .sn-i1 { left: 154mm; } .sn-i2 { left: 178mm; }
   .sn-kesik { position: absolute; left: 0; width: 210mm; height: 0; border-top: 0.3mm dashed #7a8a90; }
   .sn-kesik span { position: absolute; left: 3mm; top: -3.2mm; font-size: 9pt; color: #7a8a90; background: #fff; padding: 0 1mm; font-family: Arial, sans-serif; }
+  .giris-hata { color: #b3261e; font-weight: 700; font-size: 0.88rem; margin-top: 6px; min-height: 1.2em; text-align: left; }
+  @media (prefers-color-scheme: dark) { .giris-hata { color: #ff8a80; } }
+  .giris-link { background: none; border: 0; padding: 0 0 0 4px; color: var(--accent); text-decoration: underline; font-size: inherit; font-weight: 700; cursor: pointer; }
+  #gHatirli { margin-top: 6px; }
   .gercek-kutu { position: sticky; top: 76px; z-index: 6; background: #fff1d6; color: #5b3a00; border: 1.5px solid #d98e04; border-radius: 10px; padding: 8px 10px; margin-bottom: 10px; font-size: 0.88rem; display: flex; flex-direction: column; gap: 2px; box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
   .gercek-kutu b { font-size: 1.05rem; }
   .gercek-kutu em { font-style: normal; font-weight: 700; }
@@ -511,6 +515,11 @@
       <div class="field"><label>Yedek adres (CC, isteğe bağlı)</label><input type="email" id="hvCc"></div>
       <div id="hvEski" class="muted"></div>
       <button type="button" class="btn full" id="hvKaydet" style="margin-top:8px">Kaydet</button>
+    </div>
+    <div class="card">
+      <h2>Yönetici Girişi</h2>
+      <div class="muted" id="yonDurum" style="margin-bottom:8px"></div>
+      <button type="button" class="btn secondary full" id="yonUnut" style="display:none">Bu cihazda yönetici girişini unut</button>
     </div>
   </div>
 </div>
@@ -1369,7 +1378,7 @@ function showPanel(name) {
   document.title = APP_TITLE;
   if (name === 'kayit') renderKayit();
   if (name === 'musteri') renderMusteriPanel();
-  if (name === 'ayar') { alicilarCiz(); havuzCiz(); }
+  if (name === 'ayar') { alicilarCiz(); havuzCiz(); yonDurumCiz(); }
   window.scrollTo(0, 0);
 }
 document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => {
@@ -2897,6 +2906,16 @@ async function sifreDogru(p) {
   const bits = new Uint8Array(await crypto.subtle.deriveBits({ name: 'PBKDF2', salt, iterations: it, hash: 'SHA-256' }, key, 256));
   return Array.from(bits).map(b => b.toString(16).padStart(2, '0')).join('') === parts[2];
 }
+const LS_YON = 'slm26_yonetici_v1'; /* şifre doğru girilince bu cihaz yöneticiyi hatırlar; kayıt, geçerli şifre özetine ve cihaza bağlıdır (şifre değişirse geçersiz olur) */
+const yonKimlik = () => { const p = YONETICI_OZET.split(':'); return p.length === 3 ? 'v1|' + p[2].slice(0, 16) + '|' + cihazKodu() : ''; };
+const cihazYoneticiHatirli = () => { const k = yonKimlik(); return !!k && lsGet(LS_YON, '') === k; };
+function yoneticiHatirla() { const k = yonKimlik(); if (k) lsSet(LS_YON, k); }
+function yonDurumCiz() {
+  const el = $('yonDurum'); if (!el) return; const h = cihazYoneticiHatirli();
+  el.textContent = h ? 'Bu cihazda yönetici girişi hatırlanıyor (Yönetici seçildiğinde şifre sorulmaz).' : 'Bu cihazda yönetici girişi hatırlanmıyor.';
+  $('yonUnut').style.display = h ? '' : 'none';
+}
+function yoneticiUnut() { try { localStorage.removeItem(LS_YON); } catch (e) { } yoneticiModu = false; document.body.classList.remove('yonetici'); kimlikGuncelle(); toplamGuncelle(); yonDurumCiz(); }
 let bekleyenHatirlat = false;
 const girisGorunur = () => getComputedStyle($('girisModal')).display === 'flex';
 function girisAc(zorunlu) {
@@ -2904,27 +2923,34 @@ function girisAc(zorunlu) {
   $('girisBox').innerHTML = '<img class="giris-logo" src="' + LOGO + '" alt="Merve Gözlük Camı"><h1>SILMO İSTANBUL 2026</h1><div class="giris-alt">Fuar Uygulaması</div><p class="giris-yonerge">Lütfen Şubenizi Seçiniz</p>' +
     '<select id="gSube"><option value="">Şube seçin…</option>' + SUBELER.map(s => '<option value="' + s[1] + '"' + (k.sube === s[1] ? ' selected' : '') + '>' + esc(s[0]) + '</option>').join('') + '</select>' +
     '<div class="hd-grid giris-isim"><div class="field"><label>Adınızın ilk 2 harfi</label><input type="text" id="gAd" maxlength="2" autocapitalize="characters" autocomplete="off" value="' + esc(k.ad) + '"></div><div class="field"><label>Soyadınızın ilk 2 harfi</label><input type="text" id="gSoyad" maxlength="2" autocapitalize="characters" autocomplete="off" value="' + esc(k.soyad) + '"></div></div>' +
-    '<div class="field" id="gSifreAlan" style="display:none"><label>Yönetici şifresi</label><input type="password" id="gSifre" autocomplete="off"></div>' +
+    '<div class="field" id="gSifreAlan" style="display:none"><label>Yönetici şifresi</label><input type="password" id="gSifre" autocomplete="off"><div class="giris-hata" id="gHata"></div><div class="muted" id="gHatirli" style="display:none">Bu cihazda yönetici girişi hatırlanıyor; şifre gerekmez. <button type="button" class="giris-link" id="gYeniden">Şifreyi yeniden gir</button></div></div>' +
     '<div class="pv-bar" style="margin-top:14px">' + (tamam && !zorunlu ? '<button type="button" class="btn secondary" id="gVazgec">Vazgeç</button>' : '') + '<button type="button" class="btn" id="gDevam" disabled>Devam</button></div>';
   $('girisModal').style.display = 'flex';
+  const hata = t => { $('gHata').textContent = t || ''; };
+  const MASKE = '**********'; let yeniden = false; /* hatırlanan cihazda alan kilitli ve noktalı gelir; "Şifreyi yeniden gir" alanı açar */
   const kontrol = () => {
-    const yon = $('gSube').value === 'MRK'; $('gSifreAlan').style.display = yon ? '' : 'none';
-    $('gDevam').disabled = !($('gSube').value && /^[A-Z]{2}$/.test($('gAd').value) && /^[A-Z]{2}$/.test($('gSoyad').value) && (!yon || $('gSifre').value.length > 0));
+    const yon = $('gSube').value === 'MRK', hat = yon && cihazYoneticiHatirli() && !yeniden, sf = $('gSifre');
+    $('gSifreAlan').style.display = yon ? '' : 'none'; $('gHatirli').style.display = hat ? '' : 'none';
+    if (hat) { sf.readOnly = true; sf.value = MASKE; } else { if (sf.readOnly || sf.value === MASKE) { sf.readOnly = false; sf.value = ''; } }
+    $('gDevam').disabled = !($('gSube').value && /^[A-Z]{2}$/.test($('gAd').value) && /^[A-Z]{2}$/.test($('gSoyad').value) && (!yon || hat || sf.value.length > 0));
   };
   ['gAd', 'gSoyad'].forEach(id => $(id).addEventListener('input', e => { e.target.value = harf2(e.target.value); kontrol(); }));
-  $('gSifre').addEventListener('input', kontrol); $('gSube').addEventListener('change', kontrol); kontrol();
+  $('gSifre').addEventListener('input', () => { hata(''); kontrol(); }); $('gSube').addEventListener('change', () => { yeniden = false; hata(''); kontrol(); }); $('gYeniden').addEventListener('click', () => { yeniden = true; hata(''); kontrol(); $('gSifre').focus(); }); kontrol();
   $('gDevam').addEventListener('click', async () => {
     if ($('gDevam').disabled) return;
     const sube = $('gSube').value; let yon = false;
     if (sube === 'MRK') {
-      $('gDevam').disabled = true;
-      let d = null; try { d = await sifreDogru($('gSifre').value); } catch (e) { d = null; }
-      if (d === null) { toast(!YONETICI_OZET || YONETICI_OZET.indexOf('__') === 0 ? 'Yönetici şifresi henüz tanımlanmadı.' : 'Bu tarayıcıda yönetici girişi yapılamıyor (güvenli bağlantı gerekir).'); kontrol(); return; }
-      if (!d) {
-        yanlisSayi++; toast('Şifre yanlış.'); $('gSifre').value = '';
-        const b = $('gDevam'); b.textContent = 'Bekleyin…'; await new Promise(r => setTimeout(r, yanlisSayi >= 5 ? 30000 : 1500)); b.textContent = 'Devam'; kontrol(); return;
+      if (cihazYoneticiHatirli() && !yeniden) yon = true;
+      else {
+        $('gDevam').disabled = true; hata('');
+        let d = null; try { d = await sifreDogru($('gSifre').value); } catch (e) { d = null; }
+        if (d === null) { const m = !YONETICI_OZET ? 'Yönetici şifresi henüz tanımlanmadı.' : 'Bu tarayıcıda yönetici girişi yapılamıyor (güvenli bağlantı gerekir).'; hata(m); toast(m); kontrol(); return; }
+        if (!d) {
+          yanlisSayi++; hata('Şifre yanlış. Lütfen tekrar deneyin.'); toast('Şifre yanlış.'); $('gSifre').value = '';
+          const b = $('gDevam'); b.textContent = 'Bekleyin…'; await new Promise(r => setTimeout(r, yanlisSayi >= 5 ? 30000 : 1500)); b.textContent = 'Devam'; kontrol(); return;
+        }
+        yon = true; yanlisSayi = 0; yoneticiHatirla();
       }
-      yon = true; yanlisSayi = 0;
     }
     yoneticiModu = yon; document.body.classList.toggle('yonetici', yon);
     lsSet(LS_KULL, { sube, ad: $('gAd').value, soyad: $('gSoyad').value });
@@ -2937,6 +2963,7 @@ function girisAc(zorunlu) {
 const baslangicGoster = () => !navigator.webdriver || localStorage.getItem('slm26_test_baslangic') === '1';
 function girisBaslangic() { if (baslangicGoster()) girisAc(true); }
 $('kimlik').addEventListener('click', () => girisAc(false));
+$('yonUnut').addEventListener('click', () => { yoneticiUnut(); toast('Bu cihazda yönetici girişi unutuldu.'); });
 
 /* ============ Havuz adresi ============ */
 function havuzCiz() {
