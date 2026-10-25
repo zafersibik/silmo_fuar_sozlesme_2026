@@ -468,6 +468,55 @@
   }
 }
 
+/* ============ Kayıt kartı (rozetler ünvanın yanında, küçük düğmeler, ⋯ menüsü), Ayarlar tabloları ============ */
+@media screen {
+  #kayitList .list-row.kk { flex-direction: row; align-items: center; gap: 12px; padding: 10px 14px; margin-bottom: 8px; }
+  .kk .bilgi { flex: 1; min-width: 0; }
+  .kk .l1 { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .kk .unvan { font-size: 0.92rem; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .kk .chips { display: flex; gap: 5px; flex: 0 1 auto; flex-wrap: wrap; row-gap: 4px; min-width: 0; }
+  .kk .chips .badge { margin: 0; white-space: nowrap; }
+  .kk .l2 { font-size: 0.72rem; color: var(--text-muted); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .kk .l2 .no2 { font-weight: 800; color: var(--text); }
+  .kk .l2a:after { content: " · "; }
+  .kk .acts { display: flex; gap: 6px; flex: none; align-items: center; position: relative; }
+  .kk .btn2 { height: 28px; padding: 0 12px; font-size: 0.75rem; font-weight: 700; border-radius: 8px; border: 1.5px solid var(--accent); color: var(--accent); background: var(--card-bg); cursor: pointer; font-family: inherit; }
+  .kk .btn2.d { background: var(--accent); color: #fff; }
+  .kk .daha2 { width: 28px; height: 28px; border: 1.5px solid var(--border); border-radius: 8px; background: var(--card-bg); color: var(--accent); display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
+  .kk .daha2 svg { width: 15px; height: 15px; fill: currentColor; stroke: none; }
+  .kmenu { position: relative; }
+  .menu2 { display: none; position: absolute; right: 0; top: 34px; width: 160px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 8px 22px rgba(20,33,43,0.22); padding: 4px; z-index: 20; }
+  .menu2.acik { display: block; }
+  .menu2 button { display: block; width: 100%; text-align: left; background: transparent; border: 0; padding: 9px 10px; font-size: 0.8rem; font-weight: 700; color: var(--accent); border-radius: 8px; cursor: pointer; font-family: inherit; }
+  .menu2 button.k { color: var(--danger); }
+  .menu2 button:hover { background: var(--accent-light); }
+  .badge.iptal { background: rgba(192,57,43,0.12); border-color: rgba(192,57,43,0.4); color: var(--danger); }
+  .kk.iptalli .unvan { text-decoration: line-through; opacity: 0.7; }
+  @media (max-width: 560px) {
+    #kayitList .list-row.kk { flex-direction: column; align-items: stretch; gap: 6px; padding: 10px 12px; }
+    .kk .l1 { flex-wrap: wrap; row-gap: 4px; }
+    .kk .chips { flex-wrap: wrap; }
+    .kk .l2 { white-space: normal; }
+    .kk .l2a { display: block; }
+    .kk .l2a:after { content: ""; }
+    .kk .l2b { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .kk .acts { justify-content: flex-end; }
+    .kk .btn2 { height: 26px; padding: 0 9px; font-size: 0.72rem; }
+    .kk .daha2 { width: 26px; height: 26px; }
+    .menu2 { top: auto; bottom: 32px; }
+  }
+  .k-alt { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+  .gscroll { overflow-x: auto; margin-top: 8px; }
+  .gtab { width: 100%; border-collapse: collapse; font-size: 0.74rem; }
+  .gtab th, .gtab td { text-align: left; padding: 5px 6px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  .gtab th { color: var(--accent); font-weight: 800; }
+  .gtab tr.ghata td { color: var(--danger); font-weight: 700; }
+  .gcak { margin-top: 8px; padding: 8px 10px; border-radius: 10px; background: rgba(192,57,43,0.1); border: 1px solid rgba(192,57,43,0.35); color: var(--danger); font-size: 0.75rem; font-weight: 700; }
+  .alici .mrk { display: flex; gap: 8px; align-items: center; font-size: 0.8rem; margin: 4px 0 8px; }
+  #zorunluModal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 150; padding: 16px; }
+  #zorunluModal .modal-box { max-width: 420px; width: 100%; }
+}
+
 </style>
 </head>
 <body>
@@ -584,26 +633,14 @@
       <h2>Kayıtlı Sözleşmeler</h2>
       <div class="field"><input type="text" id="k_q" placeholder="Ünvan, cari kodu, sözleşme no veya kampanya ara"></div>
       <div class="k-fil">
-        <label class="k-chip"><input type="checkbox" id="k_havuz"><span>Yalnızca merkeze gönderilmeyenler</span></label>
+        <label class="k-chip"><input type="checkbox" id="k_havuz"><span>Gönderilmeyenler</span></label>
         <label class="k-chip"><input type="checkbox" id="k_duz"><span>Düzenlenenler</span></label>
       </div>
       <div id="kSummary"></div>
       <div id="kayitList"></div>
-      <div class="k-gun"><button class="btn full" id="btnPaket">Günü Bitir: Gönderilmeyenleri Merkeze Gönder (Veri Paketi)</button></div>
-      <details class="diger" id="kDiger"><summary>Diğer işlemler</summary>
-        <button class="btn secondary full" id="btnExcel">Excel'e Aktar</button>
-        <button class="btn secondary full" id="btnExcelHavuz" style="margin-top:8px">Excel'i Havuza Gönder</button>
-        <button class="btn secondary full" id="btnYedek" style="margin-top:8px">Yedek İndir</button>
-        <p class="muted">Kayıtlar yalnızca bu cihazın tarayıcı hafızasında tutulur. Excel bir rapordur, geri yüklenemez; gerçek yedek için "Yedek İndir"i kullanın. Yedeği her akşam alın ve başka bir yerde (e-posta, bilgisayar) saklayın.</p>
-      </details>
-      <div class="sadece-yonetici">
-        <details class="diger" id="kYon"><summary>Yönetici işlemleri</summary>
-          <div class="field"><label>Kayıt paketi yükle (şubelerden gelen gün sonu paketleri)</label><input type="file" id="paketDosya" accept=".json,application/json" multiple></div>
-          <div class="field"><label>Yedekten geri yükle</label><input type="file" id="yedekDosya" accept=".json,application/json"></div>
-          <label style="display:flex;gap:8px;align-items:center;font-size:0.82rem;margin-top:8px"><input type="checkbox" id="yedekDegistir"> Mevcut kayıtları silip yalnızca yedekteki kayıtları koy</label>
-          <div class="field" style="margin-top:12px"><label>PDF'lerden kayıt yükle (PDF Gönder ile üretilenler; birden fazla seçilebilir)</label><input type="file" id="pdfKayitDosya" accept=".pdf,application/pdf" multiple></div>
-          <p class="muted">PDF Gönder ile üretilen PDF'in içinde görünmez kayıt verisi bulunur. Müşteriye PDF'i "PDF İndir" ile verin. Geri yükleme ve kayıt yükleme yalnızca yönetici girişinde yapılır; aynı numaralı kayıtta daha yeni düzenleme eskisinin yerine geçer.</p>
-        </details>
+      <div class="k-alt">
+        <button type="button" class="btn full" id="btnExcel">Kayıtları Excel'e Aktar</button>
+        <button type="button" class="btn secondary full" id="btnPdfListe">Kayıtları PDF'e Aktar</button>
       </div>
     </div>
   </div>
@@ -626,19 +663,37 @@
   <!-- ===== AYARLAR ===== -->
   <div class="panel" id="panel-ayar">
     <div class="card">
-      <h2>PDF Gönderme Alıcıları</h2>
-      <p class="muted" style="margin-bottom:10px">En fazla 5 alıcı tanımlayabilirsiniz (örneğin muhasebe). "PDF Gönder" menüsünde ad ad görünür. Bilgiler yalnızca bu cihazda saklanır, internete gönderilmez; her cihazda bir kez girilmesi gerekir.</p>
+      <h2>Yedek</h2>
+      <div class="muted" id="yedekAyarBilgi" style="margin-bottom:8px"></div>
+      <button type="button" class="btn full" id="btnYedek">Yedek Al</button>
+      <p class="muted" style="margin-top:8px">Yedek dosyası bu cihazdaki sözleşme kayıtlarını ve ayarları taşır (müşteri listesi yedeğe girmez). Dosya adı şube, personel, cihaz, tarih ve saati içerir. Yedek alınca gönderme penceresi açılır; yedeği merkeze göndermeyi unutmayın.</p>
+    </div>
+    <div class="card">
+      <h2>Gönderim Adresleri</h2>
+      <p class="muted" style="margin-bottom:10px">En fazla 8 kişi tanımlayabilirsiniz. "Merkez" olarak işaretlenen kişi listenin başında çıkar. Bu kişiler "Gönder" ve "Yedek Al" pencerelerinde ad ad görünür. Bilgiler yalnızca bu cihazda saklanır, internete gönderilmez; her cihazda bir kez girilmesi gerekir.</p>
       <div id="alicilar"></div>
-      <button type="button" class="btn secondary full" id="aliciEkle">Alıcı Ekle</button>
+      <button type="button" class="btn secondary full" id="aliciEkle">Kişi Ekle</button>
       <button type="button" class="btn full" id="aliciKaydet" style="margin-top:8px">Kaydet</button>
     </div>
     <div class="card">
-      <h2>Havuz Adresi</h2>
-      <p class="muted" style="margin-bottom:10px">Sözleşme PDF'leri ve kayıt Excel'i bu adrese gönderilir. Adres sonradan değiştirilebilir; eski adrese gönderilmiş kayıtlar "havuza gönderilmedi" olarak görünür ve yeniden gönderilebilir.</p>
-      <div class="field"><label>Havuz e-posta adresi</label><input type="email" id="hvAdres" placeholder="sozlesme@sirket.com"></div>
-      <div class="field"><label>Yedek adres (CC, isteğe bağlı)</label><input type="email" id="hvCc"></div>
-      <div id="hvEski" class="muted"></div>
-      <button type="button" class="btn full" id="hvKaydet" style="margin-top:8px">Kaydet</button>
+      <h2>Bu Cihaz</h2>
+      <div class="muted" id="cihazBilgi" style="margin-bottom:8px"></div>
+      <div class="field"><label>Cihaz numarası</label><select id="cihazNoSec"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option></select></div>
+      <p class="muted">Aynı kişi birden fazla cihaz kullanıyorsa her cihazda farklı numara seçin (sözleşme numarasındaki T1, T2…). Çoğu kişi için 1 kalır.</p>
+    </div>
+    <div class="sadece-yonetici">
+      <div class="card">
+        <h2>Yönetici İşlemleri</h2>
+        <div class="field"><label>Gelen yedekleri yükle (birden fazla seçilebilir)</label><input type="file" id="gelenYedek" accept=".json,application/json" multiple></div>
+        <p class="muted">Şubelerden gelen yedek dosyalarındaki kayıtlar tek listede birleştirilir. Müşteri listesine ve ayarlara dokunulmaz. Aynı kayıt tekrar gelirse eklenmez, daha yeni değişiklik (düzenleme ya da iptal) eskisinin yerine geçer.</p>
+        <div id="gelenOzet"></div>
+        <h2 style="margin-top:14px;font-size:0.95rem">Yedek Takibi</h2>
+        <div id="gelenTakip"></div>
+        <div class="field" style="margin-top:16px"><label>Bu cihazı yedekten geri yükle</label><input type="file" id="yedekDosya" accept=".json,application/json"></div>
+        <label style="display:flex;gap:8px;align-items:center;font-size:0.82rem;margin-top:8px"><input type="checkbox" id="yedekDegistir"> Mevcut kayıtları silip yalnızca yedekteki kayıtları koy</label>
+        <div class="field" style="margin-top:12px"><label>PDF'lerden kayıt yükle (Kaydet ve Gönder ile üretilenler; birden fazla seçilebilir)</label><input type="file" id="pdfKayitDosya" accept=".pdf,application/pdf" multiple></div>
+        <p class="muted">Sözleşme PDF'inin içinde görünmez kayıt verisi bulunur. Müşteriye PDF'i "PDF İndir" ile verin. Geri yükleme ve kayıt yükleme yalnızca yönetici girişinde yapılır.</p>
+      </div>
     </div>
     <div class="card">
       <h2>Yönetici Girişi</h2>
@@ -1502,7 +1557,7 @@ function showPanel(name) {
   document.title = APP_TITLE;
   if (name === 'kayit') renderKayit();
   if (name === 'musteri') renderMusteriPanel();
-  if (name === 'ayar') { alicilarCiz(); havuzCiz(); yonDurumCiz(); }
+  if (name === 'ayar') { alicilarCiz(); ayarSayfaCiz(); yonDurumCiz(); }
   window.scrollTo(0, 0);
 }
 document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => {
@@ -2400,7 +2455,7 @@ const pageHtml = (blks, i, N, tag) => `<div class="page"><div class="pg-body">${
 let pvY = 0; /* önizlemeye gitmeden önceki kaydırma konumu */
 function showPreview(m, from, saved) {
   if (!$('panel-onizleme').classList.contains('active')) pvY = window.scrollY;
-  curModel = m; prevPanel = from; fromSaved = saved;
+  m = kayitHazirla(m); curModel = m; prevPanel = from; fromSaved = saved;
   document.title = pdfName(m);
   if (!saved) curSig = sig();
   curLayout = layoutModel(m);
@@ -2431,6 +2486,7 @@ function saveModel() {
   if (!curModel) return false;
   const prevK = lsGet(LS_KAYIT, []).find(x => x.id === curModel.id);
   if (prevK) ['no', 'sube', 'pers', 'subeKod', 'persKod', 'gonder'].forEach(k => { if (prevK[k] != null && curModel[k] == null) curModel[k] = prevK[k]; });
+  if (prevK && prevK.cihaz) curModel.cihaz = prevK.cihaz; else if (!curModel.cihaz) curModel.cihaz = { tur: cihazTuru(), no: cihazNo(), kod: cihazKodu() };
   if (prevK && S.editId && curModel.id === S.editId) {
     if (!(S.savedId === curModel.id && S.savedSig === curSig)) {
       const kim = kullGecerli() ? subeAd(kullOku().sube) + ' ' + persKodu() : 'Yönetici';
@@ -2442,11 +2498,12 @@ function saveModel() {
   }
   kimlikRed = false;
   if (!curModel.no && kullGecerli()) {
-    const kk = kullOku(); curModel.no = noUret(curModel.tarih); curModel.subeKod = kk.sube; curModel.persKod = persKodu(); curModel.sube = subeAd(kk.sube); curModel.pers = persKodu();
+    const kk = kullOku(); curModel.no = noUret(curModel.tarih, curModel.campId); curModel.subeKod = kk.sube; curModel.persKod = persKodu(); curModel.sube = subeAd(kk.sube); curModel.pers = persKodu();
   }
   const all = lsGet(LS_KAYIT, []);
   const i = all.findIndex(x => x.id === curModel.id);
-  if (i > -1) all[i] = curModel; else all.push(curModel);
+  const ks = snapSikistir(curModel);
+  if (i > -1) all[i] = ks; else all.push(ks);
   if (!lsSet(LS_KAYIT, all)) return false;
   S.savedId = curModel.id; S.savedSig = curSig; updateKayitBadge(); pvEtiket(true);
   return true;
@@ -2574,76 +2631,6 @@ function kayitInfo(x) {
   };
 }
 const numTr = n => String(n).replace('.', ',');
-function renderKayit() {
-  const q = norm($('k_q').value);
-  const all = lsGet(LS_KAYIT, []).sort((a, b) => b.ts - a.ts)
-    .filter(x => (!q || norm(x.unvan + ' ' + x.kod + ' ' + x.campName + ' ' + (x.no || '')).indexOf(q) > -1) && !($('k_havuz') && $('k_havuz').checked && havuzaGitti(x)) && !($('k_duz') && $('k_duz').checked && !x.duzTs));
-  // Özet: kayıt sayısı ve anlaşma tutarları
-  let total = 0; const per = [];
-  CAMPS.forEach(c => {
-    const sub = all.filter(x => x.campId === c.id); if (!sub.length) return;
-    const t = sub.reduce((a, x) => a + (kayitInfo(x).tutar || 0), 0); total += t;
-    per.push('<div class="rowk"><span>' + esc(KISA[c.id] || c.code) + ' · ' + sub.length + ' adet</span><span>' + money(t) + '</span></div>');
-  });
-  const cbs = all.map(x => cbOf(x).tutar).filter(v => v);
-  const cbLine = cbs.length ? '<div class="rowk"><span>Cihaz bedeli tahsilatı · ' + cbs.length + ' adet</span><span>' + money(cbs.reduce((a, v) => a + v, 0)) + '</span></div>' : '';
-  $('kSummary').innerHTML = all.length
-    ? '<div class="ksum"><div class="rowk tot"><span><b>' + all.length + '</b> sözleşme</span><b>' + money(total) + '</b></div>' + per.join('') + cbLine +
-      '<details class="ksum-not"><summary>Tutarlar nasıl hesaplanır?</summary>Aylık anlaşmalarda aylık × ay, makinelerde ödeme planı toplamı, stok camda KDV dahil ödeme. Farklı türler birlikte toplanmıştır. Cihaz bedeli ayrı gösterilir, toplama katılmaz.</details></div>' : '';
-  $('kayitList').innerHTML = all.length ? all.map(x => {
-    const k = kayitInfo(x);
-    let bd = '';
-    if (k.ekIskonto != null && k.ekIskonto !== 0) bd += '<span class="badge">ek iskonto ' + (k.ekIskonto > 0 ? '+' : '−') + numTr(Math.abs(k.ekIskonto)) + '</span>';
-    if (k.farklar.length) bd += '<span class="badge">tablo dışı</span>'; else if (x.custom) bd += '<span class="badge">özelleştirilmiş</span>';
-    if (x.odtDuzenlendi || x.cbDuzenlendi) bd += '<span class="badge">ödeme planı düzenlendi</span>';
-    if (x.duzTs) bd += '<span class="badge">düzenlendi ' + new Date(x.duzTs).toLocaleDateString('tr-TR') + '</span>';
-    bd += kaynakRozet(x) + havuzRozet(x);
-    return `<div class="list-row"><div class="info"><b>${x.no ? esc(x.no) + ' · ' : ''}${esc(x.unvan)}</b><small>${fmtDateDot(x.tarih)} · ${esc(x.campName)}${x.ozet ? ' · ' + esc(x.ozet) : ''}${bd}</small>` +
-      (k.aciklama ? `<small style="display:block">Not: ${esc(k.aciklama)}</small>` : '') + `</div>` +
-      `<div class="acts"><button class="btn secondary" data-open="${x.id}">Aç</button><button class="btn secondary" data-gonder="${x.id}">Gönder</button>${yoneticiMi() ? `<button class="btn secondary" data-duz="${x.id}">Düzenle</button>` : ''}<button class="btn danger" data-del="${x.id}">Sil</button></div></div>`;
-  }).join('') : '<div class="empty-msg">Kayıtlı sözleşme yok.</div>';
-}
-$('k_q').addEventListener('input', renderKayit);
-$('kayitList').addEventListener('click', e => {
-  const o = e.target.closest('[data-open]'), d = e.target.closest('[data-del]'), gd = e.target.closest('[data-gonder]'), du = e.target.closest('[data-duz]');
-  if (du) { kayitDuzenle(du.dataset.duz); return; }
-  if (gd) { const m = lsGet(LS_KAYIT, []).find(x => x.id === gd.dataset.gonder); if (m) { showPreview(m, 'kayit', true); pdfGonder(1, true); } }
-  if (o) { const m = lsGet(LS_KAYIT, []).find(x => x.id === o.dataset.open); if (m) showPreview(m, 'kayit', true); }
-  if (d && confirm('Bu sözleşme kaydı silinsin mi?')) {
-    lsSet(LS_KAYIT, lsGet(LS_KAYIT, []).filter(x => x.id !== d.dataset.del));
-    updateKayitBadge(); renderKayit();
-  }
-});
-function excelUret(mod) {
-  const all = lsGet(LS_KAYIT, []).sort((a, b) => a.ts - b.ts);
-  if (!all.length) { toast('Aktarılacak kayıt yok.'); return null; }
-  const H = ['Sözleşme No', 'Şube', 'Personel', 'Tarih', 'Başlangıç Tarihi', 'Cari Kodu', 'Ünvan', 'Kampanya', 'Ödeme Çeşidi', 'Anlaşma Tutarı (₺)', 'Tutar Türü', 'Aylık Ödeme (₺)', 'Ay Sayısı',
-    'İskonto (%)', 'Ek İskonto (puan)', 'Hediye / Cihaz / Çek', 'Hediye / Çek Tutarı (₺)', 'Hediye Paket Değeri (₺)', 'Hediye Fark (₺)', 'Hediye Puan', 'Elektronik Kampanya Tutarı (₺)', 'Fiyat Farkı (₺)', 'Ödeme Tablosu', 'Cihaz Bedeli (₺)', 'Cihaz Bedeli Ödeme Sayısı', 'Ödeme Planı Düzenlendi', 'Özelleştirildi',
-    'Tablodan Farklı Alanlar', 'Ek Fayda Açıklaması', 'Havuz Gönderimi', 'Kayıt Zamanı', 'Düzenlendi', 'Düzenleme Zamanı'].concat(yoneticiMi() ? ['Gerçek İskonto Oranı (%)', 'Gerçek İskonto Tutarı (₺)', 'Katalogdaki Gerçek İskonto (%)'] : []);
-  const nn = v => (v == null || v === '' || isNaN(v)) ? '' : v;
-  const aoa = [H].concat(all.map(x => {
-    const k = kayitInfo(x);
-    return [x.no || '', x.sube || '', x.pers || '', fmtDateDot(x.tarih), x.baslangic ? fmtDateDot(x.baslangic) : '', x.kod, x.unvan, x.campName, x.odeme, nn(k.tutar), k.tutarTuru, nn(k.aylik), nn(k.ay),
-      nn(k.iskonto), nn(k.ekIskonto), k.fayda, nn(k.hediyeTutar), nn(k.hedPaket), nn(k.hedFark), nn(k.puan), nn(k.elk), nn(k.fark), k.tablo, nn(k.cbTutar), nn(k.cbAdet), (x.odtDuzenlendi || x.cbDuzenlendi) ? 'Evet' : 'Hayır', x.custom ? 'Evet' : 'Hayır',
-      k.farklar.concat(x.odtFark ? [x.odtFark] : [], x.cbFark ? [x.cbFark] : []).join('; '), k.aciklama, havuzMetni(x), new Date(x.ts).toLocaleString('tr-TR'), x.duzTs ? 'Evet' : '', x.duzTs ? new Date(x.duzTs).toLocaleString('tr-TR') + (x.duzKim ? ' – ' + x.duzKim : '') : ''].concat(yoneticiMi() ? gercekExcel(x) : []);
-  }));
-  if (libXlsx()) {
-    const ws = XLSX.utils.aoa_to_sheet(aoa);
-    ws['!cols'] = [20, 10, 18, 12, 16, 14, 40, 52, 24, 18, 26, 16, 10, 12, 16, 60, 20, 20, 16, 14, 22, 16, 18, 18, 16, 14, 11, 70, 40, 28, 20, 11, 34, 18, 22, 24].map(w => ({ wch: w }));
-    [9, 11, 16, 17, 18, 19, 20, 21, 23].forEach(c => { for (let r = 1; r < aoa.length; r++) { const cell = ws[XLSX.utils.encode_cell({ r, c })]; if (cell && typeof cell.v === 'number') cell.z = '#,##0'; } });
-    [[33, '0.00'], [34, '#,##0'], [35, '0.00']].forEach(f => { for (let r = 1; r < aoa.length; r++) { const cell = ws[XLSX.utils.encode_cell({ r, c: f[0] })]; if (cell && typeof cell.v === 'number') cell.z = f[1]; } });
-    const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Sözleşmeler');
-    if (mod === 'blob') return XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-    XLSX.writeFile(wb, 'silmo_sozlesme_kayitlari.xlsx');
-  } else {
-    const csv = '\ufeff' + aoa.map(r => r.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(';')).join('\r\n');
-    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
-    a.download = 'silmo_sozlesme_kayitlari.csv'; a.click();
-  }
-  return null;
-}
-$('btnExcel').addEventListener('click', () => excelUret('indir'));
-
 /* ============ Müşteri listesi yükleme ============ */
 function parseCSV(text) {
   const first = text.split(/\r?\n/, 1)[0];
@@ -2734,7 +2721,7 @@ const pad2 = n => String(n).padStart(2, '0');
 const gunStr = d => d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
 function yedekDurum() {
   const k = lsGet(LS_KAYIT, []), y = lsGet(LS_YEDEK, {}), son = typeof y.son === 'number' ? y.son : 0;
-  const zm = x => Math.max(x.yuklemeTs || x.ts || 0, x.duzTs || 0);
+  const zm = x => Math.max(x.yuklemeTs || x.ts || 0, sonDegisim(x));
   const yeniler = k.filter(x => zm(x) > son);
   return { n: k.length, yeni: yeniler.length, eskiYeni: yeniler.filter(x => zm(x) < Date.now() - 30 * 60 * 1000).length, son, hat: y.hat || '' };
 }
@@ -2784,7 +2771,7 @@ function yedekUygula(d, gecerli, degistir) {
     if (degistir || (!a0.alicilar.length && !a0.havuz.adres)) lsSet(LS_AYAR, d.ayar);
   }
   sayacYenile(sonuc, d.sayac);
-  loadMusteri(); renderMusteriPanel(); updateKayitBadge(); renderKayit(); alicilarCiz(); havuzCiz(); kimlikGuncelle(); havuzBarGuncelle();
+  loadMusteri(); renderMusteriPanel(); updateKayitBadge(); renderKayit(); alicilarCiz(); kimlikGuncelle(); havuzBarGuncelle();
   toast(gecerli.length + ' kayıt yedekten işlendi' + (guncelSay ? ' (' + guncelSay + ' kayıt daha yeni düzenlemeyle güncellendi)' : '') + ' (şu an ' + sonuc.length + ' kayıt var).');
 }
 $('yedekDosya').addEventListener('change', async e => {
@@ -2792,7 +2779,7 @@ $('yedekDosya').addEventListener('change', async e => {
   if (!yoneticiMi()) { toast('Yedekten geri yükleme yalnızca yönetici girişinde yapılabilir.'); return; }
   let d; try { d = JSON.parse(await f.text()); } catch (err) { toast('Dosya okunamadı: geçerli bir yedek dosyası değil.'); return; }
   if (!d || d.uygulama !== 'SILMO-2026' || !Array.isArray(d.kayit)) { toast('Bu dosya SILMO uygulamasının yedeği değil.'); return; }
-  if (d.surum > 1) { toast('Bu yedek daha yeni bir sürümden; geri yüklenemedi.'); return; }
+  if (d.surum > 2) { toast('Bu yedek daha yeni bir sürümden; geri yüklenemedi.'); return; }
   const gecerli = d.kayit.filter(x => x && typeof x === 'object' && x.id && typeof x.ts === 'number' && Array.isArray(x.rows));
   const atlanan = d.kayit.length - gecerli.length, cur = lsGet(LS_KAYIT, []), degistir = $('yedekDegistir').checked;
   const yeni = gecerli.filter(x => !cur.some(c => c.id === x.id));
@@ -2832,7 +2819,7 @@ function alicilarCiz(taslak) {
     '<button type="button" class="btn danger" data-asil="' + i + '" style="padding:7px 10px;font-size:0.78rem">Sil</button></div>').join('') : '<div class="empty-msg">Alıcı tanımlı değil.</div>';
 }
 $('aliciEkle').addEventListener('click', () => {
-  const L = aliciTopla(); if (L.length >= 5) { toast('En fazla 5 alıcı tanımlanabilir.'); return; }
+  const L = aliciTopla(); if (L.length >= 8) { toast('En fazla 8 kişi tanımlanabilir.'); return; }
   L.push({ ad: '', eposta: '', tel: '' }); alicilarCiz(L);
 });
 $('alicilar').addEventListener('click', e => {
@@ -2848,7 +2835,7 @@ $('aliciKaydet').addEventListener('click', () => {
     if (a.eposta && !epostaOk(a.eposta)) { toast(a.ad + ': e-posta adresi geçersiz.'); return; }
     if (a.tel && !waNo(a.tel)) { toast(a.ad + ': telefon numarası geçersiz (örn. 0532 123 45 67).'); return; }
   }
-  if (!ayarYaz({ alicilar: L })) { toast('Kaydedilemedi: tarayıcı hafızası dolu olabilir.'); return; }
+  if (!ayarYaz({ alicilar: L, havuz: { adres: '', cc: '', eski: [] } })) { toast('Kaydedilemedi: tarayıcı hafızası dolu olabilir.'); return; }
   alicilarCiz(); toast('Alıcılar kaydedildi.');
 });
 
@@ -2905,14 +2892,14 @@ $('gonderBox').addEventListener('click', e => {
   const ac = (href, hedef) => { const k = document.createElement('a'); k.href = href; if (hedef) { k.target = '_blank'; k.rel = 'noopener'; } document.body.appendChild(k); k.click(); k.remove(); };
   const posta = (adres, cc) => ac('mailto:' + adres + '?' + (cc ? 'cc=' + encodeURIComponent(cc) + '&' : '') + 'subject=' + encodeURIComponent(c.konu) + '&body=' + encodeURIComponent(c.govde));
   if (g === 'paylas') navigator.share({ files: c.files, title: c.konu, text: c.govde }).then(() => {
-    if (c.ids && c.ids.length) { $('gonderModal').style.display = 'none'; askModal({ title: 'Merkeze gönderildi mi?', text: 'Paylaşımı merkeze (havuza) gönderdiyseniz "Evet"i seçin; kayıtlar "merkeze gönderildi" olarak işaretlenir.', left: { label: 'Hayır' }, right: { label: 'Evet', fn: () => gonderIsaretle(c.ids, 'paylas') } }); }
+    if (c.yedek) yedekIsaretle();
+    if (c.ids && c.ids.length) { $('gonderModal').style.display = 'none'; askModal({ title: 'Merkeze gönderildi mi?', text: 'Yedeği merkeze gönderdiyseniz "Evet"i seçin; kayıtlar "merkeze gönderildi" olarak işaretlenir.', left: { label: 'Hayır' }, right: { label: 'Evet', fn: () => gonderIsaretle(c.ids, 'paylas') } }); }
   }).catch(() => {});
-  else if (g === 'indir') { c.dosyalar.forEach((d, i) => setTimeout(() => dosyaIndir(d.blob, d.name), i * 500)); toast(c.dosyalar.length > 1 ? 'Dosyalar indiriliyor.' : 'Dosya indirildi.'); }
-  else if (g === 'havuz') posta(c.hv.adres, c.hv.cc);
+  else if (g === 'indir') { if (c.yedek) yedekIsaretle(); c.dosyalar.forEach((d, i) => setTimeout(() => dosyaIndir(d.blob, d.name), i * 500)); toast(c.dosyalar.length > 1 ? 'Dosyalar indiriliyor.' : 'Dosya indirildi.'); }
   else if (g === 'isaret') { if (c.ids && c.ids.length) gonderIsaretle(c.ids, 'eposta'); }
-  else if (g === 'mail') posta(c.A[+b.dataset.i].eposta, '');
-  else if (g === 'wamesaj') ac('https://wa.me/?text=' + encodeURIComponent(c.govde), true);
-  else if (g === 'wa') { const a = c.A[+b.dataset.i]; ac('https://wa.me/' + waNo(a.tel) + '?text=' + encodeURIComponent(c.govde), true); }
+  else if (g === 'mail') { if (c.yedek) { c.dosyalar.forEach(d => dosyaIndir(d.blob, d.name)); yedekIsaretle(); } posta(c.A[+b.dataset.i].eposta, ''); }
+  else if (g === 'wamesaj') { if (c.yedek) { c.dosyalar.forEach(d => dosyaIndir(d.blob, d.name)); yedekIsaretle(); } ac('https://wa.me/?text=' + encodeURIComponent(c.govde), true); }
+  else if (g === 'wa') { if (c.yedek) { c.dosyalar.forEach(d => dosyaIndir(d.blob, d.name)); yedekIsaretle(); } const a = c.A[+b.dataset.i]; ac('https://wa.me/' + waNo(a.tel) + '?text=' + encodeURIComponent(c.govde), true); }
 });
 $('gonderModal').addEventListener('click', e => { if (e.target === $('gonderModal')) $('gonderModal').style.display = 'none'; });
 
@@ -2985,18 +2972,6 @@ $('pvSenetG').addEventListener('click', () => pdfGonder(2, false, 'odt'));
 $('pvSenetCbG').addEventListener('click', () => pdfGonder(2, false, 'cb'));
 
 /* Gün sonu veri paketi: merkeze gönderilmemiş kayıtlar tek küçük dosyada (sözleşme başına yaklaşık 8 KB) */
-function paketGonder() {
-  const liste = lsGet(LS_KAYIT, []).filter(x => !havuzaGitti(x));
-  if (!liste.length) { toast('Merkeze gönderilmemiş kayıt yok.'); return; }
-  const k = kullOku(), d = new Date(), bugun = gunStr(d), sa = pad2(d.getHours()) + pad2(d.getMinutes());
-  const ad = 'silmo_paket_' + (k.sube || 'XXX') + '_' + (k.ad && k.soyad ? persKodu() : 'XX') + '_' + bugun + '_' + sa + '.json';
-  const veri = { uygulama: 'SILMO-2026-PAKET', surum: 1, olusturma: d.toISOString(), sube: k.sube || '', kisi: k.ad && k.soyad ? persKodu() : '', cihaz: cihazKodu(), kayit: liste };
-  const blob = new Blob([JSON.stringify(veri)], { type: 'application/json' }), file = new File([blob], ad, { type: 'application/json' });
-  const nolar = liste.map(x => x.no).filter(Boolean).sort();
-  const govde = ['Merhaba,', '', 'Ekte SILMO İstanbul 2026 sözleşme kayıt paketi bulunmaktadır.', '', 'Kayıt sayısı: ' + liste.length, 'Şube / Personel: ' + (subeAd(k.sube || '') + ' / ' + (k.ad && k.soyad ? persKodu() : '')), 'Tarih: ' + fmtDateDot(bugun) + ' ' + pad2(d.getHours()) + ':' + pad2(d.getMinutes())].concat(nolar.length ? ['İlk sözleşme no: ' + nolar[0], 'Son sözleşme no: ' + nolar[nolar.length - 1]] : []).join('\n');
-  gonderModal({ dosyalar: [{ file, blob, name: ad }], baslik: 'Veri paketi hazır (' + liste.length + ' kayıt)', konu: 'SILMO kayıt paketi – ' + subeAd(k.sube || '') + ' – ' + fmtDateDot(bugun) + ' – ' + liste.length + ' kayıt', govde, havuz: true, ids: liste.map(x => x.id) });
-}
-$('btnPaket').addEventListener('click', paketGonder);
 let kimlikRed = false; /* son kaydetme girişimi şube/personel seçilmediği için engellendi */
 /* ============ Özelleştir: toplam tutar ve evrak adedi ============ */
 function ekhOzet() {
@@ -3186,39 +3161,16 @@ function girisBaslangic() { if (baslangicGoster()) girisAc(true); }
 $('kimlik').addEventListener('click', () => girisAc(false));
 $('yonUnut').addEventListener('click', () => { yoneticiUnut(); toast('Bu cihazda yönetici girişi unutuldu.'); });
 
-/* ============ Havuz adresi ============ */
-function havuzCiz() {
-  const h = ayarOku().havuz; if (!$('hvAdres')) return;
-  $('hvAdres').value = h.adres || ''; $('hvCc').value = h.cc || '';
-  $('hvEski').textContent = (h.eski && h.eski.length) ? 'Önceki havuz adresleri: ' + h.eski.join(', ') : '';
-}
-$('hvKaydet').addEventListener('click', () => {
-  const adres = $('hvAdres').value.trim(), cc = $('hvCc').value.trim(), cur = ayarOku().havuz;
-  if (adres && !epostaOk(adres)) { toast('Havuz e-posta adresi geçersiz.'); return; }
-  if (cc && !epostaOk(cc)) { toast('Yedek (CC) adresi geçersiz.'); return; }
-  const eski = (cur.eski || []).slice();
-  if (cur.adres && cur.adres.toLowerCase() !== adres.toLowerCase() && eski.indexOf(cur.adres) < 0) eski.push(cur.adres);
-  if (!ayarYaz({ havuz: { adres, cc, eski: eski.slice(-5) } })) { toast('Kaydedilemedi.'); return; }
-  havuzCiz(); havuzBarGuncelle(); renderKayit(); toast('Havuz adresi kaydedildi.');
-});
 function havuzBarGuncelle() {
   const b = $('havuzBar'); if (!b) return;
   const n = lsGet(LS_KAYIT, []).filter(x => !havuzaGitti(x)).length;
   b.style.display = n ? '' : 'none';
   if (n) $('havuzMetin').textContent = n + ' sözleşme merkeze gönderilmedi.';
 }
-$('havuzGit').addEventListener('click', () => paketGonder());
+$('havuzGit').addEventListener('click', gonderilmeyenleriGoster);
 $('k_havuz').addEventListener('change', renderKayit); $('k_duz').addEventListener('change', renderKayit);
-const havuzMetni = x => x.kaynak ? (x.kaynak === 'pdf' ? 'PDF\'ten yüklendi' : 'Paketten yüklendi') : x.gonder ? 'Gönderildi ' + new Date(x.gonder.ts).toLocaleString('tr-TR') + (x.gonder.kime ? ' → ' + x.gonder.kime : '') : 'Gönderilmedi';
 function havuzRozet(x) { if (x.kaynak) return ''; return havuzaGitti(x) ? '<span class="badge ok">merkeze gönderildi</span>' : '<span class="badge warn">merkeze gönderilmedi</span>'; }
 function kaynakRozet(x) { return x.kaynak ? '<span class="badge info">' + (x.kaynak === 'pdf' ? 'PDF\'ten yüklendi' : 'paketten yüklendi') + '</span>' : ''; }
-$('btnExcelHavuz').addEventListener('click', () => {
-  const arr = excelUret('blob'); if (!arr) return;
-  const n = lsGet(LS_KAYIT, []).length, bugun = gunStr(new Date());
-  const blob = new Blob([arr], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), ad = 'silmo_sozlesme_kayitlari_' + bugun + '.xlsx';
-  gonderModal({ dosyalar: [{ file: new File([blob], ad, { type: blob.type }), blob, name: ad }], baslik: 'Excel hazır', havuz: true, konu: 'SILMO sözleşme kayıtları (Excel) – ' + fmtDateDot(bugun) + ' – ' + n + ' kayıt', govde: 'Merhaba,\n\nEkte SILMO İstanbul 2026 sözleşme kayıtları Excel dosyası bulunmaktadır (' + n + ' kayıt).' });
-});
-
 /* ============ PDF'lerden kayıt yükleme (PDF Gönder ile üretilen PDF'in içinde kayıt verisi vardır) ============ */
 function kayitKodla(m) {
   const u8 = new TextEncoder().encode(JSON.stringify(Object.assign({}, m, { farklar: [], aciklama: '', ekIskonto: null, odtFark: '', cbFark: '', duzGecmis: [], form: m.form ? Object.assign({}, m.form, { ekAciklama: '' }) : undefined }))); let b = '';
@@ -3239,9 +3191,9 @@ $('pdfKayitDosya').addEventListener('change', async e => {
   for (const f of fs) {
     const m = await pdfKayitOku(f);
     if (!m || !m.id || typeof m.ts !== 'number' || !Array.isArray(m.rows) || !m.unvan) { yok++; continue; }
-    if (cur.some(x => x.id === m.id) && (m.duzTs || 0) <= (cur.find(x => x.id === m.id).duzTs || 0)) { var_++; continue; }
+    if (cur.some(x => x.id === m.id) && sonDegisim(m) <= sonDegisim(cur.find(x => x.id === m.id))) { var_++; continue; }
     const fy = farkYeniden(m); m.farklar = fy.farklar; m.ekIskonto = fy.ekIsk; m.custom = !!m.custom || fy.farklar.length > 0; m.kaynak = 'pdf'; m.yuklemeTs = Date.now();
-    if (kayitBirlestir(cur, m) === 'guncel') guncel++; else yeni++;
+    { const sn = kayitBirlestir(cur, m); if (sn === 'guncel') guncel++; else if (sn === 'yeni') yeni++; else var_++; }
   }
   if ((yeni || guncel) && !lsSet(LS_KAYIT, cur)) { toast('Kaydedilemedi: tarayıcı hafızası dolu olabilir.'); return; }
   sayacYenile(cur); updateKayitBadge(); renderKayit();
@@ -3249,24 +3201,6 @@ $('pdfKayitDosya').addEventListener('change', async e => {
 });
 
 /* Kayıt paketi yükle (yalnızca yönetici): şubelerden gelen gün sonu veri paketlerini birleştirir */
-$('paketDosya').addEventListener('change', async e => {
-  const fs = [...e.target.files]; e.target.value = ''; if (!fs.length) return;
-  if (!yoneticiMi()) { toast('Kayıt paketi yükleme yalnızca yönetici girişinde yapılabilir.'); return; }
-  const cur = lsGet(LS_KAYIT, []); let yeni = 0, var_ = 0, hata = 0, guncel = 0;
-  for (const f of fs) {
-    let d; try { d = JSON.parse(await f.text()); } catch (er) { hata++; continue; }
-    if (!d || d.uygulama !== 'SILMO-2026-PAKET' || !Array.isArray(d.kayit)) { hata++; continue; }
-    d.kayit.forEach(m => {
-      if (!m || !m.id || typeof m.ts !== 'number' || !Array.isArray(m.rows) || !m.unvan) { hata++; return; }
-      m.kaynak = 'paket'; m.yuklemeTs = Date.now();
-      const sn = kayitBirlestir(cur, m); if (sn === 'yeni') yeni++; else if (sn === 'guncel') guncel++; else var_++;
-    });
-  }
-  if ((yeni || guncel) && !lsSet(LS_KAYIT, cur)) { toast('Kaydedilemedi: tarayıcı hafızası dolu olabilir.'); return; }
-  sayacYenile(cur); updateKayitBadge(); renderKayit();
-  toast(yeni + ' kayıt eklendi' + (guncel ? ', ' + guncel + ' güncellendi (daha yeni düzenleme)' : '') + (var_ ? ', ' + var_ + ' zaten vardı' : '') + (hata ? ', ' + hata + ' dosya/kayıt okunamadı' : '') + '.');
-});
-
 /* ============ Senet yazdırma (A4'e üç senet) ============ */
 const SN_W = 203, SN_H = 94.6;
 const SN_B = ['', 'BİR', 'İKİ', 'ÜÇ', 'DÖRT', 'BEŞ', 'ALTI', 'YEDİ', 'SEKİZ', 'DOKUZ'], SN_O = ['', 'ON', 'YİRMİ', 'OTUZ', 'KIRK', 'ELLİ', 'ALTMIŞ', 'YETMİŞ', 'SEKSEN', 'DOKSAN'], SN_G = ['', 'BİN', 'MİLYON', 'MİLYAR'];
@@ -3478,8 +3412,448 @@ document.querySelectorAll('.tab-btn').forEach(b => {
 });
 const OK_SVG = '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
 
+/* ============ Merkez ve yedek akışı: cihaz, numara, iptal, silinenler, yedek ============ */
+const LS_CIHAZNO = 'slm26_cihazno_v1', LS_SILINEN = 'slm26_silinen_v1', LS_GELEN = 'slm26_gelen_v1';
+const KILIT_SIFIR = 0;
+function cihazTuru() { /* T telefon, P tablet, B bilgisayar (tahmin) */
+  const ua = navigator.userAgent || '', mt = navigator.maxTouchPoints || 0;
+  if (/iPad/.test(ua) || (/Macintosh/.test(ua) && mt > 1)) return 'P';
+  if (/iPhone|iPod/.test(ua)) return 'T';
+  if (/Android/.test(ua)) return /Mobile/.test(ua) ? 'T' : 'P';
+  return 'B';
+}
+const cihazTurAd = t => ({ T: 'Telefon', B: 'Bilgisayar', P: 'Tablet' }[t] || '');
+function cihazNo() { const n = parseInt(lsGet(LS_CIHAZNO, 1), 10); return (n >= 1 && n <= 9) ? n : 1; }
+function noUret(tarihIso, campId) {
+  const k = kullOku(), pk = persKodu(), yy = String(/^\d{4}/.test(tarihIso || '') ? tarihIso : new Date().getFullYear()).slice(2, 4);
+  const kmp = 'KMP' + (campId || 0), ct = cihazTuru() + cihazNo();
+  const key = [yy, k.sube, pk, kmp, ct].join('|'), sy = lsGet(LS_SAYAC, {}); sy[key] = (sy[key] || 0) + 1; lsSet(LS_SAYAC, sy);
+  return 'SLM' + yy + '-' + k.sube + '-' + pk + '-' + kmp + '-' + ct + '-' + String(sy[key]).padStart(4, '0');
+}
+function sayacYenile(kayitlar, ek) { /* geri yüklemeden sonra sıra numaraları çakışmasın */
+  const sy = lsGet(LS_SAYAC, {});
+  const art = (key, n) => { if (n > (sy[key] || 0)) sy[key] = n; };
+  if (ek && typeof ek === 'object') Object.keys(ek).forEach(k => art(k, +ek[k] || 0));
+  (kayitlar || []).forEach(x => {
+    let m = /^SLM(\d\d)-([A-Z]{3})-([A-Z]{2}\.[A-Z]{2})-(KMP\d+)-([TBP]\d)-(\d{4})$/.exec(x.no || '');
+    if (m) { art([m[1], m[2], m[3], m[4], m[5]].join('|'), +m[6]); return; }
+    m = /^SLM(\d\d)-([A-Z]{3})-([A-Z]{2}\.[A-Z]{2})-([A-Z]\d)-(\d{4})$/.exec(x.no || '');
+    if (m) { art([m[1], m[2], m[3], m[4]].join('|'), +m[5]); return; }
+    m = /^SLM(\d\d)-([A-Z0-9]+)-([A-Z0-9]+)(?:-([A-Z]))?-(\d{4})$/.exec(x.no || ''); /* eski (personel kodlu) numaralar */
+    if (m) art([m[1], m[2], m[3], m[4] || ''].join('|'), +m[5]);
+  });
+  lsSet(LS_SAYAC, sy);
+}
+/* ---- iptal ve kalıcı silme ---- */
+const iptalMi = x => !!(x.iptal && !x.iptal.geri);
+const sonDegisim = x => Math.max(x.duzTs || 0, (x.iptal && x.iptal.ts) || 0);
+function silinenOku() { const a = lsGet(LS_SILINEN, []); return Array.isArray(a) ? a : []; }
+function silinenEkle(liste) {
+  const cur = silinenOku(), ids = new Set(cur.map(x => x.id)); let n = 0;
+  (liste || []).forEach(t => { if (t && t.id && !ids.has(t.id)) { cur.push({ id: t.id, no: t.no || '', ts: t.ts || Date.now() }); ids.add(t.id); n++; } });
+  if (n) lsSet(LS_SILINEN, cur.slice(-3000)); return n;
+}
+/* ---- sözleşme metni (snap) tekilleştirme: aynı metin tek kopya saklanır, kayıtta yalnızca snapId durur ---- */
+const LS_SNAP = 'slm26_snap_v1';
+function snapKimlik(sn) { const js = JSON.stringify(sn); let h = 2166136261; for (let i = 0; i < js.length; i++) { h ^= js.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } return 's' + h.toString(36) + '-' + js.length.toString(36); }
+function snapSikistir(m) {
+  if (!m || !m.snap) return m;
+  const mp = lsGet(LS_SNAP, {}), id = snapKimlik(m.snap);
+  if (!mp[id]) { mp[id] = m.snap; if (!lsSet(LS_SNAP, mp)) return m; }
+  const k = Object.assign({}, m, { snapId: id }); delete k.snap; return k;
+}
+function kayitHazirla(m) { if (!m || m.snap || !m.snapId) return m; const sn = lsGet(LS_SNAP, {})[m.snapId]; return sn ? Object.assign({}, m, { snap: sn }) : m; }
+function snapEkle(mp) { if (!mp || typeof mp !== 'object') return; const cur = lsGet(LS_SNAP, {}); let n = 0; Object.keys(mp).forEach(id => { if (!cur[id] && mp[id] && typeof mp[id] === 'object') { cur[id] = mp[id]; n++; } }); if (n) lsSet(LS_SNAP, cur); }
+function snapKullanilan(kayitlar) { const mp = lsGet(LS_SNAP, {}), o = {}; kayitlar.forEach(x => { if (x.snapId && mp[x.snapId]) o[x.snapId] = mp[x.snapId]; }); return o; }
+function snapGoc() { const all = lsGet(LS_KAYIT, []); let n = 0; const yeni = all.map(x => { if (x.snap) { n++; return snapSikistir(x); } return x; }); if (n) lsSet(LS_KAYIT, yeni); }
+function kayitBirlestir(cur, m) { /* aynı kayıt varsa daha yeni değişiklik (düzenleme ya da iptal) eskisinin yerine geçer; kalıcı silinenler geri gelmez */
+  if (silinenOku().some(t => t.id === m.id)) return 'silinmis';
+  const i = cur.findIndex(x => x.id === m.id);
+  if (i < 0) { cur.push(snapSikistir(m)); return 'yeni'; }
+  if (sonDegisim(m) > sonDegisim(cur[i])) { delete m.gonder; cur[i] = snapSikistir(m); return 'guncel'; }
+  return 'var';
+}
+const kimMetni = () => kullGecerli() ? subeAd(kullOku().sube) + ' ' + persKodu() : 'Yönetici';
+function kayitIptal(id) {
+  const all = lsGet(LS_KAYIT, []), x = all.find(k => k.id === id); if (!x || iptalMi(x)) return;
+  x.iptal = { ts: Date.now(), kim: kimMetni() }; delete x.gonder;
+  if (!lsSet(LS_KAYIT, all)) { toast('Kaydedilemedi: tarayıcı hafızası dolu olabilir.'); return; }
+  updateKayitBadge(); renderKayit(); toast('Sözleşme iptal edildi.');
+}
+function kayitIptalGeriAl(id) {
+  if (!yoneticiMi()) { toast('İptali geri alma yalnızca yönetici girişinde yapılabilir.'); return; }
+  const all = lsGet(LS_KAYIT, []), x = all.find(k => k.id === id); if (!x || !iptalMi(x)) return;
+  x.iptal = { ts: Date.now(), kim: kimMetni(), geri: true }; delete x.gonder;
+  lsSet(LS_KAYIT, all); updateKayitBadge(); renderKayit(); toast('İptal geri alındı.');
+}
+function kayitSilKalici(id) {
+  if (!yoneticiMi()) { toast('Kalıcı silme yalnızca yönetici girişinde yapılabilir.'); return; }
+  const all = lsGet(LS_KAYIT, []), x = all.find(k => k.id === id); if (!x) return;
+  silinenEkle([{ id: x.id, no: x.no || '', ts: Date.now() }]);
+  lsSet(LS_KAYIT, all.filter(k => k.id !== id)); updateKayitBadge(); renderKayit(); toast('Kayıt kalıcı olarak silindi.');
+}
+/* ---- merkeze gönderim bilgisi (havuz kavramı kalktı) ---- */
+function havuzaGitti(x) { if (x.kaynak) return true; return !!(x.gonder && x.gonder.ts); }
+function gonderIsaretle(ids, yol) {
+  const all = lsGet(LS_KAYIT, []); let n = 0;
+  all.forEach(x => { if (ids.indexOf(x.id) > -1) { x.gonder = { ts: Date.now(), yol }; n++; if (curModel && curModel.id === x.id) curModel.gonder = x.gonder; } });
+  if (!n) return; lsSet(LS_KAYIT, all);
+  havuzBarGuncelle(); renderKayit(); toast(n + ' kayıt merkeze gönderildi olarak işaretlendi.');
+}
+function havuzMetni(x) { return x.kaynak ? (x.kaynak === 'pdf' ? 'PDF\'ten yüklendi' : (x.kaynak === 'paket' ? 'Paketten yüklendi' : 'Yedekten yüklendi')) : x.gonder ? 'Gönderildi ' + new Date(x.gonder.ts).toLocaleString('tr-TR') : 'Gönderilmedi'; }
+function havuzRozet(x) { if (x.kaynak) return ''; return havuzaGitti(x) ? '<span class="badge ok">gönderildi</span>' : '<span class="badge warn">gönderilmedi</span>'; }
+function kaynakRozet(x) { return x.kaynak ? '<span class="badge info">' + (x.kaynak === 'pdf' ? 'PDF\'ten yüklendi' : (x.kaynak === 'paket' ? 'paketten yüklendi' : 'yedekten yüklendi')) + '</span>' : ''; }
+function gonderilmeyenleriGoster() { $('k_havuz').checked = true; showPanel('kayit'); }
+/* ---- gönderme penceresi: kayıtlı kişiler (merkez dahil) ---- */
+function gonderModal(c) {
+  const A = ayarOku().alicilar, files = c.dosyalar.map(d => d.file);
+  const canShare = !!(navigator.canShare && navigator.share && navigator.canShare({ files }));
+  const mb = b => (b.size / 1048576).toFixed(1).replace('.', ',');
+  const coklu = c.dosyalar.length > 1;
+  let h = '<h3>' + esc(c.baslik || 'Dosya hazır') + '</h3>' + c.dosyalar.map(d => '<p style="margin:2px 0">' + esc(d.name) + ' (' + (d.sayfa ? d.sayfa + ' sayfa, ' : '') + mb(d.blob) + ' MB)</p>').join('') + '<div class="gbtns" style="margin-top:10px">';
+  if (canShare) h += '<button type="button" class="btn" data-g="paylas">Paylaş (WhatsApp, e-posta… telefon menüsü)</button>';
+  h += '<button type="button" class="btn secondary" data-g="indir">' + (coklu ? 'Dosyaları İndir' : 'İndir') + '</button>';
+  if (!canShare) h += '<button type="button" class="btn secondary" data-g="wamesaj">WhatsApp ile gönder (dosya elle eklenir)</button>';
+  A.forEach((a, i) => {
+    const ad = (a.merkez ? 'Merkez · ' : '') + a.ad;
+    if (a.eposta) h += '<button type="button" class="btn secondary" data-g="mail" data-i="' + i + '">E-posta: ' + esc(ad) + '</button>';
+    if (waNo(a.tel)) h += '<button type="button" class="btn secondary" data-g="wa" data-i="' + i + '">WhatsApp: ' + esc(ad) + '</button>';
+  });
+  if (c.ids && c.ids.length) h += '<button type="button" class="btn secondary" data-g="isaret">Merkeze gönderildi olarak işaretle</button>';
+  h += '</div>';
+  h += '<p class="muted" style="margin:10px 0 0">' + (canShare ? '"Paylaş"a basınca telefonun paylaşma menüsü açılır; dosya kendiliğinden eklenir, alıcıyı (örneğin WhatsApp\'ta merkez kişisini) siz seçersiniz. Aşağıdaki kişi düğmeleri alıcıyı ve mesajı hazırlar, dosya iner, mesaja elle eklersiniz.' : 'Bu cihazda paylaşma menüsü yok: önce "İndir"e basın, sonra WhatsApp ya da e-postaya dosyayı ekleyin. Kişi düğmeleri alıcıyı ve mesajı hazırlar.') + '</p>';
+  h += '<button type="button" class="btn secondary full" data-g="kapat" style="margin-top:10px">Kapat</button>';
+  const box = $('gonderBox'); box.innerHTML = h; $('gonderModal').style.display = 'flex';
+  box._ctx = Object.assign({ A, files }, c);
+}
+/* ---- yedek: şube, kişi, cihaz, tarih ve saat belli; müşteri listesi yedeğe girmez ---- */
+const yedekYeniler = () => lsGet(LS_KAYIT, []);
+function yedekIsaretle() {
+  const y = lsGet(LS_YEDEK, {}); lsSet(LS_YEDEK, Object.assign({}, y, { son: Date.now() }));
+  yedekBarGuncelle(); if (typeof zorunluTamamMi === 'function') zorunluTamamMi(); if (typeof ayarSayfaCiz === 'function') ayarSayfaCiz();
+}
+function yedekIndir() {
+  const kayit = lsGet(LS_KAYIT, []), ayar = lsGet(LS_AYAR, null);
+  if (!kayit.length && !ayar) { toast('Yedeklenecek veri yok.'); return; }
+  const k = kullOku(), d = new Date(), tur = cihazTuru(), ct = tur + cihazNo(), pk = k.ad && k.soyad ? persKodu() : 'XX', sb = k.sube || 'XXX';
+  const gun = gunStr(d), saat = pad2(d.getHours()) + pad2(d.getMinutes());
+  const ad = 'silmo_yedek_' + sb + '_' + pk + '_' + ct + '_' + gun + '_' + saat + '.json';
+  const veri = { uygulama: 'SILMO-2026', surum: 2, tarih: d.toISOString(), sube: k.sube || '', kisi: k.ad && k.soyad ? persKodu() : '', cihaz: { tur, no: cihazNo(), kod: cihazKodu() }, kayit, ayar, sayac: lsGet(LS_SAYAC, null), silinen: silinenOku(), snaplar: snapKullanilan(kayit) };
+  const blob = new Blob([JSON.stringify(veri)], { type: 'application/json' }), file = new File([blob], ad, { type: 'application/json' });
+  const kimden = (k.sube ? subeAd(k.sube) : 'Şube seçilmedi') + ' · ' + pk + ' · ' + cihazTurAd(tur) + ' (' + ct + ')';
+  const zaman = fmtDateDot(gun) + ' ' + pad2(d.getHours()) + ':' + pad2(d.getMinutes());
+  const sonNo = kayit.filter(x => x.no).sort((a, b) => b.ts - a.ts)[0];
+  gonderModal({ dosyalar: [{ file, blob, name: ad }], baslik: 'Yedek hazır (' + kayit.length + ' kayıt)', konu: 'SILMO Yedek · ' + kimden + ' · ' + zaman + ' · ' + kayit.length + ' kayıt',
+    govde: ['SILMO İstanbul 2026 yedek dosyası', '', 'Şube: ' + (k.sube ? subeAd(k.sube) : '—'), 'Personel: ' + pk, 'Cihaz: ' + cihazTurAd(tur) + ' (' + ct + ')', 'Tarih ve saat: ' + zaman, 'Kayıt sayısı: ' + kayit.length, sonNo ? 'Son sözleşme: ' + sonNo.no : ''].filter(x => x !== '').join('\n'),
+    ids: kayit.map(x => x.id), yedek: true });
+}
+function yedekUygula(d, gecerli, degistir) {
+  const cur = lsGet(LS_KAYIT, []);
+  if (Array.isArray(d.silinen)) silinenEkle(d.silinen);
+  snapEkle(d.snaplar);
+  const sil = new Set(silinenOku().map(t => t.id));
+  const temiz = gecerli.filter(x => !sil.has(x.id));
+  const sonuc = degistir ? temiz.map(snapSikistir) : cur.slice(); let guncelSay = 0;
+  if (!degistir) temiz.forEach(x => { const sn = kayitBirlestir(sonuc, x); if (sn === 'guncel') guncelSay++; });
+  if (!lsSet(LS_KAYIT, sonuc)) { toast('Geri yüklenemedi: tarayıcı hafızası dolu olabilir.'); return; }
+  if (d.musteri && Array.isArray(d.musteri.list) && d.musteri.list.length) { /* eski (sürüm 1) yedekler müşteri listesi taşır */
+    const m0 = lsGet(LS_MUSTERI, null);
+    if (degistir || !m0 || !m0.list || !m0.list.length || (d.musteri.ts || 0) > (m0.ts || 0)) lsSet(LS_MUSTERI, d.musteri);
+  }
+  if (d.ayar && typeof d.ayar === 'object') { if (degistir || !ayarOku().alicilar.length) lsSet(LS_AYAR, d.ayar); }
+  sayacYenile(sonuc, d.sayac);
+  loadMusteri(); renderMusteriPanel(); updateKayitBadge(); renderKayit(); alicilarCiz(); kimlikGuncelle(); havuzBarGuncelle();
+  toast(temiz.length + ' kayıt yedekten işlendi' + (guncelSay ? ' (' + guncelSay + ' kayıt daha yeni değişiklikle güncellendi)' : '') + ' (şu an ' + sonuc.length + ' kayıt var).');
+}
+/* ---- zorunlu yedek: her günün ilk açılışında yedeklenmemiş ya da merkeze gönderilmemiş kayıt varsa ---- */
+let zorunlaSay = 0;
+function yedekHatirlat() {
+  if (navigator.webdriver && localStorage.getItem('slm26_test_zorunlu') !== '1') return;
+  const bugun = gunStr(new Date()), y = lsGet(LS_YEDEK, {});
+  if (y.zorunlu === bugun || $('zorunluModal')) return;
+  const s = yedekDurum(), g = lsGet(LS_KAYIT, []).filter(x => !havuzaGitti(x)).length;
+  if (!s.yeni && !g) { lsSet(LS_YEDEK, Object.assign({}, y, { zorunlu: bugun })); return; }
+  zorunluEkran(s.yeni, g);
+}
+function zorunluEkran(yeni, gonderilmeyen) {
+  zorunlaSay = 0;
+  const d = document.createElement('div'); d.id = 'zorunluModal';
+  d.innerHTML = '<div class="modal-box"><h3>Günlük yedek zorunlu</h3><p id="zorunluMetin"></p><div class="gbtns"><button type="button" class="btn" id="zorunluYedek">Yedek Al</button></div><p class="muted" style="margin-top:10px">Yedek dosyası oluşturulmadan yeni sözleşmeye geçilemez. İnternet gerekmez: "İndir" ile telefona kaydedebilirsiniz.</p><button type="button" class="giris-link" id="zorunluAtla" style="display:none;margin-top:6px">Şimdilik atla</button></div>';
+  document.body.appendChild(d);
+  $('zorunluMetin').textContent = [yeni ? yeni + ' kayıt henüz yedeklenmedi.' : '', gonderilmeyen ? gonderilmeyen + ' kayıt merkeze gönderilmedi.' : ''].filter(Boolean).join(' ') + ' Lütfen önce yedek alın' + (gonderilmeyen ? ' ve yedeği merkeze gönderin.' : '.');
+  $('zorunluYedek').addEventListener('click', () => { zorunlaSay++; if (zorunlaSay >= 2) $('zorunluAtla').style.display = ''; yedekIndir(); });
+  $('zorunluAtla').addEventListener('click', () => zorunluKapat());
+}
+function zorunluKapat() { const m = $('zorunluModal'); if (m) m.remove(); const y = lsGet(LS_YEDEK, {}); lsSet(LS_YEDEK, Object.assign({}, y, { zorunlu: gunStr(new Date()) })); }
+function zorunluTamamMi() { if ($('zorunluModal') && !yedekDurum().yeni) zorunluKapat(); }
+
+/* ============ Merkez: Excel (çok sayfalı), PDF liste raporu, Gelen Yedekler ============ */
+const subeKodAd = k => { const s = SUBELER.find(x => x[1] === k); return s ? s[0] : (k || ''); };
+const zamanTr = ts => ts ? new Date(ts).toLocaleString('tr-TR') : '';
+function noCakismalari() { /* aynı sözleşme numarasını taşıyan farklı kayıtlar */
+  const m = {}; lsGet(LS_KAYIT, []).forEach(x => { if (x.no) (m[x.no] = m[x.no] || []).push(x.id); });
+  return Object.keys(m).filter(n => m[n].length > 1);
+}
+function eksikNumaraSatirlari(all) {
+  const re1 = /^SLM(\d\d)-([A-Z]{3})-([A-Z]{2}\.[A-Z]{2})-(KMP\d+)-([TBP]\d)-(\d{4})$/, re2 = /^SLM(\d\d)-([A-Z]{3})-([A-Z]{2}\.[A-Z]{2})-([A-Z]\d)-(\d{4})$/;
+  const g = {};
+  const al = (no, silindi) => {
+    let m = re1.exec(no || ''), key, kam = '', cz, n;
+    if (m) { key = [m[2], m[3], m[4], m[5]].join('|'); kam = m[4]; cz = m[5]; n = +m[6]; }
+    else if ((m = re2.exec(no || ''))) { key = [m[2], m[3], '', m[4]].join('|'); cz = m[4]; n = +m[5]; }
+    else return;
+    const q = g[key] = g[key] || { sube: m[2], pers: m[3], kam, cz, max: 0, var: new Set(), sil: new Set() };
+    q.max = Math.max(q.max, n); (silindi ? q.sil : q.var).add(n);
+  };
+  all.forEach(x => al(x.no, false)); silinenOku().forEach(t => al(t.no, true));
+  const p4 = n => String(n).padStart(4, '0'), rows = [];
+  Object.keys(g).sort().forEach(k => {
+    const q = g[k], eksik = [], sil = [];
+    for (let i = 1; i <= q.max; i++) { if (q.var.has(i)) continue; if (q.sil.has(i)) sil.push(p4(i)); else eksik.push(p4(i)); }
+    if (eksik.length || sil.length) rows.push([subeKodAd(q.sube), q.pers, q.kam, q.cz, p4(q.max), eksik.join(', '), sil.join(', ')]);
+  });
+  return rows;
+}
+function yedekTakipSatirlari() {
+  const log = lsGet(LS_GELEN, []), son = {};
+  log.forEach(l => { const key = [l.sube, l.kisi, l.cihaz].join('|'); if (!son[key] || (l.yedekTs || 0) >= (son[key].yedekTs || 0)) son[key] = l; });
+  const rows = Object.keys(son).map(k => son[k]).sort((a, b) => (subeKodAd(a.sube) + a.kisi).localeCompare(subeKodAd(b.sube) + b.kisi, 'tr'))
+    .map(l => [subeKodAd(l.sube), l.kisi, cihazTurAd((l.cihaz || '').charAt(0)) + (l.cihaz ? ' (' + l.cihaz + ')' : ''), zamanTr(l.yedekTs), l.kayit, zamanTr(l.ts), l.dosya]);
+  const gelen = new Set(Object.keys(son).map(k => son[k].sube));
+  SUBELER.filter(s => s[1] !== 'MRK' && !gelen.has(s[1])).forEach(s => rows.push([s[0], '', '', 'Gelmedi', '', '', '']));
+  return rows;
+}
+function subeOzetSatirlari(all) {
+  const g = {};
+  all.forEach(x => { const s = x.sube || 'Belirsiz'; const q = g[s] = g[s] || { n: 0, iptal: 0, tutar: 0, gi: [] }; if (iptalMi(x)) { q.iptal++; return; } q.n++; q.tutar += kayitInfo(x).tutar || 0; const gk = gercekKayit(x); if (gk) q.gi.push(gk.oran); });
+  const avg = a => a.length ? Math.round(a.reduce((p, v) => p + v, 0) / a.length * 100) / 100 : '';
+  const rows = Object.keys(g).sort((a, b) => a.localeCompare(b, 'tr')).map(s => [s, g[s].n, g[s].iptal, Math.round(g[s].tutar), avg(g[s].gi)]);
+  const tn = rows.reduce((p, r) => p + r[1], 0), ti = rows.reduce((p, r) => p + r[2], 0), tt = rows.reduce((p, r) => p + r[3], 0);
+  const tgi = []; Object.keys(g).forEach(s => g[s].gi.forEach(v => tgi.push(v)));
+  rows.push(['Toplam', tn, ti, tt, avg(tgi)]);
+  return rows;
+}
+function excelAd(uz) { const d = new Date(); return 'SILMO_Sozlesmeler_' + gunStr(d) + '_' + pad2(d.getHours()) + pad2(d.getMinutes()) + '.' + uz; }
+function excelUret(mod) {
+  const all = lsGet(LS_KAYIT, []).sort((a, b) => a.ts - b.ts);
+  if (!all.length) { toast('Aktarılacak kayıt yok.'); return null; }
+  const adm = yoneticiMi(), cak = new Set(noCakismalari());
+  const H = ['Sözleşme No', 'Şube', 'Personel', 'Tarih', 'Başlangıç Tarihi', 'Cari Kodu', 'Ünvan', 'Kampanya', 'Ödeme Çeşidi', 'Anlaşma Tutarı (₺)', 'Tutar Türü', 'Aylık Ödeme (₺)', 'Ay Sayısı',
+    'İskonto (%)', 'Ek İskonto (puan)', 'Hediye / Cihaz / Çek', 'Hediye / Çek Tutarı (₺)', 'Hediye Paket Değeri (₺)', 'Hediye Fark (₺)', 'Hediye Puan', 'Elektronik Kampanya Tutarı (₺)', 'Fiyat Farkı (₺)', 'Ödeme Tablosu', 'Cihaz Bedeli (₺)', 'Cihaz Bedeli Ödeme Sayısı', 'Ödeme Planı Düzenlendi', 'Özelleştirildi',
+    'Tablodan Farklı Alanlar', 'Ek Fayda Açıklaması', 'Merkeze Gönderim', 'Kayıt Zamanı', 'Düzenlendi', 'Düzenleme Zamanı', 'Durum', 'Cihaz Türü', 'Cihaz Kodu', 'Kaynak Yedek', 'Numara Çakışması'].concat(adm ? ['Gerçek İskonto Oranı (%)', 'Gerçek İskonto Tutarı (₺)', 'Katalogdaki Gerçek İskonto (%)'] : []);
+  const nn = v => (v == null || v === '' || isNaN(v)) ? '' : v;
+  const aoa = [H].concat(all.map(x => {
+    const k = kayitInfo(x), cz = x.cihaz || {};
+    return [x.no || '', x.sube || '', x.pers || '', fmtDateDot(x.tarih), x.baslangic ? fmtDateDot(x.baslangic) : '', x.kod, x.unvan, x.campName, x.odeme, nn(k.tutar), k.tutarTuru, nn(k.aylik), nn(k.ay),
+      nn(k.iskonto), nn(k.ekIskonto), k.fayda, nn(k.hediyeTutar), nn(k.hedPaket), nn(k.hedFark), nn(k.puan), nn(k.elk), nn(k.fark), k.tablo, nn(k.cbTutar), nn(k.cbAdet), (x.odtDuzenlendi || x.cbDuzenlendi) ? 'Evet' : 'Hayır', x.custom ? 'Evet' : 'Hayır',
+      k.farklar.concat(x.odtFark ? [x.odtFark] : [], x.cbFark ? [x.cbFark] : []).join('; '), k.aciklama, havuzMetni(x), new Date(x.ts).toLocaleString('tr-TR'), x.duzTs ? 'Evet' : '', x.duzTs ? new Date(x.duzTs).toLocaleString('tr-TR') + (x.duzKim ? ' – ' + x.duzKim : '') : '',
+      iptalMi(x) ? 'İptal – ' + zamanTr(x.iptal.ts) + (x.iptal.kim ? ' – ' + x.iptal.kim : '') : 'Geçerli', cz.tur ? cihazTurAd(cz.tur) + (cz.no ? ' ' + cz.no : '') : '', cz.kod || '', x.kaynakYedek || '', cak.has(x.no) ? 'Evet' : ''].concat(adm ? gercekExcel(x) : []);
+  }));
+  if (libXlsx()) {
+    const ws = XLSX.utils.aoa_to_sheet(aoa);
+    ws['!cols'] = [20, 10, 18, 12, 16, 14, 40, 52, 24, 18, 26, 16, 10, 12, 16, 60, 20, 20, 16, 14, 22, 16, 18, 18, 16, 14, 11, 70, 40, 28, 20, 11, 34, 36, 16, 11, 34, 14, 18, 22, 24].map(w => ({ wch: w }));
+    [9, 11, 16, 17, 18, 19, 20, 21, 23].forEach(c => { for (let r = 1; r < aoa.length; r++) { const cell = ws[XLSX.utils.encode_cell({ r, c })]; if (cell && typeof cell.v === 'number') cell.z = '#,##0'; } });
+    [[38, '0.00'], [39, '#,##0'], [40, '0.00']].forEach(f => { for (let r = 1; r < aoa.length; r++) { const cell = ws[XLSX.utils.encode_cell({ r, c: f[0] })]; if (cell && typeof cell.v === 'number') cell.z = f[1]; } });
+    const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Sözleşmeler');
+    if (adm) {
+      const ek = (ad, basliklar, satirlar, genis) => { const w = XLSX.utils.aoa_to_sheet([basliklar].concat(satirlar.length ? satirlar : [['Kayıt yok'].concat(new Array(basliklar.length - 1).fill(''))])); w['!cols'] = genis.map(x => ({ wch: x })); XLSX.utils.book_append_sheet(wb, w, ad); return w; };
+      const so = ek('Şube Özeti', ['Şube', 'Sözleşme (iptal hariç)', 'İptal', 'Toplam Tutar (₺)', 'Ortalama Gerçek İskonto (%)'], subeOzetSatirlari(all), [24, 22, 10, 20, 28]);
+      for (let r = 1; r <= subeOzetSatirlari(all).length; r++) { const c = so[XLSX.utils.encode_cell({ r, c: 3 })]; if (c && typeof c.v === 'number') c.z = '#,##0'; }
+      ek('Yedek Takibi', ['Şube', 'Personel', 'Cihaz', 'Son Yedek Zamanı', 'Kayıt Sayısı', 'Uygulamaya Yüklenme Zamanı', 'Dosya'], yedekTakipSatirlari(), [22, 14, 20, 22, 12, 26, 60]);
+      ek('Eksik Numaralar', ['Şube', 'Personel', 'Kampanya', 'Cihaz', 'En Yüksek Sıra', 'Eksik Numaralar', 'Silinen Numaralar'], eksikNumaraSatirlari(all), [22, 14, 12, 10, 16, 50, 40]);
+    }
+    if (mod === 'blob') return XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    XLSX.writeFile(wb, excelAd('xlsx'));
+  } else {
+    const csv = '\ufeff' + aoa.map(r => r.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(';')).join('\r\n');
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+    a.download = excelAd('csv'); a.click();
+  }
+  return null;
+}
+$('btnExcel').addEventListener('click', () => excelUret('indir'));
+/* ---- PDF liste raporu (iç bilgiler: gerçek iskonto, tablodan farklı alanlar, ek fayda notu yoktur) ---- */
+let listePdfBusy = false;
+function listeSayfalari(kayitlar, zaman, kimden) {
+  const SATIR = 21, n = Math.max(1, Math.ceil(kayitlar.length / SATIR));
+  const gecerli = kayitlar.filter(x => !iptalMi(x)), toplam = gecerli.reduce((p, x) => p + (kayitInfo(x).tutar || 0), 0);
+  const th = 'style="text-align:left;padding:6px 6px;border-bottom:2px solid #1F4E78;font-size:11px;color:#1F4E78"', thR = 'style="text-align:right;padding:6px 6px;border-bottom:2px solid #1F4E78;font-size:11px;color:#1F4E78"';
+  const out = [];
+  for (let p = 0; p < n; p++) {
+    const rows = kayitlar.slice(p * SATIR, (p + 1) * SATIR).map(x => {
+      const k = kayitInfo(x), td = 'style="padding:5px 6px;border-bottom:1px solid #e3e3e3;font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:0"';
+      const durum = iptalMi(x) ? 'İptal' : (x.duzTs ? 'Düzenlendi' : 'Geçerli');
+      return '<tr' + (iptalMi(x) ? ' style="color:#999;text-decoration:line-through"' : '') + '><td ' + td + '>' + esc(x.no || '') + '</td><td ' + td + '>' + esc(fmtDateDot(x.tarih)) + '</td><td ' + td + '>' + esc((x.sube || '') + ' / ' + (x.pers || '')) + '</td><td ' + td + '>' + esc(x.unvan) + '</td><td ' + td + '>' + esc(KISA[x.campId] || x.campName) + '</td><td ' + td + ' style="text-align:right">' + esc(k.tutar ? TL(k.tutar) : '') + '</td><td ' + td + '>' + esc(k.fayda) + '</td><td ' + td + '>' + durum + '</td></tr>';
+    }).join('');
+    out.push('<div class="lp" style="width:1123px;height:794px;box-sizing:border-box;padding:30px 36px;background:#fff;color:#14212B;font-family:Arial,Helvetica,sans-serif;position:relative">' +
+      '<div style="display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid #1F4E78;padding-bottom:8px;margin-bottom:10px"><div><div style="font-size:20px;font-weight:700;color:#1F4E78">SILMO İSTANBUL 2026 · Sözleşme Kayıtları</div><div style="font-size:11px;color:#555;margin-top:3px">' + esc(kimden) + '</div></div><div style="font-size:11px;color:#555;text-align:right">' + esc(zaman) + '<br>' + gecerli.length + ' geçerli sözleşme · ' + esc(TL(toplam)) + '</div></div>' +
+      '<table style="width:100%;border-collapse:collapse;table-layout:fixed"><colgroup><col style="width:19%"><col style="width:7%"><col style="width:12%"><col style="width:20%"><col style="width:15%"><col style="width:9%"><col style="width:11%"><col style="width:7%"></colgroup><thead><tr><th ' + th + '>Sözleşme No</th><th ' + th + '>Tarih</th><th ' + th + '>Şube / Personel</th><th ' + th + '>Ünvan</th><th ' + th + '>Kampanya</th><th ' + thR + '>Tutar</th><th ' + th + '>Hediye / Cihaz</th><th ' + th + '>Durum</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+      '<div style="position:absolute;left:36px;right:36px;bottom:16px;font-size:10px;color:#777;display:flex;justify-content:space-between"><span>Bu liste iç kullanım içindir.</span><span>Sayfa ' + (p + 1) + '/' + n + '</span></div></div>');
+  }
+  return out;
+}
+async function kayitListePdf() {
+  if (listePdfBusy || pdfBusy) return;
+  const all = lsGet(LS_KAYIT, []).sort((a, b) => a.ts - b.ts);
+  if (!all.length) { toast('Aktarılacak kayıt yok.'); return; }
+  listePdfBusy = true; const dgm = $('btnPdfListe'), eski = dgm.textContent; dgm.disabled = true; dgm.textContent = 'PDF hazırlanıyor…';
+  try {
+    await pdfLibs();
+    const k = kullOku(), d = new Date(), zaman = fmtDateDot(gunStr(d)) + ' ' + pad2(d.getHours()) + ':' + pad2(d.getMinutes());
+    const kimden = (k.sube ? subeAd(k.sube) : '') + (k.ad && k.soyad ? ' · ' + persKodu() : '') + (yoneticiMi() ? ' (yönetici)' : '');
+    const wrap = document.createElement('div'); wrap.innerHTML = listeSayfalari(all, zaman, kimden).join('');
+    const sayfalar = [...wrap.children], ad = excelAd('pdf');
+    const pdf = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4', orientation: 'landscape', compress: true });
+    pdf.setProperties({ title: 'SILMO İstanbul 2026 Sözleşme Kayıtları', subject: all.length + ' kayıt', creator: 'SILMO İSTANBUL 2026 Fuar Uygulaması' });
+    let stage = $('pdfStage'); if (!stage) { stage = document.createElement('div'); stage.id = 'pdfStage'; document.body.appendChild(stage); }
+    try {
+      for (let i = 0; i < sayfalar.length; i++) {
+        stage.innerHTML = sayfalar[i].outerHTML; await new Promise(r => setTimeout(r, 30));
+        const canvas = await window.html2canvas(stage.firstElementChild, { scale: 1.6, backgroundColor: '#ffffff', useCORS: true, logging: false, windowWidth: 1200 });
+        if (i > 0) pdf.addPage('a4', 'landscape');
+        pdf.addImage(canvas.toDataURL('image/jpeg', 0.88), 'JPEG', 0, 0, 297, 210, undefined, 'FAST'); canvas.width = canvas.height = 0;
+      }
+    } finally { stage.innerHTML = ''; }
+    dosyaIndir(pdf.output('blob'), ad); toast('PDF indirildi (' + sayfalar.length + ' sayfa).');
+  } catch (e) { toast('PDF oluşturulamadı.'); }
+  finally { listePdfBusy = false; dgm.disabled = false; dgm.textContent = eski; }
+}
+$('btnPdfListe').addEventListener('click', kayitListePdf);
+/* ---- Gelen Yedekler (yönetici): şube yedeklerini yükleyip tek listede birleştir ---- */
+function gelenOzetCiz(satirlar, cakisma) {
+  const el = $('gelenOzet'); if (!el) return;
+  if (!satirlar.length) { el.innerHTML = ''; return; }
+  el.innerHTML = '<div class="gscroll"><table class="gtab"><thead><tr><th>Dosya</th><th>Kimden</th><th>Yedek zamanı</th><th>Kayıt</th><th>Yeni</th><th>Güncel</th><th>Vardı</th></tr></thead><tbody>' + satirlar.map(s => s.hata
+    ? '<tr class="ghata"><td>' + esc(s.dosya) + '</td><td colspan="6">' + esc(s.hata) + '</td></tr>'
+    : '<tr><td>' + esc(s.dosya) + '</td><td>' + esc(s.kimden) + '</td><td>' + esc(s.zaman) + '</td><td>' + s.kayit + '</td><td>' + s.yeni + '</td><td>' + s.guncel + '</td><td>' + s.var_ + '</td></tr>').join('') + '</tbody></table></div>' +
+    (cakisma.length ? '<div class="gcak">Aynı numaralı farklı sözleşme: ' + cakisma.slice(0, 5).map(esc).join(', ') + (cakisma.length > 5 ? ' ve ' + (cakisma.length - 5) + ' tane daha' : '') + ' (' + cakisma.length + ' numara). İkisi de saklandı, Excel\'de işaretli.</div>' : '');
+}
+function gelenTakipCiz() {
+  const el = $('gelenTakip'); if (!el) return;
+  const r = yedekTakipSatirlari();
+  el.innerHTML = '<div class="gscroll"><table class="gtab"><thead><tr><th>Şube</th><th>Personel</th><th>Cihaz</th><th>Son yedek</th><th>Kayıt</th></tr></thead><tbody>' + r.map(x => '<tr' + (x[3] === 'Gelmedi' ? ' class="ghata"' : '') + '><td>' + esc(x[0]) + '</td><td>' + esc(x[1]) + '</td><td>' + esc(x[2]) + '</td><td>' + esc(x[3]) + '</td><td>' + esc(x[4]) + '</td></tr>').join('') + '</tbody></table></div>';
+}
+async function gelenYedekYukle(fs) {
+  const cur = lsGet(LS_KAYIT, []), log = lsGet(LS_GELEN, []), satirlar = []; let topYeni = 0, topGuncel = 0;
+  for (const f of fs) {
+    let d; try { d = JSON.parse(await f.text()); } catch (er) { satirlar.push({ dosya: f.name, hata: 'Okunamadı: geçerli bir yedek dosyası değil' }); continue; }
+    if (!d || d.uygulama !== 'SILMO-2026' || !Array.isArray(d.kayit)) { satirlar.push({ dosya: f.name, hata: 'SILMO yedeği değil' }); continue; }
+    if (d.surum > 2) { satirlar.push({ dosya: f.name, hata: 'Daha yeni bir sürümden' }); continue; }
+    if (Array.isArray(d.silinen)) silinenEkle(d.silinen);
+    snapEkle(d.snaplar);
+    let yeni = 0, guncel = 0, var_ = 0;
+    d.kayit.forEach(m => {
+      if (!m || !m.id || typeof m.ts !== 'number' || !Array.isArray(m.rows) || !m.unvan) return;
+      m.kaynak = 'yedek'; m.yuklemeTs = Date.now(); m.kaynakYedek = f.name;
+      const sn = kayitBirlestir(cur, m); if (sn === 'yeni') yeni++; else if (sn === 'guncel') guncel++; else var_++;
+    });
+    const k0 = d.kayit[0] || {}, sube = d.sube || k0.subeKod || '', kisi = d.kisi || k0.persKod || '', cz = d.cihaz ? (d.cihaz.tur || '') + (d.cihaz.no || '') : '';
+    const yts = d.tarih ? Date.parse(d.tarih) : 0;
+    log.push({ ts: Date.now(), dosya: f.name, sube, kisi, cihaz: cz, yedekTs: yts, kayit: d.kayit.length, yeni, guncel, var_ });
+    topYeni += yeni; topGuncel += guncel;
+    satirlar.push({ dosya: f.name, kimden: [subeKodAd(sube) || '—', kisi || '—', cz ? cihazTurAd(cz.charAt(0)) + ' (' + cz + ')' : ''].filter(Boolean).join(' · '), zaman: yts ? zamanTr(yts) : '—', kayit: d.kayit.length, yeni, guncel, var_ });
+  }
+  if ((topYeni || topGuncel) && !lsSet(LS_KAYIT, cur)) { toast('Kaydedilemedi: tarayıcı hafızası dolu olabilir.'); return; }
+  lsSet(LS_GELEN, log.slice(-500));
+  sayacYenile(cur); updateKayitBadge(); renderKayit(); gelenOzetCiz(satirlar, noCakismalari()); gelenTakipCiz();
+  toast(topYeni + ' kayıt eklendi' + (topGuncel ? ', ' + topGuncel + ' güncellendi (daha yeni değişiklik)' : '') + (satirlar.some(s => s.hata) ? ', ' + satirlar.filter(s => s.hata).length + ' dosya okunamadı' : '') + '.');
+}
+$('gelenYedek').addEventListener('change', async e => {
+  const fs = [...e.target.files]; e.target.value = ''; if (!fs.length) return;
+  if (!yoneticiMi()) { toast('Gelen yedekleri yükleme yalnızca yönetici girişinde yapılabilir.'); return; }
+  await gelenYedekYukle(fs);
+});
+
+/* ============ Kayıt kartları, Ayarlar (gönderim adresleri, cihaz, yönetici) ============ */
+const MENU_IKON = '<svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>';
+function renderKayit() {
+  const q = norm($('k_q').value), cak = new Set(noCakismalari()), adm = yoneticiMi();
+  const all = lsGet(LS_KAYIT, []).sort((a, b) => b.ts - a.ts)
+    .filter(x => (!q || norm(x.unvan + ' ' + x.kod + ' ' + x.campName + ' ' + (x.no || '')).indexOf(q) > -1) && !($('k_havuz') && $('k_havuz').checked && havuzaGitti(x)) && !($('k_duz') && $('k_duz').checked && !x.duzTs));
+  const gec = all.filter(x => !iptalMi(x)), ipt = all.length - gec.length;
+  let total = 0; const per = [];
+  CAMPS.forEach(c => {
+    const sub = gec.filter(x => x.campId === c.id); if (!sub.length) return;
+    const t = sub.reduce((a, x) => a + (kayitInfo(x).tutar || 0), 0); total += t;
+    per.push('<div class="rowk"><span>' + esc(KISA[c.id] || c.code) + ' · ' + sub.length + ' adet</span><span>' + money(t) + '</span></div>');
+  });
+  const cbs = gec.map(x => cbOf(x).tutar).filter(v => v);
+  const cbLine = cbs.length ? '<div class="rowk"><span>Cihaz bedeli tahsilatı · ' + cbs.length + ' adet</span><span>' + money(cbs.reduce((a, v) => a + v, 0)) + '</span></div>' : '';
+  $('kSummary').innerHTML = all.length
+    ? '<div class="ksum"><div class="rowk tot"><span><b>' + gec.length + '</b> sözleşme' + (ipt ? ' <small>(+ ' + ipt + ' iptal)</small>' : '') + '</span><b>' + money(total) + '</b></div>' + per.join('') + cbLine +
+      '<details class="ksum-not"><summary>Tutarlar nasıl hesaplanır?</summary>Aylık anlaşmalarda aylık × ay, makinelerde ödeme planı toplamı, stok camda KDV dahil ödeme. Farklı türler birlikte toplanmıştır. İptal edilenler toplama katılmaz. Cihaz bedeli ayrı gösterilir, toplama katılmaz.</details></div>' : '';
+  $('kayitList').innerHTML = all.length ? all.map(x => {
+    const k = kayitInfo(x), id = x.id, ip = iptalMi(x);
+    let bd = '';
+    if (ip) bd += '<span class="badge iptal">iptal</span>';
+    if (cak.has(x.no)) bd += '<span class="badge iptal">numara çakışması</span>';
+    if (k.ekIskonto != null && k.ekIskonto !== 0) bd += '<span class="badge">ek iskonto ' + (k.ekIskonto > 0 ? '+' : '−') + numTr(Math.abs(k.ekIskonto)) + '</span>';
+    if (k.farklar.length) bd += '<span class="badge">tablo dışı</span>'; else if (x.custom) bd += '<span class="badge">özelleştirilmiş</span>';
+    if (x.odtDuzenlendi || x.cbDuzenlendi) bd += '<span class="badge">ödeme planı düzenlendi</span>';
+    if (x.duzTs) bd += '<span class="badge">düzenlendi ' + new Date(x.duzTs).toLocaleDateString('tr-TR') + '</span>';
+    bd += kaynakRozet(x) + havuzRozet(x);
+    let mn = '';
+    if (adm) mn += '<button type="button" data-duz="' + id + '">Düzenle</button>';
+    if (ip) { if (adm) mn += '<button type="button" data-iptalgeri="' + id + '">İptali Geri Al</button>'; } else mn += '<button type="button" data-iptal="' + id + '">İptal Et</button>';
+    if (adm) mn += '<button type="button" class="k" data-del="' + id + '">Sil (kalıcı)</button>';
+    const tutarMetni = x.ozet ? esc(x.ozet) : (k.tutar ? money(k.tutar) : '');
+    return '<div class="list-row kk' + (ip ? ' iptalli' : '') + '"><div class="bilgi"><div class="l1"><span class="unvan">' + esc(x.unvan) + '</span><span class="chips">' + bd + '</span></div>' +
+      '<div class="l2"><span class="l2a no2">' + esc(x.no || '') + '</span><span class="l2b">' + fmtDateDot(x.tarih) + (tutarMetni ? ' · ' + tutarMetni : '') + ' · ' + esc(KISA[x.campId] || x.campName) + '</span></div>' +
+      (k.aciklama ? '<div class="l2" style="white-space:normal">Not: ' + esc(k.aciklama) + '</div>' : '') + '</div>' +
+      '<div class="acts"><button type="button" class="btn2" data-open="' + id + '">Aç</button><button type="button" class="btn2 d" data-gonder="' + id + '">Gönder</button>' +
+      (mn ? '<span class="kmenu"><button type="button" class="daha2" data-menu="' + id + '" aria-label="Diğer işlemler">' + MENU_IKON + '</button><div class="menu2" id="m_' + id + '">' + mn + '</div></span>' : '') + '</div></div>';
+  }).join('') : '<div class="empty-msg">Kayıtlı sözleşme yok.</div>';
+}
+function kayitMenuKapat() { document.querySelectorAll('#kayitList .menu2.acik').forEach(m => m.classList.remove('acik')); }
+$('k_q').addEventListener('input', renderKayit);
+document.addEventListener('click', e => { if (!e.target.closest('.kmenu')) kayitMenuKapat(); });
+$('kayitList').addEventListener('click', e => {
+  const mb = e.target.closest('[data-menu]');
+  if (mb) { const m = $('m_' + mb.dataset.menu), ac = m.classList.contains('acik'); kayitMenuKapat(); if (!ac) m.classList.add('acik'); return; }
+  const o = e.target.closest('[data-open]'), d = e.target.closest('[data-del]'), gd = e.target.closest('[data-gonder]'), du = e.target.closest('[data-duz]'), ip = e.target.closest('[data-iptal]'), ig = e.target.closest('[data-iptalgeri]');
+  if (du || ip || ig || d) kayitMenuKapat();
+  if (du) { kayitDuzenle(du.dataset.duz); return; }
+  if (gd) { const m = lsGet(LS_KAYIT, []).find(x => x.id === gd.dataset.gonder); if (m) { showPreview(m, 'kayit', true); pdfGonder(1, true); } return; }
+  if (o) { const m = lsGet(LS_KAYIT, []).find(x => x.id === o.dataset.open); if (m) showPreview(m, 'kayit', true); return; }
+  if (ip) { const m = lsGet(LS_KAYIT, []).find(x => x.id === ip.dataset.iptal); if (m) askModal({ title: 'Sözleşme iptal edilsin mi?', text: (m.no ? m.no + ' · ' : '') + m.unvan + ' iptal edilecek. Kayıt listede kalır, Excel\'de "İptal" görünür ve iptal bilgisi merkeze gider.', left: { label: 'Vazgeç' }, right: { label: 'İptal Et', danger: true, fn: () => kayitIptal(m.id) } }); return; }
+  if (ig) { kayitIptalGeriAl(ig.dataset.iptalgeri); return; }
+  if (d && confirm('Bu sözleşme kaydı KALICI olarak silinsin mi? (Silmek yerine iptal etmek isterseniz "İptal Et"i kullanın.)')) kayitSilKalici(d.dataset.del);
+});
+/* ---- Ayarlar: gönderim adresleri (merkez dahil) ---- */
+function ayarOku() {
+  const a = lsGet(LS_AYAR, null) || {};
+  const al = Array.isArray(a.alicilar) ? a.alicilar.filter(x => x && x.ad).map(x => Object.assign({}, x)) : [];
+  const hv = Object.assign({ adres: '', cc: '', eski: [] }, a.havuz || {});
+  if (hv.adres && !al.some(x => x.merkez)) al.unshift({ ad: 'Merkez', eposta: hv.adres, tel: '', merkez: true });
+  al.sort((x, y) => (y.merkez ? 1 : 0) - (x.merkez ? 1 : 0));
+  return { alicilar: al, havuz: hv };
+}
+function aliciTopla() {
+  return [...document.querySelectorAll('#alicilar .alici')].map(r => ({ ad: r.querySelector('[data-af="ad"]').value.trim(), eposta: r.querySelector('[data-af="eposta"]').value.trim(), tel: r.querySelector('[data-af="tel"]').value.trim(), merkez: r.querySelector('[data-af="merkez"]').checked }));
+}
+function alicilarCiz(taslak) {
+  const L = taslak || ayarOku().alicilar, el = $('alicilar'); if (!el) return;
+  el.innerHTML = L.length ? L.map((a, i) => '<div class="alici" data-i="' + i + '"><div class="field"><label>Ad</label><input type="text" data-af="ad" value="' + esc(a.ad) + '" placeholder="Örn. Muhasebe"></div>' +
+    '<div class="field"><label>E-posta</label><input type="email" data-af="eposta" value="' + esc(a.eposta) + '" placeholder="ornek@sirket.com"></div>' +
+    '<div class="field"><label>WhatsApp numarası</label><input type="tel" data-af="tel" value="' + esc(a.tel) + '" placeholder="05XX XXX XX XX"></div>' +
+    '<label class="mrk"><input type="checkbox" data-af="merkez"' + (a.merkez ? ' checked' : '') + '> Merkez (yedek ve raporlar buraya gönderilir)</label>' +
+    '<button type="button" class="btn danger" data-asil="' + i + '" style="padding:7px 10px;font-size:0.78rem">Sil</button></div>').join('') : '<div class="empty-msg">Kişi tanımlı değil.</div>';
+}
+$('alicilar').addEventListener('change', e => { const c = e.target.closest('[data-af="merkez"]'); if (!c || !c.checked) return; document.querySelectorAll('#alicilar [data-af="merkez"]').forEach(x => { if (x !== c) x.checked = false; }); });
+/* ---- Ayarlar sayfası: yedek bilgisi, cihaz, gelen yedek takibi ---- */
+function ayarSayfaCiz() {
+  const s = yedekDurum(), b = $('yedekAyarBilgi');
+  if (b) b.textContent = !s.n ? 'Henüz kayıt yok.' : (!s.son ? 'Henüz yedek alınmadı (' + s.n + ' kayıt var).' : (s.yeni ? s.yeni + ' kayıt yedeklenmedi · son yedek: ' + sonYedekMetni(s.son) : 'Tüm kayıtlar yedekte · son yedek: ' + sonYedekMetni(s.son)));
+  const t = cihazTuru(), cb = $('cihazBilgi');
+  if (cb) cb.textContent = cihazTurAd(t) + ' (otomatik tahmin) · sözleşme numarasında ' + t + cihazNo() + ' · cihaz kodu ' + cihazKodu();
+  const sel = $('cihazNoSec'); if (sel) sel.value = String(cihazNo());
+  gelenTakipCiz();
+}
+$('cihazNoSec').addEventListener('change', e => { lsSet(LS_CIHAZNO, parseInt(e.target.value, 10)); ayarSayfaCiz(); toast('Cihaz numarası ' + e.target.value + ' olarak kaydedildi.'); });
+ayarSayfaCiz();
+snapGoc();
 /* ============ Başlangıç ============ */
-renderCamps(); loadMusteri(); updateKayitBadge(); renderMusteriPanel(); yedekBarGuncelle(); alicilarCiz(); havuzCiz(); havuzBarGuncelle(); kimlikGuncelle(); document.body.classList.toggle('yonetici', !!yoneticiMi());
+renderCamps(); loadMusteri(); updateKayitBadge(); renderMusteriPanel(); yedekBarGuncelle(); alicilarCiz(); havuzBarGuncelle(); kimlikGuncelle(); document.body.classList.toggle('yonetici', !!yoneticiMi());
 girisBaslangic();
 setTimeout(() => { if (girisGorunur()) bekleyenHatirlat = true; else yedekHatirlat(); }, 700);
 })();
