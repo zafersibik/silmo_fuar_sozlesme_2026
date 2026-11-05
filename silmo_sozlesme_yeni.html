@@ -183,6 +183,26 @@
   @media (prefers-color-scheme: dark) { .giris-hata { color: #ff8a80; } }
   .giris-link { background: none; border: 0; padding: 0 0 0 4px; color: var(--accent); text-decoration: underline; font-size: inherit; font-weight: 700; cursor: pointer; }
   #gHatirli { margin-top: 6px; }
+  .zpage { position: relative; width: 210mm; height: 297mm; overflow: hidden; background: #fff; page-break-after: always; break-after: page; -webkit-print-color-adjust: exact; print-color-adjust: exact; font-family: "Times New Roman", Times, "DejaVu Serif", serif; color: #111; }
+  .zpage:last-child { page-break-after: auto; break-after: auto; }
+  .zpage .zin { position: absolute; left: 16mm; right: 16mm; top: 15mm; }
+  .zbas { font-size: 12.5pt; text-align: center; margin: 0 0 7mm; font-weight: 700; line-height: 1.25; }
+  .ztar { text-align: right; font-size: 11pt; margin-bottom: 5mm; }
+  .ztar u { text-decoration: none; border-bottom: 0.2mm dotted #555; padding: 0 3mm; }
+  .zp { font-size: 10.5pt; text-align: justify; line-height: 1.35; margin: 0 0 3mm; text-indent: 10mm; }
+  .zp.zk { color: #c00000; font-weight: 700; }
+  .zimza { text-align: center; font-size: 10.5pt; margin: 7mm 0 0 88mm; width: 80mm; line-height: 1.3; }
+  .zimza-d { margin-top: 10mm; }
+  .zkamp { font-size: 10.5pt; margin: 11mm 0 2mm; }
+  .zek { font-size: 10.5pt; font-weight: 700; margin: 0 0 7mm; }
+  .zbas2 { font-size: 11pt; text-align: center; font-weight: 700; margin: 0 0 4mm; }
+  .zt { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 7.6pt; }
+  .zt th, .zt td { border: 0.25mm solid #222; padding: 1mm 1.4mm; vertical-align: middle; }
+  .zt th { font-size: 8pt; font-weight: 700; text-align: center; height: 10mm; }
+  .zt td { height: 8mm; line-height: 1.15; word-break: break-word; }
+  .zt td.r { text-align: right; white-space: nowrap; }
+  .zfoot { position: absolute; left: 0; right: 0; bottom: 8mm; text-align: center; font-size: 8pt; color: #555; }
+
   .gercek-kutu { position: sticky; top: 76px; z-index: 6; background: #fff1d6; color: #5b3a00; border: 1.5px solid #d98e04; border-radius: 10px; padding: 8px 10px; margin-bottom: 10px; font-size: 0.88rem; display: flex; flex-direction: column; gap: 2px; box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
   .gercek-kutu b { font-size: 1.05rem; }
   .gercek-kutu em { font-style: normal; font-weight: 700; }
@@ -2908,7 +2928,7 @@ $('gonderModal').addEventListener('click', e => { if (e.target === $('gonderModa
 async function uretSenetPdf(m, tur, onProgress) {
   await pdfLibs();
   const L = senetSatirlari(tur); if (!L) throw new Error('Senet için sıralı evrak ödeme tablosu gerekli.');
-  const wrap = document.createElement('div'); wrap.innerHTML = senetSayfalari(L, m);
+  const wrap = document.createElement('div'); wrap.innerHTML = sozlesmeSayfalari(L, m, tur) + senetSayfalari(L, m, tur);
   const sayfalar = [...wrap.children];
   const ad = pdfName(m) + (tur === 'cb' ? ' - Cihaz Bedeli Senetleri' : ' - Senetler');
   const pdf = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait', compress: true });
@@ -3236,20 +3256,20 @@ function snCerceve() {
   });
   return o;
 }
-function snSenet(i, n, N, l, m) {
+function snSenet(i, n, N, l, m, kod) {
   const tutar = Math.round(l.tutar * 100), lira = Math.floor(tutar / 100), kurus = tutar % 100;
   const vade = fmtDate(l.tarih), duz = fmtDate(m.tarih), unvan = String(m.unvan || ''), adres = String(m.adres || '');
   let a1 = adres, a2 = ''; if (adres.length > 52) { const k = adres.lastIndexOf(' ', 52); a1 = adres.slice(0, k > 0 ? k : 52); a2 = adres.slice(k > 0 ? k + 1 : 52); }
   const et = (y, t) => '<div class="sn-et" style="top:' + y + 'mm">' + t + '</div>', ci = (y, cls) => '<div class="sn-kc' + (cls ? ' ' + cls : '') + '" style="top:' + y + 'mm"></div>';
   const stub = et(9, 'No.') + ci(16.5) + et(20, 'Lira') + ci(27.5) + et(31, 'Kuruş') + ci(38.5) + et(42, 'Borçlu') + ci(49.5) + ci(56.5) + ci(63.5) + et(67, 'Vade') + ci(74) + et(77, 'Tarih') + ci(84);
-  const cols = [['Ödeme Günü', 67, 34, vade], ['Türk Lirası', 104, 34, grp(lira)], ['Kuruş', 141, 22, String(kurus).padStart(2, '0')], ['No.', 166, 29, n + ' / ' + N]];
+  const cols = [['Kampanya / Sıra', 67, 26, kod + ' / ' + n], ['Ödeme Günü', 96, 27, vade], ['Türk Lirası', 126, 29, grp(lira)], ['Kuruş', 158, 13, kurus ? String(kurus).padStart(2, '0') : '-'], ['No.', 174, 21, '']];
   const ust = cols.map(c => '<div class="sn-ush" style="left:' + c[1] + 'mm;width:' + c[2] + 'mm"><span>' + c[0] + '</span><i></i><b>' + esc(c[3]) + '</b><i></i></div>').join('');
   const t = x => '<s>' + x + '</s>', v = x => '<u>' + esc(x) + '</u>';
   const metin =
     '<div class="sn-ln">' + t('İş bu emre Muharrer senedimin') + v('bedeli') + t('Mukabilinde') + v(vade) + t('Tarihinde') + '</div>' +
     '<div class="sn-ln">' + t('Sayın') + v('MERVE GÖZLÜK CAMI SAN.TİC.A.Ş.') + t('veyahut emruhavale') + v('İstanbul’da') + '</div>' +
     '<div class="sn-ln">' + t('Yukarıda yazılı yalnız') + v(yaziSp(lira)) + t('Türk Lirası') + '</div>' +
-    '<div class="sn-ln">' + v(kurus ? yaziSp(kurus) : 'SIFIR') + t('Kuruş ödeyeceğim.') + v('Bedeli malen') + t('Ahzolunmuştur. İş Bu bono') + '</div>' +
+    '<div class="sn-ln">' + v(kurus ? yaziSp(kurus) : '-') + t('Kuruş ödeyeceğim.') + v('Bedeli malen') + t('Ahzolunmuştur. İş Bu bono') + '</div>' +
     '<div class="sn-ln sn-just">Vadesinde ödenmediği takdirde müteakip bonolarında muacceliyet kesbedeceğini, İhtilaf</div>' +
     '<div class="sn-ln">' + t('Vukuunda') + v('İSTANBUL') + t('Mahkemelerinin selahiyetini şimdiden kabul eylerim.') + '</div>';
   const sat = (lbl, val) => '<div class="sn-sat"><span>' + lbl + '</span><u>' + esc(val || '') + '</u></div>';
@@ -3258,15 +3278,39 @@ function snSenet(i, n, N, l, m) {
     '<div class="sn-in"><svg class="sn-orn" viewBox="0 0 200 93" xmlns="http://www.w3.org/2000/svg">' + SN_ORN + '</svg>' + stub + ust + '<div class="sn-metin">' + metin + '</div><div class="sn-od">ÖDEYECEK</div><div class="sn-bor">' + borclu + '</div>' +
     '<div class="sn-duz">Düzenleme Tar. <u>' + esc(duz) + '</u></div><div class="sn-im sn-i1">İmza</div><div class="sn-im sn-i2">İmza</div></div></div>';
 }
-function senetSayfalari(satirlar, m) {
-  const N = satirlar.length, out = [];
+function senetSayfalari(satirlar, m, tur) {
+  const N = satirlar.length, out = [], kod = 'KMP' + m.campId + (tur === 'cb' ? '-CB' : '');
   for (let p = 0; p * 3 < N; p++) {
     let h = '', cnt = 0;
-    for (let j = 0; j < 3 && p * 3 + j < N; j++) { h += snSenet(j, p * 3 + j + 1, N, satirlar[p * 3 + j], m); cnt++; }
+    for (let j = 0; j < 3 && p * 3 + j < N; j++) { h += snSenet(j, p * 3 + j + 1, N, satirlar[p * 3 + j], m, kod); cnt++; }
     for (let k = 0; k < cnt - 1; k++) h += '<div class="sn-kesik" style="top:' + (3.5 + 94.6 + 1.5 + 97.6 * k).toFixed(2) + 'mm"><span>✂</span></div>';
     out.push('<div class="spage">' + h + '</div>');
   }
   return out.join('');
+}
+/* ============ Sıralı Evrak Alımı Sözleşmesi (senetlerle birlikte yazdırılır / gönderilir) ============ */
+function snTutar(t) {
+  const x = Math.round(t * 100), lira = Math.floor(x / 100), kurus = x % 100;
+  return { rakam: grp(lira) + (kurus ? ',' + String(kurus).padStart(2, '0') : ',-') + ' TL', yazi: yaziSp(lira) + ' TÜRK LİRASI' + (kurus ? ' ' + yaziSp(kurus) + ' KURUŞ' : '') };
+}
+function sozlesmeSayfalari(satirlar, m, tur) {
+  const kod = 'KMP' + m.campId + (tur === 'cb' ? '-CB' : ''), unvan = esc(m.unvan || ''), tarih = esc(fmtDate(m.tarih)), N = satirlar.length;
+  /* satır yüksekliği tahmini (mm): ünvan ve yazıyla tutar kaç satıra sarar; sayfa bütçesi dolunca yeni sayfa (taşan satır kesilmesin) */
+  const hSat = l => { const t = snTutar(l.tutar), ln = Math.max(1, Math.ceil(unvan.length / 22), Math.ceil(t.yazi.length / 24)); return Math.max(8, 2.6 + ln * 3.3); };
+  const gr = []; let cur = [], top = 0, bud = 140;
+  satirlar.forEach(l => { const h = hSat(l); if (cur.length && top + h > bud) { gr.push(cur); cur = []; top = 0; bud = 200; } cur.push(l); top += h; });
+  gr.push(cur);
+  const tablo = rows => '<table class="zt"><colgroup><col style="width:28%"><col style="width:13%"><col style="width:13%"><col style="width:19%"><col style="width:27%"></colgroup><thead><tr><th>Senedin Borçlusu</th><th>Düzenlenme Tarihi</th><th>Senedin Vadesi</th><th>Senedin Bedeli<br>(Rakam İle)</th><th>Senedin Bedeli<br>(Yazı İle)</th></tr></thead><tbody>' +
+    rows.map(l => { const t = snTutar(l.tutar); return '<tr><td>' + unvan + '</td><td>' + tarih + '</td><td>' + esc(fmtDate(l.tarih)) + '</td><td class="r">' + esc(t.rakam) + '</td><td>' + esc(t.yazi) + '</td></tr>'; }).join('') + '</tbody></table>';
+  const imza = cls => '<div class="zimza' + (cls || '') + '">Senedi Düzenleyen Firmanın<br>Kaşe ve İmza</div>';
+  const kamp = '<div class="zkamp">Kampanya No: <b>' + esc(kod) + '</b></div>';
+  const foot = i => gr.length > 1 ? '<div class="zfoot">Sayfa ' + (i + 1) + ' / ' + gr.length + '</div>' : '';
+  return gr.map((rows, i) => '<div class="zpage"><div class="zin">' + (i === 0
+    ? '<h1 class="zbas">MERVE GÖZLÜK CAMI SANAYİ VE TİCARET A.Ş. SIRALI EVRAK ALIMI SÖZLEŞMESİ</h1><div class="ztar">Tarih: <u>' + tarih + '</u></div>' +
+      '<p class="zp">Aşağıda listesi bulunan sıralı evrakları MERVE GÖZLÜK CAMI SANAYİ VE TİCARET A.Ş.’ne cari hesaba istinaden düzenlemiş bulunmaktayım. Senetlerin herhangi birinin vadesinde ödenmemesi halinde müteakibindeki tüm senetlerin muacceliyet kesbedeceğini ve icra işlemlerine konu olabileceğini gayri kabili rücu kabul ederim.</p>' +
+      '<p class="zp zk">Sıralı evraklar ile ilgili vadesinde tahsil olmayan protesto ve karşılıksız olan tutar kadar tüm hukuki haklarımız saklı kalmak şartı ile AYLIK %6 vade farkı uygulanacaktır.</p>' + imza('') + kamp +
+      '<div class="zek">Ek-Senet borçlusuna ait İmza sirküleri.</div><h2 class="zbas2">SENETLERİN DÖKÜMÜ</h2>' + tablo(rows)
+    : '<h2 class="zbas2">SENETLERİN DÖKÜMÜ (devam)</h2>' + kamp + tablo(rows) + imza(' zimza-d')) + '</div>' + foot(i) + '</div>').join('');
 }
 function senetSatirlari(tur) {
   const m = curModel; if (!m) return null;
@@ -3283,7 +3327,7 @@ function senetYazdir(tur) {
   const L = senetSatirlari(tur); if (!L) { toast('Senet için sıralı evrak ödeme tablosu gerekli.'); return; }
   if (kimlikGerekli(curModel)) { toast('Önce şube ve personel seçin.'); girisAc(false); return; }
   if (!fromSaved) { if (saveModel()) toast('Sözleşme kaydedildi.'); else if (!confirm('Sözleşme kaydedilemedi (tarayıcı hafızası dolu olabilir). Yine de senetler yazdırılsın mı?')) return; }
-  $('printArea').innerHTML = senetSayfalari(L, curModel);
+  $('printArea').innerHTML = sozlesmeSayfalari(L, curModel, tur) + senetSayfalari(L, curModel, tur);
   window.print();
 }
 $('pvSenet').addEventListener('click', () => senetYazdir('odt'));
