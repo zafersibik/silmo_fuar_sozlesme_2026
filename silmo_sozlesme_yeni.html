@@ -546,8 +546,6 @@
   .gtab tr.ghata td { color: var(--danger); font-weight: 700; }
   .gcak { margin-top: 8px; padding: 8px 10px; border-radius: 10px; background: rgba(192,57,43,0.1); border: 1px solid rgba(192,57,43,0.35); color: var(--danger); font-size: 0.75rem; font-weight: 700; }
   .alici .mrk { display: flex; gap: 8px; align-items: center; font-size: 0.8rem; margin: 4px 0 8px; }
-  #zorunluModal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 150; padding: 16px; }
-  #zorunluModal .modal-box { max-width: 420px; width: 100%; }
 }
 
 </style>
@@ -3587,7 +3585,7 @@ function gonderModal(c) {
 const yedekYeniler = () => lsGet(LS_KAYIT, []);
 function yedekIsaretle() {
   const y = lsGet(LS_YEDEK, {}); lsSet(LS_YEDEK, Object.assign({}, y, { son: Date.now() }));
-  yedekBarGuncelle(); if (typeof zorunluTamamMi === 'function') zorunluTamamMi(); if (typeof ayarSayfaCiz === 'function') ayarSayfaCiz();
+  yedekBarGuncelle(); if (typeof ayarSayfaCiz === 'function') ayarSayfaCiz();
 }
 function yedekIndir() {
   const kayit = lsGet(LS_KAYIT, []), ayar = lsGet(LS_AYAR, null);
@@ -3622,27 +3620,9 @@ function yedekUygula(d, gecerli, degistir) {
   loadMusteri(); renderMusteriPanel(); updateKayitBadge(); renderKayit(); alicilarCiz(); kimlikGuncelle(); havuzBarGuncelle();
   toast(temiz.length + ' kayıt yedekten işlendi' + (guncelSay ? ' (' + guncelSay + ' kayıt daha yeni değişiklikle güncellendi)' : '') + ' (şu an ' + sonuc.length + ' kayıt var).');
 }
-/* ---- zorunlu yedek: her günün ilk açılışında yedeklenmemiş ya da merkeze gönderilmemiş kayıt varsa ---- */
-let zorunlaSay = 0;
-function yedekHatirlat() {
-  if (navigator.webdriver && localStorage.getItem('slm26_test_zorunlu') !== '1') return;
-  const bugun = gunStr(new Date()), y = lsGet(LS_YEDEK, {});
-  if (y.zorunlu === bugun || $('zorunluModal')) return;
-  const s = yedekDurum(), g = lsGet(LS_KAYIT, []).filter(x => !havuzaGitti(x)).length;
-  if (!s.yeni && !g) { lsSet(LS_YEDEK, Object.assign({}, y, { zorunlu: bugun })); return; }
-  zorunluEkran(s.yeni, g);
-}
-function zorunluEkran(yeni, gonderilmeyen) {
-  zorunlaSay = 0;
-  const d = document.createElement('div'); d.id = 'zorunluModal';
-  d.innerHTML = '<div class="modal-box"><h3>Günlük yedek zorunlu</h3><p id="zorunluMetin"></p><div class="gbtns"><button type="button" class="btn" id="zorunluYedek">Yedek Al</button></div><p class="muted" style="margin-top:10px">Yedek dosyası oluşturulmadan yeni sözleşmeye geçilemez. İnternet gerekmez: "İndir" ile telefona kaydedebilirsiniz.</p><button type="button" class="giris-link" id="zorunluAtla" style="display:none;margin-top:6px">Şimdilik atla</button></div>';
-  document.body.appendChild(d);
-  $('zorunluMetin').textContent = [yeni ? yeni + ' kayıt henüz yedeklenmedi.' : '', gonderilmeyen ? gonderilmeyen + ' kayıt merkeze gönderilmedi.' : ''].filter(Boolean).join(' ') + ' Lütfen önce yedek alın' + (gonderilmeyen ? ' ve yedeği merkeze gönderin.' : '.');
-  $('zorunluYedek').addEventListener('click', () => { zorunlaSay++; if (zorunlaSay >= 2) $('zorunluAtla').style.display = ''; yedekIndir(); });
-  $('zorunluAtla').addEventListener('click', () => zorunluKapat());
-}
-function zorunluKapat() { const m = $('zorunluModal'); if (m) m.remove(); const y = lsGet(LS_YEDEK, {}); lsSet(LS_YEDEK, Object.assign({}, y, { zorunlu: gunStr(new Date()) })); }
-function zorunluTamamMi() { if ($('zorunluModal') && !yedekDurum().yeni) zorunluKapat(); }
+/* Açılışta zorunlu yedek ekranı yok (kullanıcı kararı). Yedek uyarıları üstteki çiplerde, "Yedek Al" düğmesi Ayarlar'da ve çipte durur.
+   Eski hatırlatma işlevi boşaltıldı: açılışta ve girişten sonra çağrılır ama hiçbir şey göstermez. */
+function yedekHatirlat() {}
 
 /* ============ Merkez: Excel (çok sayfalı), PDF liste raporu, Gelen Yedekler ============ */
 const subeKodAd = k => { const s = SUBELER.find(x => x[1] === k); return s ? s[0] : (k || ''); };
