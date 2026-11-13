@@ -1454,18 +1454,25 @@ function hdIzinli() { /* KMP2'nin ilk kademesinde yalnızca Premium seçilebilir
   Object.keys(PROG_TASARIM).forEach(m => PROG_TASARIM[m].forEach(t => { if (!kisit || (m === 'Hawk Plus' && t === 'Premium')) liste.push({ marka: m, tasarim: t }); }));
   return { liste, vista: kisit };
 }
+function hdImza() { return hdRows().map(x => x.i + ':' + x.r.v).join('|'); }
 function hdUygula(f) {
+  /* Adetler HER SEFERİNDE baz değerden hesaplanır (zincirleme yuvarlama kaybı olmasın: Premium → Clarity → Premium aynı adetlere döner).
+     Baz, satırlar son hesaplamadan beri değişmemişse korunur; elle adet girilmiş, tür değişmiş, "Katalog Adetleri"ne basılmış ya da ilk kezse şimdiki satırlardan yeniden alınır. */
+  if (!(S.hdBaz && S.hdSon === hdImza())) {
+    S.hdBaz = {};
+    hdRows().forEach(x => { const p = hdParse(x.r); if (p) S.hdBaz[x.i] = { deger: p.adet * (p.fiyat || 0), tip: p.prod ? p.prod.tip : 'Beyaz', pozitif: p.adet > 0 }; });
+  }
   hdRows().forEach(x => {
-    const p = hdParse(x.r); if (!p) return;
-    const deger = p.adet * (p.fiyat || 0); const eskiTip = p.prod ? p.prod.tip : 'Beyaz';
-    const tip = hdMapTip(eskiTip, f.marka);
-    if (tip !== eskiTip && p.adet > 0 && PROG_TIPLER[f.marka].indexOf(eskiTip) === -1) toast(eskiTip + ' ' + f.marka + '\'ta yok; ' + tip + ' yapıldı.');
+    const b = S.hdBaz[x.i]; if (!b) return;
+    const deger = b.deger, eskiTip = b.tip, tip = hdMapTip(eskiTip, f.marka);
+    if (tip !== eskiTip && b.pozitif && PROG_TIPLER[f.marka].indexOf(eskiTip) === -1) toast(eskiTip + ' ' + f.marka + '\'ta yok; ' + tip + ' yapıldı.');
     const np = hdBul(f.marka, f.tasarim, tip, f.indeks, f.kaplama);
-    if (np) { hdSetRow(x.i, np.etiket, p.adet > 0 ? Math.floor(deger / np.fiyat) : 0); return; }
+    if (np) { hdSetRow(x.i, np.etiket, b.pozitif ? Math.floor(deger / np.fiyat) : 0); return; }
     /* bu indeks bu materyalde yok (yalnızca adedi 0 olan satırlar için): satır 0 adet olarak geçerli bir ürüne bağlanır */
     const alt = PROG.find(o => o.marka === f.marka && o.tasarim === f.tasarim && o.tip === tip && o.kaplama === f.kaplama) || hdBul(f.marka, f.tasarim, 'Beyaz', f.indeks, f.kaplama);
     hdSetRow(x.i, alt.etiket, 0);
   });
+  S.hdSon = hdImza();
 }
 function hdKatalog() {
   const o = S.orig; if (!o) return;
@@ -1544,7 +1551,7 @@ function hediyeBlok() {
     '<button type="button" class="btn secondary" style="padding:6px 10px;font-size:0.8rem" data-hd-btn="katalog">Katalog Adetleri</button></div>' +
     (coklu && !fotoVar ? '<div class="muted" style="margin-top:6px">Seçili indekste fotokromik (' + (f.marka === 'Fuji' ? 'Neochromes' : 'Hybrid') + ') yok; "Tamamı Fotokromik" için indeksi değiştirin.</div>' : '');
   h += '<div class="hd-sum" id="hdSum">' + hdSumHtml() + '</div>';
-  h += '<div class="muted" style="margin-top:6px">Ürün, indeks veya kaplama değişince her satırın değeri korunur; adet yeni fiyata göre aşağı yuvarlanır. Adetler aşağıdaki alanlardan elle de değiştirilebilir.</div></div>';
+  h += '<div class="muted" style="margin-top:6px">Ürün, indeks veya kaplama değişince her satırın değeri korunur; adet yeni fiyata göre aşağı yuvarlanır. Başka ürüne geçip geri dönünce adetler aynen geri gelir (değer, katalogdan ya da son elle girilen adetlerden hesaplanır). Adetler aşağıdaki alanlardan elle de değiştirilebilir.</div></div>';
   return h;
 }
 function hdChange(t) {
